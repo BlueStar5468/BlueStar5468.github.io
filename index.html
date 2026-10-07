@@ -1,12 +1,483 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-accent="blue">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BlueStar5468</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>BlueStar5468 | 软件 &amp; 硬件开发者</title>
+<!-- 标题和下面的摘要都可以在 js/content.js 的 site 里改 -->
+<meta name="description" content="泛星际蓝星工作室 —— 软件与硬件双修。C# / C / C++ / 嵌入式 / PCB 设计。" />
+
+<!-- 内联 SVG favicon：字母是下面的 B，想换颜色改 fill 的 %23xxxxxx -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%232563eb'/%3E%3Ctext y='72' x='50' text-anchor='middle' font-size='58' fill='white' font-family='sans-serif'%3EB%3C/text%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/style.css" />
+
+<!-- JS 被禁用时的兜底：去掉"钉住翻页"，退回普通整页滚动，四页依次排开 -->
+<noscript><style>
+  #deck { height: auto; }
+  #deck .stage { position: static; height: auto; overflow: visible; display: flex; flex-direction: column; }
+  #deck .glow, #deck .stage__progress { display: none; }
+  #deck .page { position: static; padding: 26px 0; opacity: 1; transform: none; filter: none; visibility: visible; }
+  #deck .rail {
+    position: sticky; top: 8px; order: -1; display: flex; justify-content: center; gap: 6px;
+    width: max-content; max-width: 100%; margin: 0 auto 6px; padding: 6px 8px; border-radius: 10px;
+    background: #fff; border: 1px solid #e2e8f0;
+  }
+  #deck .rail__label { opacity: 1; transform: none; }
+  #deck .hint { display: none; }
+</style></noscript>
 </head>
 <body>
-    <h1>Project BlueStar universal net</h1>
-    <p>Comming s∞n</p>
+
+<!-- 背景装饰（纯 CSS，无图片） -->
+<div class="bg" aria-hidden="true">
+  <span class="bg__blob bg__blob--blue"></span>
+  <span class="bg__blob bg__blob--cyan"></span>
+  <span class="bg__blob bg__blob--amber"></span>
+  <span class="bg__grid"></span>
+</div>
+
+<div class="app">
+
+  <!-- ════════════════ 左侧：贴边停靠的个人介绍栏 ════════════════ -->
+  <aside class="sidebar" data-cfg="ui.sidebar">
+    <div class="profile">
+
+      <div class="profile__top">
+        <!-- 头像：想用真图就删掉 svg，换成 <img class="avatar__img" src="assets/avatar.jpg" alt="头像"> -->
+        <!-- 头像：默认是字母渐变方块；在 js/content.js 里填 side.avatarImg 就会换成你的图片 -->
+        <div class="avatar" data-cfg="side.avatar" data-avatar>
+          <svg viewBox="0 0 120 120" role="img" aria-label="头像占位图">
+            <defs>
+              <linearGradient id="avatarGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#3b82f6" />
+                <stop offset="1" stop-color="#06b6d4" />
+              </linearGradient>
+            </defs>
+            <rect width="120" height="120" rx="26" fill="url(#avatarGrad)" />
+            <text x="60" y="75" text-anchor="middle" font-size="44" font-weight="700"
+                  fill="#ffffff" font-family="system-ui, sans-serif" data-fill="side.avatar">YN</text>
+          </svg>
+        </div>
+        <span class="status" title="可联系" data-cfg="side.status">
+          <i class="status__dot"></i><span data-fill="side.status">开放合作</span>
+        </span>
+      </div>
+
+      <h1 class="profile__name" data-cfg="side.name" data-fill="side.name">BlueStar</h1>
+      <p class="profile__title" data-cfg="side.name" data-fill-html="side.title">软件工程师 <span class="slash">/</span> 嵌入式爱好者</p>
+
+      <!-- 内容在 js/content.js → side.meta（下面留一条示例，JS 没跑起来时显示） -->
+      <ul class="profile__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta">
+        <li><span class="ico">📍</span>武汉 · 中国</li>
+      </ul>
+
+      <p class="profile__bio" data-cfg="side.bio" data-fill-html="side.bio">
+        一只手写代码，一只手焊板子。
+      </p>
+
+      <div data-cfg="side.skills">
+        <div class="divider"></div>
+
+        <h2 class="side-heading">技能速览</h2>
+        <div class="chips" data-list="side.skills" data-item="chip">
+          <span class="chip chip--blue">TypeScript</span>
+        </div>
+      </div>
+
+      <div data-cfg="side.links">
+        <div class="divider"></div>
+
+        <h2 class="side-heading">找到我</h2>
+        <nav class="links" data-list="side.links" data-item="link">
+          <a class="link" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">
+            <span class="link__ico">GH</span>
+            <span class="link__text">GitHub</span>
+            <span class="link__arrow">↗</span>
+          </a>
+        </nav>
+      </div>
+
+      <p class="profile__foot" data-cfg="side.credit" data-fill-html="side.credit">© <span id="year">2025</span> BlueStar<br />由 DSH 与我共同制作</p>
+    </div>
+  </aside>
+
+  <!-- ════════════════ 右侧：滚动驱动的分页叙事 ════════════════ -->
+  <main class="main">
+
+    <!-- deck = 滚动跑道，stage 在里面被"钉"住 -->
+    <div class="deck" id="deck">
+      <div class="stage" id="stage">
+
+        <!-- 随当前板块渐变的背景光晕 -->
+        <span class="glow glow--blue" aria-hidden="true" data-cfg="ui.glow"></span>
+        <span class="glow glow--amber" aria-hidden="true" data-cfg="ui.glow"></span>
+        <div class="stage__progress" aria-hidden="true" data-cfg="ui.progress"><i id="progress"></i></div>
+
+        <!-- ═══════════════════════════════════════════════════════
+             第 1 页 · 概览
+             定制点：data-slug（地址栏锚点）/ data-accent（blue|amber）
+             ═══════════════════════════════════════════════════════ -->
+        <section class="page is-active" id="page-overview" data-slug="overview" data-accent="blue" data-cfg="page.overview" aria-label="概览">
+
+          <!-- 本页背景装饰：软件 ↔ 硬件的连接示意 + 零散技术词 -->
+          <div class="deco" aria-hidden="true">
+            <svg class="deco__bridge" viewBox="0 0 220 420" fill="none" data-cfg="deco.bridge">
+              <text x="110" y="82" text-anchor="middle" font-size="76" font-weight="800"
+                    fill="#2563eb" fill-opacity=".55" font-family="Consolas, monospace">&lt;/&gt;</text>
+              <path d="M110 112 V192" stroke="#2563eb" stroke-opacity=".4" stroke-width="2" stroke-dasharray="6 8"/>
+              <circle cx="110" cy="112" r="4" fill="#2563eb" fill-opacity=".5"/>
+              <circle cx="110" cy="192" r="4" fill="#f59e0b" fill-opacity=".5"/>
+              <!-- 下面接一个丝印风格的元件外框（真实 PCB 的丝印就是这么画的） -->
+              <rect x="52" y="220" width="116" height="116" rx="6"
+                    stroke="#64748b" stroke-opacity=".5" stroke-width="2.2"/>
+              <path d="M68 208 H152" stroke="#64748b" stroke-opacity=".5" stroke-width="8" stroke-dasharray="4 12"/>
+              <path d="M68 348 H152" stroke="#64748b" stroke-opacity=".5" stroke-width="8" stroke-dasharray="4 12"/>
+              <circle cx="70" cy="236" r="5" fill="#64748b" fill-opacity=".55"/>
+              <text x="110" y="286" text-anchor="middle" font-size="24" font-weight="700"
+                    fill="#64748b" fill-opacity=".55" font-family="Consolas, monospace">U1</text>
+              <text x="110" y="308" text-anchor="middle" font-size="11"
+                    fill="#64748b" fill-opacity=".5" font-family="Consolas, monospace">Cortex-M4</text>
+            </svg>
+            <span class="deco__tok deco__tok--1" data-cfg="deco.tokens">{ }</span>
+            <span class="deco__tok deco__tok--2" data-cfg="deco.tokens">git push</span>
+            <span class="deco__tok deco__tok--3" data-cfg="deco.tokens">make flash</span>
+            <span class="deco__tok deco__tok--4" data-cfg="deco.tokens">0x1F</span>
+            <span class="deco__tok deco__tok--5" data-cfg="deco.tokens">;</span>
+          </div>
+
+          <div class="page__inner">
+            <p class="eyebrow" data-fill="overview.eyebrow">HELLO, WORLD 👋</p>
+            <h2 class="page__title" data-fill-html="overview.title">
+              我做<span class="hl hl--blue">软件</span>，也做<span class="hl hl--amber">硬件</span>。
+            </h2>
+            <p class="page__lead" data-fill-html="overview.lead">
+              从一行代码到一块电路板，全链路把想法做成能跑的东西。
+            </p>
+
+            <!-- 内容在 js/content.js → overview.stats（下面留一条示例） -->
+            <div class="stats" data-cfg="ov.stats" data-list="overview.stats" data-item="stat">
+              <div class="stat card"><b>6+</b><span>年写代码</span></div>
+            </div>
+
+            <div class="quick" data-cfg="ov.quick" data-list="overview.quick" data-item="quick">
+              <button class="card quick__card" data-goto="software">
+                <span class="quick__ico">💻</span>
+                <span class="quick__text"><b>软件开发</b><i>前端 / 后端 / 工具链</i></span>
+                <span class="quick__arrow">→</span>
+              </button>
+            </div>
+
+            <div class="card pad" data-cfg="ov.skills">
+              <h3 class="mini-title" data-fill="overview.skillsTitle">技能速览</h3>
+              <div class="chips" data-list="overview.skills" data-item="chip">
+                <span class="chip">TypeScript</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             第 2 页 · 软件开发
+             ═══════════════════════════════════════════════════════ -->
+        <section class="page" id="page-software" data-slug="software" data-accent="blue" data-cfg="page.software" aria-hidden="true" aria-label="软件开发">
+
+          <!-- 本页背景装饰：C / C++ / C# 堆成一摞（下面两个、上面一个）+ OpenGL + Tux + 二进制 / ELF
+               图片都在 assets/ 里，想换图上直接替换同名文件即可 -->
+          <div class="deco" aria-hidden="true">
+            <!-- 六边形那一摞：下面 C 和 C++ 并排贴着，C# 骑在中间接缝上（尺寸在 CSS 里） -->
+            <div class="hexstack" data-cfg="deco.hexstack">
+              <img class="hexstack__item hexstack__c"   src="assets/hex-c.png"      alt="" />
+              <img class="hexstack__item hexstack__cpp" src="assets/hex-cpp.png"    alt="" />
+              <img class="hexstack__item hexstack__cs"  src="assets/hex-csharp.png" alt="" />
+            </div>
+
+            <img class="deco__gl"  src="assets/logo-opengl.png" alt="" data-cfg="deco.opengl" />
+            <img class="deco__tux" src="assets/logo-linux.png"  alt="" data-cfg="deco.linux" />
+
+            <!-- 二进制彩蛋：解出来是 LINUX ELF / C# code / Linux is awesome -->
+            <pre class="deco__bin" data-cfg="deco.binary">01001100 01001001 01001110 01010101 01011000 00100000 01000101 01001100 01000110
+01000011 00100011 00100000 01100011 01101111 01100100 01100101
+01001100 01101001 01101110 01110101 01111000 00100000 01101001 01110011 00100000 01100001 01110111 01100101 01110011 01101111 01101101 01100101</pre>
+
+            <pre class="deco__elf" data-cfg="deco.elf">$ readelf -h ./a.out
+Magic:   7f 45 4c 46 02 01 01 00
+Class:   ELF64 · LSB · x86-64
+Sections: .text .rodata .data .bss</pre>
+          </div>
+
+          <div class="page__inner">
+            <header class="phead">
+              <p class="eyebrow" data-fill="software.eyebrow">01 · SOFTWARE</p>
+              <h2 class="phead__title" data-fill="software.title">软件开发</h2>
+              <p class="phead__desc" data-fill-html="software.desc">从界面到服务端，喜欢把东西做得又快又稳。</p>
+            </header>
+
+            <!-- 内容在 js/content.js → software.stack -->
+            <div class="grid grid--4" data-cfg="sw.stack" data-list="software.stack" data-item="mini">
+              <article class="card mini">
+                <h4>前端</h4>
+                <div class="chips">
+                  <span class="chip">TypeScript</span><span class="chip">React</span>
+                </div>
+              </article>
+            </div>
+
+            <h3 class="section-title" data-cfg="sw.projects"><span class="dot"></span><span data-fill="software.projectsTitle">精选项目</span></h3>
+            <!-- 内容在 js/content.js → software.projects -->
+            <div class="grid grid--3" data-cfg="sw.projects" data-list="software.projects" data-item="work">
+              <article class="card work work--slim">
+                <div class="work__ico">⚙️</div>
+                <div>
+                  <h4>项目名称 A</h4>
+                  <p>一句话说明它解决什么问题、你负责哪部分。</p>
+                </div>
+                <a class="work__link" href="#" target="_blank" rel="noopener">仓库 ↗</a>
+              </article>
+            </div>
+
+            <div class="two-col">
+              <div class="card pad" data-cfg="sw.opensource">
+                <h3 class="mini-title" data-fill="software.opensourceTitle">开源 &amp; 社区</h3>
+                <ul class="list" data-list="software.opensource" data-item="listitem">
+                  <li><span class="list__tag">维护</span><span>某 CLI 工具 · 300+ star</span></li>
+                </ul>
+              </div>
+              <div class="card pad" data-cfg="sw.certs">
+                <h3 class="mini-title" data-fill="software.certsTitle">证书 / 课程</h3>
+                <div class="chips" data-list="software.certs" data-item="chip">
+                  <span class="chip">CET-6</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             第 3 页 · 硬件开发（强调色转橙，改 data-accent="amber" 可换回来）
+             ═══════════════════════════════════════════════════════ -->
+        <section class="page" id="page-hardware" data-slug="hardware" data-accent="amber" data-cfg="page.hardware" aria-hidden="true" aria-label="硬件开发">
+
+          <!-- 本页背景装饰：PCB 走线（并排不交叉）+ 过孔 + 丝印层（元件外框 / 位号 / 引脚） -->
+          <div class="deco" aria-hidden="true">
+            <svg class="deco__pcb" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" fill="none" data-cfg="deco.pcb">
+              <!-- 走线：上下两组"平行并排"的 45° 折线，组内等距、组间大片留空，所以永远不会交叉 -->
+              <g stroke="#0d9488" stroke-opacity=".55" stroke-width="4"
+                 stroke-linecap="round" stroke-linejoin="round">
+                <path d="M-10 96 H300 L400 196 H1210"/>
+                <path d="M-10 126 H280 L380 226 H1210"/>
+                <path d="M-10 156 H260 L360 256 H1210"/>
+                <path d="M-10 186 H240 L340 286 H1210"/>
+                <path d="M-10 704 H250 L350 604 H1210"/>
+                <path d="M-10 674 H270 L370 574 H1210"/>
+                <path d="M-10 644 H290 L390 544 H1210"/>
+              </g>
+              <!-- 过孔：镀金环，中间是空的 -->
+              <g stroke="#d4a017" stroke-opacity=".75" stroke-width="3.4" fill="none">
+                <circle cx="300" cy="96" r="9"/><circle cx="280" cy="126" r="9"/>
+                <circle cx="260" cy="156" r="9"/><circle cx="240" cy="186" r="9"/>
+                <circle cx="250" cy="704" r="9"/><circle cx="270" cy="674" r="9"/>
+                <circle cx="290" cy="644" r="9"/>
+              </g>
+              <!-- 丝印层：真实 PCB 上就是这层印字，这里用灰蓝让它在浅色背景上也看得见 -->
+              <g stroke="#64748b" stroke-opacity=".5" stroke-width="2.2" stroke-linecap="round" fill="none" data-cfg="deco.silkscreen">
+                <!-- 大封装 U1：外框 + 上下两排引脚（虚线加粗模拟引脚） -->
+                <rect x="790" y="300" width="250" height="180" rx="8"/>
+                <path d="M806 288 H1024" stroke-width="9" stroke-dasharray="4 13"/>
+                <path d="M806 492 H1024" stroke-width="9" stroke-dasharray="4 13"/>
+              </g>
+              <!-- 位号 + 一脚标记 + 焊盘 -->
+              <g fill="#64748b" fill-opacity=".55" font-family="Consolas, monospace" data-cfg="deco.silkscreen">
+                <circle cx="814" cy="324" r="6"/>
+                <text x="915" y="386" font-size="32" text-anchor="middle">U1</text>
+                <text x="915" y="412" font-size="15" text-anchor="middle">STM32F407</text>
+              </g>
+              <g fill="#d4a017" fill-opacity=".5">
+                <rect x="846" y="270" width="18" height="10" rx="2"/>
+                <rect x="886" y="270" width="18" height="10" rx="2"/>
+                <rect x="926" y="270" width="18" height="10" rx="2"/>
+                <rect x="966" y="270" width="18" height="10" rx="2"/>
+              </g>
+            </svg>
+
+            <!-- 我的板子：焊接实物（右下角）+ PCB 走线图（整张放大铺在右上角当背景纹理）
+                 换图：覆盖 assets/board.jpg / assets/layout.jpg -->
+            <img class="deco-shot deco__layout" src="assets/layout.jpg" alt="" data-cfg="deco.layoutShot" />
+            <img class="deco-shot deco__board"  src="assets/board.jpg"  alt="" data-cfg="deco.boardShot" />
+          </div>
+
+          <div class="page__inner">
+            <header class="phead">
+              <p class="eyebrow eyebrow--amber">02 · HARDWARE</p>
+              <h2 class="phead__title" data-fill="hardware.title">硬件开发</h2>
+              <p class="phead__desc" data-fill-html="hardware.desc">画原理图、打板、焊上去，然后把它调通。</p>
+            </header>
+
+            <!-- 内容在 js/content.js → hardware.skills（这一页自动用橙色） -->
+            <div class="grid grid--4" data-cfg="hw.skills" data-list="hardware.skills" data-item="miniAmber">
+              <article class="card mini mini--amber">
+                <h4>单片机</h4>
+                <div class="chips">
+                  <span class="chip chip--amber">STM32</span>
+                </div>
+              </article>
+            </div>
+
+            <div class="two-col">
+              <div class="card bars" data-cfg="hw.bars" data-list="hardware.bars" data-item="bar">
+                <div class="bar">
+                  <div class="bar__head"><span>嵌入式 C 固件</span><span>85%</span></div>
+                  <div class="bar__track"><i class="bar__fill" style="--v:85%"></i></div>
+                </div>
+              </div>
+
+              <!-- 内容在 js/content.js → hardware.projects -->
+              <div class="grid grid--2" data-cfg="hw.projects" data-list="hardware.projects" data-item="work">
+                <article class="card work work--slim">
+                  <div class="work__ico">🔧</div>
+                  <div>
+                    <h4>项目名称 D</h4>
+                    <p>STM32 环境监测节点：传感器 + OLED + 无线上传。</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+
+            <div class="two-col">
+              <div class="card pad" data-cfg="hw.records">
+                <h3 class="mini-title" data-fill="hardware.recordsTitle">打样 / 作品记录</h3>
+                <ul class="list" data-list="hardware.records" data-item="listitem">
+                  <li><span class="list__tag">2025</span><span>四层板 · 电机驱动 · 打样 2 版</span></li>
+                </ul>
+              </div>
+              <div class="card pad" data-cfg="hw.gear">
+                <h3 class="mini-title" data-fill="hardware.gearTitle">我的装备台</h3>
+                <div class="chips" data-list="hardware.gear" data-item="chipAmber">
+                  <span class="chip chip--amber">恒温焊台</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             第 4 页 · 经历（最后一页，走完这里才开始真正向下滚）
+             ═══════════════════════════════════════════════════════ -->
+        <section class="page" id="page-journey" data-slug="journey" data-accent="blue" data-cfg="page.journey" aria-hidden="true" aria-label="经历">
+
+          <!-- 本页背景装饰：一条一路向上的折线（里程碑 + 终点小旗）+ 底部年份刻度 -->
+          <div class="deco" aria-hidden="true">
+            <svg class="deco__path" viewBox="0 0 200 520" fill="none" data-cfg="deco.path">
+              <path d="M50 492 L110 420 L70 350 L130 275 L95 205 L150 130 L120 58"
+                    stroke="#2563eb" stroke-opacity=".45" stroke-width="2" stroke-dasharray="7 8"/>
+              <g fill="#ffffff" stroke="#2563eb" stroke-opacity=".6" stroke-width="2">
+                <circle cx="50" cy="492" r="6"/><circle cx="110" cy="420" r="6"/>
+                <circle cx="70" cy="350" r="6"/><circle cx="130" cy="275" r="6"/>
+                <circle cx="95" cy="205" r="6"/><circle cx="150" cy="130" r="6"/>
+              </g>
+              <circle cx="120" cy="58" r="8" fill="#2563eb" fill-opacity=".45"
+                      stroke="#2563eb" stroke-opacity=".6" stroke-width="2"/>
+              <!-- 终点小旗 -->
+              <path d="M120 58 V14" stroke="#2563eb" stroke-opacity=".55" stroke-width="2"/>
+              <path d="M120 16 L156 27 L120 38 Z" fill="#2563eb" fill-opacity=".35"/>
+              <g font-family="Consolas, monospace" font-size="12" fill="#2563eb" fill-opacity=".55">
+                <text x="64" y="500">2022</text>
+                <text x="84" y="358">2023</text>
+                <text x="109" y="213">2024</text>
+                <text x="134" y="68">2025</text>
+              </g>
+            </svg>
+            <span class="deco__tok deco__tok--1" data-cfg="deco.jTokens">TODO</span>
+            <span class="deco__tok deco__tok--2" data-cfg="deco.jTokens">next →</span>
+            <span class="deco__tok deco__tok--3" data-cfg="deco.jTokens">keep going</span>
+          </div>
+
+          <div class="page__inner">
+            <header class="phead">
+              <p class="eyebrow" data-fill="journey.eyebrow">03 · JOURNEY</p>
+              <h2 class="phead__title" data-fill="journey.title">经历 &amp; 正在学</h2>
+              <p class="phead__desc" data-fill-html="journey.desc">做过的事，和接下来想做的事。</p>
+            </header>
+
+            <!-- 内容在 js/content.js → journey.timeline -->
+            <ol class="timeline" data-cfg="jn.timeline" data-list="journey.timeline" data-item="timeline">
+              <li>
+                <span class="timeline__time">2024 — 至今</span>
+                <div class="timeline__body card">
+                  <h4>某某公司 · 软件开发实习</h4>
+                  <p>做了什么事情、用到什么技术、带来什么结果。</p>
+                </div>
+              </li>
+            </ol>
+
+            <div class="two-col">
+              <div class="card pad" data-cfg="jn.honors">
+                <h3 class="mini-title" data-fill="journey.honorsTitle">荣誉 / 奖项</h3>
+                <ul class="list" data-list="journey.honors" data-item="listitem">
+                  <li><span class="list__tag">国家级</span><span>全国大学生电子设计竞赛 · 二等奖</span></li>
+                </ul>
+              </div>
+              <div class="card pad" data-cfg="jn.learning">
+                <h3 class="mini-title" data-fill="journey.learningTitle">最近在折腾</h3>
+                <div class="chips" data-list="journey.learning" data-item="chip">
+                  <span class="chip">Rust</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="scroll-note" data-cfg="jn.note"><span data-fill="journey.note">再往下滚，就真正到底了</span> <span class="scroll-note__chev">⌄</span></p>
+          </div>
+        </section>
+
+        <!-- 右侧章节导航：加页时复制一个 button，data-goto 写页面的 slug，data-cfg 跟该页保持一致 -->
+        <nav class="rail" id="rail" aria-label="章节导航" data-cfg="ui.rail">
+          <button class="rail__item is-active" data-goto="overview" data-cfg="page.overview" aria-label="第 1 页：概览">
+            <span class="rail__label">概览</span><span class="rail__dot"></span>
+          </button>
+          <button class="rail__item" data-goto="software" data-cfg="page.software" aria-label="第 2 页：软件开发">
+            <span class="rail__label">软件</span><span class="rail__dot"></span>
+          </button>
+          <button class="rail__item" data-goto="hardware" data-cfg="page.hardware" aria-label="第 3 页：硬件开发">
+            <span class="rail__label">硬件</span><span class="rail__dot"></span>
+          </button>
+          <button class="rail__item" data-goto="journey" data-cfg="page.journey" aria-label="第 4 页：经历">
+            <span class="rail__label">经历</span><span class="rail__dot"></span>
+          </button>
+        </nav>
+
+        <div class="hint" id="hint" aria-hidden="true" data-cfg="ui.hint">
+          <span>向下滚动</span><i class="hint__chev">⌄</i>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 落地页：滚过最后一屏才出现；内容在 js/content.js → landing -->
+    <footer class="landing card" id="landing" data-cfg="ui.landing">
+      <p class="eyebrow" data-fill="landing.eyebrow">CONTACT</p>
+      <h2 class="landing__title" data-fill-html="landing.title">要不要聊聊？</h2>
+      <p class="landing__desc" data-fill-html="landing.desc">
+        实习 / 全职机会、开源合作、或者只是想讨论一块板子怎么画，都欢迎直接找我。
+      </p>
+      <div class="landing__actions" data-list="landing.buttons" data-item="btn">
+        <a class="btn btn--primary" href="mailto:contact@bluestar5468.com">发邮件给我</a>
+      </div>
+      <p class="landing__foot" data-fill-html="landing.foot">
+        © <span id="yearB">2025</span> BlueStar · 托管于 GitHub Pages
+      </p>
+    </footer>
+
+  </main>
+</div>
+
+<!-- 加载顺序不能换：
+     config.js  关掉不要的模块（从 DOM 移除）
+     content.js 你填的内容
+     render.js  把内容渲染进页面
+     main.js    最后接管滚动 / 翻页（要等页面内容都就位） -->
+<script src="js/config.js"></script>
+<script src="js/content.js"></script>
+<script src="js/render.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
