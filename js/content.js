@@ -17,7 +17,7 @@ window.SITE_CONTENT = {
      ══════════════════════════════════════════════════════════ */
   site: {
     title:       'BlueStar5468',
-    description: '泛星际蓝星工作室'
+    description: '泛星际星蓝工作室'
   },
 
   /* ══════════════════════════════════════════════════════════
@@ -36,8 +36,8 @@ window.SITE_CONTENT = {
 
     // 一行一条
     meta: [
-      { icon: '', text: '泛星际蓝星工作室' },
-      { icon: '', text: '泛星际蓝星网络组' }
+      { icon: '', text: '泛星际星蓝工作室' },
+      //{ icon: '', text: '' }
       //{ icon: '📍', text: '' },
       //{ icon: '🎓', text: '' },
       //{ icon: '💼', text: '求职中 · 实习 / 全职' }
@@ -108,7 +108,7 @@ window.SITE_CONTENT = {
 
     // 技术栈：每组一张卡
     stack: [
-      { title: '前端',      chips: ['不会('] },
+      { title: '前端',      chips: ['不会'] },
       { title: '后端',      chips: ['C#', 'C', 'C++'] },
       { title: '数据 & 云', chips: ['也不会'] },
       { title: '工具链',    chips: ['Git', 'GCC', 'Linux', 'ArmClang'] }
@@ -139,7 +139,7 @@ window.SITE_CONTENT = {
   hardware: {
     eyebrow: '02 · HARDWARE',
     title:   '玩硬件',
-    desc:    '其实是硬件玩我（',
+    desc:    '--',
 
     skills: [
       { title: '单片机',     chips: ['STM32', 'ESP32'] },
@@ -207,7 +207,7 @@ window.SITE_CONTENT = {
   landing: {
     eyebrow: '关于',
     // 这是「可写 HTML」的字段：想换行要写 <br />，直接敲 \n 在 HTML 里会变成一个空格
-    title:   '想加入泛星际蓝星工作室?<br />或者只是想找我?',
+    title:   '想加入泛星际星蓝工作室?<br />或者只是想找我?',
     desc:    '有什么想交流的，欢迎找我。',
 
     // primary: true 的那个是实心蓝按钮
