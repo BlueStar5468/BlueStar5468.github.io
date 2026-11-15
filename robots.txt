@@ -1,3 +1,5 @@
+# 允许抓取全站。studio.html / test.html 用页面里的 noindex 挡索引，
+# 不要在这里 Disallow —— 被 Disallow 的页面爬虫不会抓，也就读不到 noindex。
 User-agent: *
 Allow: /
 

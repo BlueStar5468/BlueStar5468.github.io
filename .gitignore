@@ -21,6 +21,13 @@ dev-blog/
 # ── 操作系统 ─────────────────────────────────────────────
 Thumbs.db
 Desktop.ini
+desktop.ini
+*.tmp
+*.bak
+
+# 构建/检查的临时产物
+.commitmsg*.txt
+.patch*.js
 .DS_Store
 
 # ── 编辑器 / IDE ─────────────────────────────────────────
