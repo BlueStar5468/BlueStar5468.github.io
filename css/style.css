@@ -678,6 +678,104 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
   .bmain, .bmain--post { max-width: none; }
 }
 
+/* ---------- 写文章的小工具（studio.html） ---------- */
+.studio {
+  position: relative; z-index: 1;
+  max-width: 1760px; margin: 0 auto;
+  padding: calc(var(--topbar-h) + 14px) clamp(10px, 1.4vw, 20px) 60px;
+  display: grid; gap: 12px;
+}
+.studio__bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 8px 10px;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+}
+.studio__id { flex: 1 1 260px; min-width: 180px; }
+.studio__spacer { flex: 1 1 auto; }
+
+.studio__grid {
+  display: grid;
+  grid-template-columns: 300px 340px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+}
+.studio__left, .studio__mid { display: grid; gap: 12px; min-width: 0; }
+.studio__right { position: sticky; top: calc(var(--topbar-h) + 14px); min-width: 0; }
+.studio__preview {
+  padding: 18px clamp(14px, 2vw, 26px);
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+  max-height: calc(100dvh - var(--topbar-h) - 42px);
+  overflow: auto;
+}
+/* 预览区窄，别按整个视口算出过大的标题 */
+.studio__preview .phero__title { font-size: clamp(19px, 3vh, 26px); }
+.studio__preview .blk__title { font-size: 16px; }
+
+/* 表单字段 */
+.fld { display: grid; gap: 4px; margin-bottom: 10px; }
+.fld:last-child { margin-bottom: 0; }
+.fld__cap { font-size: 11.5px; font-weight: 600; color: var(--muted); }
+.fld input, .fld textarea, .fld select, .studio__id {
+  width: 100%; padding: 7px 9px;
+  font: inherit; font-size: 13px; line-height: 1.5;
+  color: var(--ink); background: #fff;
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+}
+.fld input:focus, .fld textarea:focus, .fld select:focus, .studio__id:focus {
+  outline: none; border-color: var(--blue-300); box-shadow: 0 0 0 3px var(--blue-50);
+}
+.fld textarea { resize: vertical; }
+.fld__json { font-family: ui-monospace, Consolas, monospace; font-size: 12px; line-height: 1.62; }
+.fld__json.is-bad { border-color: #fca5a5; background: #fef2f2; }
+.fld__tip { margin: 0 0 8px; font-size: 11.5px; line-height: 1.6; color: #94a3b8; }
+
+/* 块列表 */
+.studio__blocks { display: grid; gap: 2px; margin-bottom: 10px; }
+.brow {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 8px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; cursor: pointer;
+  font-size: 12.5px; color: var(--ink-soft);
+}
+.brow:hover { background: rgba(15, 23, 42, .04); }
+.brow.is-sel { background: var(--blue-50); border-color: var(--blue-100); color: var(--blue-700); font-weight: 600; }
+.brow__no { flex: 0 0 18px; text-align: right; font-size: 11px; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.brow__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.brow__ops { display: flex; gap: 1px; opacity: 0; transition: opacity .15s; }
+.brow:hover .brow__ops, .brow.is-sel .brow__ops { opacity: 1; }
+.brow__op {
+  width: 20px; height: 20px; padding: 0; line-height: 1;
+  font-size: 11px; color: var(--muted);
+  background: transparent; border: 0; border-radius: 4px; cursor: pointer;
+}
+.brow__op:hover { background: rgba(15, 23, 42, .08); color: var(--ink); }
+
+.studio__add { display: flex; gap: 6px; }
+.studio__add select {
+  flex: 1; min-width: 0; padding: 6px 8px;
+  font: inherit; font-size: 12.5px;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius-sm);
+}
+.studio__json {
+  margin: 8px 0 0; max-height: 320px; overflow: auto;
+  padding: 12px 14px; border-radius: var(--radius);
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 11.5px; line-height: 1.62;
+  color: #e2e8f0; background: #0f172a;
+}
+
+@media (max-width: 1280px) {
+  .studio__grid { grid-template-columns: 280px minmax(0, 1fr); }
+  .studio__right { grid-column: 1 / -1; position: static; }
+  .studio__preview { max-height: none; }
+}
+@media (max-width: 860px) {
+  .studio__grid { grid-template-columns: minmax(0, 1fr); }
+  .studio__left, .studio__mid, .studio__right { grid-column: auto; }
+}
+
 /* ---------- 布局（首页：左栏 + 右侧滚动舞台） ---------- */
 .app {
   position: relative;

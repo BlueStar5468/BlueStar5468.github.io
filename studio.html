@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-accent="blue">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>写文章 · BlueStar5468</title>
+<meta name="description" content="本地写作工具：用组件拼文章，导出 json 放进 blog/。" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%232563eb'/%3E%3Ctext y='72' x='50' text-anchor='middle' font-size='58' fill='white' font-family='sans-serif'%3EB%3C/text%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-section="studio">
+
+<!-- 顶栏（这页不用 render.js，静态写死） -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="index.html">
+      <span class="topbar__logo" aria-hidden="true">B</span>
+      <span>BlueStar</span>
+      <small>写文章</small>
+    </a>
+    <nav class="topbar__nav" aria-label="站点导航">
+      <a class="topbar__link" href="blog.html">← 回博客</a>
+      <a class="topbar__link" href="test.html">实验室</a>
+    </nav>
+  </div>
+</header>
+
+<div class="bg" aria-hidden="true">
+  <span class="bg__blob bg__blob--blue"></span>
+  <span class="bg__blob bg__blob--cyan"></span>
+  <span class="bg__blob bg__blob--amber"></span>
+  <span class="bg__grid"></span>
+</div>
+
+<main class="studio">
+
+  <!-- 顶部工具条 -->
+  <div class="studio__bar">
+    <input class="studio__id" id="postId" placeholder="文件名 / id（英文，比如 stm32-notes）" />
+    <span class="studio__spacer"></span>
+    <button class="btn" type="button" id="btnImport">导入 JSON</button>
+    <button class="btn" type="button" id="btnClear">清空</button>
+    <button class="btn" type="button" id="btnCopy">复制 JSON</button>
+    <button class="btn btn--primary" type="button" id="btnDownload">下载 json</button>
+    <input type="file" id="fileIn" accept=".json,application/json" hidden />
+  </div>
+
+  <div class="studio__grid">
+
+    <!-- 左：文章信息 + 内容块 -->
+    <section class="studio__left">
+      <div class="card pad">
+        <h3 class="mini-title">文章信息</h3>
+        <label class="fld"><span class="fld__cap">标题</span><input id="mTitle" type="text" placeholder="文章标题" /></label>
+        <label class="fld"><span class="fld__cap">日期</span><input id="mDate" type="date" /></label>
+        <label class="fld"><span class="fld__cap">摘要</span><textarea id="mSummary" rows="2" placeholder="一句话，列表里会显示"></textarea></label>
+        <label class="fld"><span class="fld__cap">标签（逗号分隔）</span><input id="mTags" type="text" placeholder="嵌入式, 笔记" /></label>
+        <label class="fld"><span class="fld__cap">封面图（可选）</span><input id="mCover" type="text" list="assets" placeholder="assets/xxx.jpg" /></label>
+      </div>
+
+      <div class="card pad">
+        <h3 class="mini-title">内容块</h3>
+        <div class="studio__blocks" id="blockList"></div>
+        <div class="studio__add">
+          <select id="addType" aria-label="要添加的组件类型"></select>
+          <button class="btn" type="button" id="btnAdd">+ 添加</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 中：表单 -->
+    <section class="studio__mid">
+      <div class="card pad" id="formHost">
+        <p class="pd-load">左边选一个块…</p>
+      </div>
+    </section>
+
+    <!-- 右：预览 -->
+    <section class="studio__right">
+      <div class="studio__preview" aria-label="预览">
+        <div id="preview"></div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- 导出 -->
+  <div class="card pad">
+    <h3 class="mini-title">导出</h3>
+    <p class="debug-note" id="hint"></p>
+    <pre class="studio__json" id="jsonOut"></pre>
+  </div>
+
+</main>
+
+<datalist id="assets">
+  <option value="assets/avatar.jpg"></option>
+  <option value="assets/board.jpg"></option>
+  <option value="assets/layout.jpg"></option>
+  <option value="assets/hex-c.png"></option>
+  <option value="assets/hex-cpp.png"></option>
+  <option value="assets/hex-csharp.png"></option>
+  <option value="assets/logo-opengl.png"></option>
+  <option value="assets/logo-linux.png"></option>
+</datalist>
+
+<!-- 只需要组件库；这页不引 main.js / projects.js / blog.js -->
+<script src="js/blocks.js"></script>
+<script src="js/studio.js"></script>
+</body>
+</html>
