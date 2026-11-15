@@ -437,12 +437,23 @@ window.LOADBAR = {
   var bootTimer = null;
   window.SITE_BOOTED = function () {
     if (!document.body || !document.body.hasAttribute('data-booting')) return;
-    document.body.removeAttribute('data-booting');
-    // 占位提示用完就删掉（留着它也没用了）
-    var masks = document.querySelectorAll('.bootmask');
-    for (var k = 0; k < masks.length; k++) {
-      if (masks[k].parentNode) masks[k].parentNode.removeChild(masks[k]);
-    }
+    if (document.body.classList.contains('boot-done')) return;
+
+    // 关键：同步渲染时浏览器还没画过一帧，遮罩会"从没出现过"。
+    // 等两帧（确保遮罩已经画出来）再淡出内容，然后才彻底移除。
+    var raf = window.requestAnimationFrame || function (f) { return setTimeout(f, 16); };
+    raf(function () {
+      raf(function () {
+        document.body.classList.add('boot-done');
+        setTimeout(function () {
+          document.body.removeAttribute('data-booting');
+          var masks = document.querySelectorAll('.bootmask');
+          for (var k = 0; k < masks.length; k++) {
+            if (masks[k].parentNode) masks[k].parentNode.removeChild(masks[k]);
+          }
+        }, 320);
+      });
+    });
   };
 
   // 页面上没有「要等数据」的模块时，填完就撤；有的话由模块自己调

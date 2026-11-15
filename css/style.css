@@ -1599,9 +1599,15 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 /* 注意：这里不能用 transition —— 会把 .page-shell 自己的
    transition: grid-template-columns 覆盖掉，导致侧栏折叠不再有动画。
    所以用 animation 做淡入。 */
-@keyframes bootfade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bootfade    { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bootfadeout { from { opacity: 1; } to { opacity: 0; } }
+
+/* 阶段 1：渲染中 —— 内容藏起来，遮罩显示 */
 body[data-booting] .boot-hide { opacity: 0; }
-body:not([data-booting]) .boot-hide { opacity: 1; animation: bootfade .25s ease-out; }
+
+/* 阶段 2：渲染完成 —— 内容淡入，遮罩淡出（遮罩在 data-booting 移除时才真正消失） */
+body.boot-done .boot-hide { opacity: 1; animation: bootfade .28s ease-out; }
+body.boot-done .bootmask  { animation: bootfadeout .3s ease-out forwards; }
 
 .bootmask { display: none; }
 body[data-booting] .bootmask {
@@ -1619,7 +1625,7 @@ body[data-booting] .bootmask {
 }
 @keyframes bootspin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  body:not([data-booting]) .boot-hide { animation: none; }
+  body.boot-done .boot-hide, body.boot-done .bootmask { animation: none; }
   .bootmask__spin { animation: none; }
 }
 
