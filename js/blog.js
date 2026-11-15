@@ -185,12 +185,15 @@
 
     var hasBody = host.children.length > 0 && !host.querySelector('.pd-load');
     var side = document.getElementById('bsideExtra');
-    var hasSide = !side || side.children.length > 0;
 
-    if (hasBody && hasSide) {
+    if (hasBody) {
+      // 正文是静态的（SEO 要的就是它），但侧栏「最近文章」还是要 JS 填
       if (typeof console !== 'undefined' && console.info) {
-        console.info('[blog] 静态页已预渲染，跳过 json 加载');
+        console.info('[blog] 正文已预渲染，只补侧栏');
       }
+      Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
+        .then(function (r) { renderSidebar(r[0] || {}, r[1] || []); })
+        .catch(function (e) { if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 侧栏加载失败：', e); });
       return;
     }
 

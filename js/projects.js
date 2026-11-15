@@ -257,26 +257,34 @@
 
   /* ---------- 详情页 ---------- */
   /* 详情页：页面里已经有预渲染内容就直接用，没有才回落到 json */
+  /* 详情页：正文静态时只补侧栏；没有正文才回落到 json */
   function initDetail() {
     var host = document.getElementById('pdetail');
     if (!host) return;
 
     var hasBody = host.children.length > 0 && !host.querySelector('.pd-load');
-    var nav = document.getElementById('pnav');
-    var hasNav = !nav || nav.children.length > 0;
-
-    if (hasBody && hasNav) {
-      if (typeof console !== 'undefined' && console.info) {
-        console.info('[projects] 静态页已预渲染，跳过 json 加载');
-      }
-      bindPnav(document.getElementById('pnav'));   // 内容不用重画，但收起按钮得能点
-      return;
-    }
 
     var want = (/[?&]p=([\w.-]+)/.exec(location.search) || [])[1] || '';
     if (!want) {
       var m = /\/(?:dev-)?projects\/([\w.-]+)\.html?$/.exec(location.pathname);
       if (m) want = m[1];
+    }
+
+    if (hasBody) {
+      // 正文已经是静态的；侧栏（项目列表 + 章节 TOC）由 JS 建
+      if (typeof console !== 'undefined' && console.info) {
+        console.info('[projects] 正文已预渲染，只补侧栏');
+      }
+      loadIndexes().then(loadProjects).then(function (list) {
+        var cur = null;
+        list.forEach(function (p) { if (p.id === want) cur = p; });
+        buildSidebar(document.getElementById('pnav'), list, cur ? cur.id : null,
+                     cur ? window.BLOCK_TOC(cur.blocks) : []);
+        spyToc();
+      }).catch(function (e) {
+        if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 侧栏加载失败：', e);
+      });
+      return;
     }
 
     loadIndexes().then(function (entries) {
