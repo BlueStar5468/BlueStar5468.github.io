@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-accent="blue">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>项目 · BlueStar5468</title>
+<meta name="description" content="项目与产品：软件、嵌入式、硬件。" />
+
+<!-- 内联 SVG favicon：字母 B，想换颜色改 fill 的 %23xxxxxx -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%232563eb'/%3E%3Ctext y='72' x='50' text-anchor='middle' font-size='58' fill='white' font-family='sans-serif'%3EB%3C/text%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ════════════ 顶部导航栏（所有页面共用，链接在 js/content.js 的 site.nav）════════════ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="index.html">
+      <span class="topbar__logo" aria-hidden="true">B</span>
+      <span data-fill="side.name">BlueStar</span>
+      <small>BSuniStudio</small>
+    </a>
+    <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
+      <a class="topbar__link" href="index.html">主页</a>
+      <a class="topbar__link is-active" href="projects.html">项目</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 背景装饰 -->
+<div class="bg" aria-hidden="true">
+  <span class="bg__blob bg__blob--blue"></span>
+  <span class="bg__blob bg__blob--cyan"></span>
+  <span class="bg__blob bg__blob--amber"></span>
+  <span class="bg__grid"></span>
+</div>
+
+<main class="page-main">
+
+  <!-- ───────── 页头（文字来自 content.js）───────── -->
+  <header class="page-main__head">
+    <p class="eyebrow" data-fill="projects.eyebrow">PROJECTS · 作品</p>
+    <h1 class="page-main__title" data-fill="projects.title">项目 &amp; 产品</h1>
+    <p class="page-main__desc" data-fill="projects.desc">自己从零做出来的东西，或者正在折腾的。</p>
+  </header>
+
+  <!-- ───────── 分类筛选 + 计数 ───────── -->
+  <div class="pbar">
+    <div class="filters" data-cfg="pj.filter" data-list="projects.categories" data-item="filterbtn">
+      <button class="filter is-active" type="button" data-filter="all">全部<b class="filter__n">0</b></button>
+    </div>
+    <span class="pbar__count" id="pcount" data-cfg="pj.count">共 0 个项目</span>
+  </div>
+
+  <!-- ───────── 项目卡片：由 js/content.js 的 projects.items 生成 ───────── -->
+  <div class="pgrid" data-list="projects.items" data-item="projcard">
+
+    <!-- 没有 JS 时的兜底：一张示例卡，结构和生成出来的一样 -->
+    <article class="pcard" data-cat="software" data-featured="1">
+      <div class="pcard__cover">
+        <span class="pcard__ph" aria-hidden="true">⚙️</span>
+        <span class="pcard__status pcard__status--wip">进行中</span>
+      </div>
+      <div class="pcard__body">
+        <h3 class="pcard__title">StarExplorer</h3>
+        <p class="pcard__sum">受 Windows 资源管理器气，用 C# 重写的一个文件管理器。</p>
+        <div class="chips chips--sm"><span class="chip chip--sm">C#</span><span class="chip chip--sm">.NET</span></div>
+      </div>
+      <div class="pcard__foot">
+        <span class="pcard__year">2025</span>
+        <span class="pcard__links"><a class="pcard__link pcard__link--primary" href="https://github.com/BlueStar5468/StarExplorer" target="_blank" rel="noopener">仓库 ↗</a></span>
+      </div>
+    </article>
+
+  </div>
+
+  <p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>
+
+  <p class="landing__foot" data-fill-html="side.credit">© <span id="year">2026</span> BlueStar</p>
+
+</main>
+
+<!-- 这页没有滚动翻页，不需要 main.js -->
+<script src="js/config.js"></script>
+<script src="js/content.js"></script>
+<script src="js/render.js"></script>
+<script src="js/projects.js"></script>
+</body>
+</html>

@@ -170,6 +170,104 @@ body {
 .swatch { display: flex; align-items: center; gap: 10px; }
 .swatch__dot { width: 26px; height: 26px; border-radius: 8px; flex: 0 0 26px; border: 1px solid rgba(15, 23, 42, .06); }
 
+.debug-note {
+  margin: 0; padding: 10px 13px;
+  border-radius: var(--radius);
+  font-size: 12.5px; line-height: 1.6;
+  color: #92400e; background: #fffbeb; border: 1px solid #fde68a;
+}
+.debug-note code {
+  font-size: .94em; padding: 1px 4px; border-radius: 3px;
+  background: rgba(146, 64, 14, .08);
+}
+
+/* ---------- 项目 / 产品页（projects.html） ---------- */
+.pbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filter {
+  display: inline-flex; align-items: center;
+  padding: 5px 11px; border-radius: var(--radius-sm);
+  font: inherit; font-size: 12.5px; font-weight: 600;
+  color: var(--muted); background: var(--white);
+  border: 1px solid var(--line); cursor: pointer;
+  transition: background .16s, color .16s, border-color .16s;
+}
+.filter:hover { color: var(--ink); border-color: var(--blue-200); }
+.filter.is-active { color: var(--blue-700); background: var(--blue-50); border-color: var(--blue-100); }
+.filter__n { margin-left: 6px; font-size: 11px; font-weight: 700; opacity: .6; }
+.pbar__count { margin-left: auto; font-size: 12.5px; font-weight: 600; color: #94a3b8; }
+
+.pgrid {
+  display: grid; gap: clamp(12px, 1.6vw, 16px);
+  grid-template-columns: repeat(auto-fill, minmax(272px, 1fr));
+  align-items: start;
+}
+.pcard {
+  display: flex; flex-direction: column; min-width: 0;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+  overflow: hidden;
+  transition: transform .2s var(--ease), box-shadow .2s, border-color .2s;
+}
+.pcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); border-color: var(--blue-100); }
+.pcard[data-featured="1"] { grid-column: span 2; }
+.pcard.is-off { display: none; }
+
+.pcard__cover {
+  position: relative; aspect-ratio: 16 / 9;
+  display: grid; place-items: center; overflow: hidden;
+  background: linear-gradient(135deg, #eef4ff 0%, #e6f7fb 100%);
+}
+.pcard[data-featured="1"] .pcard__cover { aspect-ratio: 21 / 9; }
+.pcard__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pcard__ph { font-size: 38px; line-height: 1; }
+.pcard__status {
+  position: absolute; top: 9px; left: 9px;
+  padding: 3px 8px; border-radius: 999px;
+  font-size: 11px; font-weight: 700; letter-spacing: .2px;
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid rgba(15, 23, 42, .06);
+}
+.pcard__status--wip      { color: var(--blue-700); }
+.pcard__status--done     { color: #0f766e; }
+.pcard__status--archived { color: var(--muted); }
+.pcard__status--idea     { color: #b45309; }
+
+.pcard__body { display: grid; gap: 6px; padding: 13px 14px 0; }
+.pcard__title { margin: 0; font-size: 15.5px; letter-spacing: -.2px; line-height: 1.3; }
+.pcard__sum  { margin: 0; font-size: 13px; line-height: 1.55; color: var(--muted); }
+.pcard__desc { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+.pcard__foot {
+  display: flex; align-items: center; gap: 8px;
+  margin-top: auto; padding: 12px 14px 13px;
+}
+.pcard__year { font-size: 11.5px; font-weight: 600; color: #94a3b8; }
+.pcard__links { margin-left: auto; display: flex; gap: 6px; }
+.pcard__link {
+  padding: 4px 9px; border-radius: var(--radius-sm);
+  font-size: 12.5px; font-weight: 600; text-decoration: none;
+  color: var(--muted); background: var(--white); border: 1px solid var(--line);
+  transition: background .16s, color .16s, border-color .16s;
+}
+.pcard__link:hover { color: var(--blue-700); background: var(--blue-50); border-color: var(--blue-100); }
+.pcard__link--primary { color: #fff; background: var(--blue-600); border-color: transparent; }
+.pcard__link--primary:hover { color: #fff; background: var(--blue-700); }
+
+.chips--sm { gap: 4px; }
+.chip--sm { padding: 2px 7px; font-size: 11px; }
+
+.pgrid__empty {
+  margin: 0; padding: 28px 16px; text-align: center;
+  color: #94a3b8; font-size: 13px;
+  border: 1px dashed var(--line); border-radius: var(--radius);
+}
+
+@media (max-width: 720px) {
+  .pcard[data-featured="1"] { grid-column: auto; }
+  .pcard[data-featured="1"] .pcard__cover { aspect-ratio: 16 / 9; }
+  .pbar__count { margin-left: 0; }
+}
+
 /* ---------- 布局（首页：左栏 + 右侧滚动舞台） ---------- */
 .app {
   position: relative;

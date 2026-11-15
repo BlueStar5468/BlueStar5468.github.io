@@ -14,20 +14,22 @@
 
 ```
 ├── index.html          主页（左侧介绍栏 + 右侧滚动翻页）
-├── test.html           实验室 / 测试页（普通内容页）
+├── projects.html       项目 / 产品展示页（卡片由 content.js 生成）
+├── test.html           调试页（默认在 config.js 里关掉）
 ├── css/style.css       样式（设计变量 → 导航栏 → 侧栏 → 舞台 → 模块 → 响应式）
 ├── js/
-│   ├── content.js      内容 + 顶部导航栏链接（你要改的）
+│   ├── content.js      内容 + 导航栏链接 + 项目数据（你要改的）
 │   ├── config.js       开关（你要改的）
-│   ├── render.js       渲染器
-│   └── main.js         滚动 / 翻页（只有 index.html 用）
+│   ├── render.js       渲染器 / 模板
+│   ├── main.js         滚动翻页（只有 index.html 用）
+│   └── projects.js     项目页的分类筛选
 ├── assets/             图片
 ├── CNAME               自定义域名 —— 不要删
 └── .nojekyll           让 Pages 跳过 Jekyll
 ```
 
 要改内容改 `js/content.js`，要关掉某块改 `js/config.js`；
-**顶部导航栏的链接在 `content.js` 的 `site.nav` 里**，复制一行就能加页面。
+**导航栏链接在 `content.js` 的 `site.nav`**，**项目卡片在 `content.js` 的 `projects.items`**，都是复制一行就能加。
 
 ## 本地预览
 

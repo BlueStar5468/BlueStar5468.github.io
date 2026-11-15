@@ -47,6 +47,13 @@
     </p>
   </header>
 
+  <!-- 调试页提示：config.js 里 ui.debug 为 false 时显示（由下面的脚本控制） -->
+  <p class="debug-note" id="debugNote" hidden>
+    🧪 这是调试页，导航栏里已经隐藏了（<code>js/config.js</code> → <code>ui.debug: false</code>）。
+    想让它重新出现在导航栏，把那个开关改成 <code>true</code>。
+    <b>改完 CSS 可以来这页做风格自检。</b>
+  </p>
+
   <div class="page-main__actions">
     <a class="btn btn--primary" href="index.html">← 回主页</a>
     <a class="btn" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">GitHub ↗</a>
@@ -133,5 +140,14 @@
 <script src="js/config.js"></script>
 <script src="js/content.js"></script>
 <script src="js/render.js"></script>
+
+<!-- 调试页提示：ui.debug 关掉的时候亮出来 -->
+<script>
+  (function () {
+    if (!window.SITE_CONFIG || window.SITE_CONFIG['ui.debug'] !== false) return;
+    var n = document.getElementById('debugNote');
+    if (n) n.hidden = false;
+  })();
+</script>
 </body>
 </html>

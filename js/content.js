@@ -20,10 +20,12 @@ window.SITE_CONTENT = {
     description: '泛星际星蓝工作室',
 
     /* 顶部导航栏的链接（所有页面共用，当前页会自动高亮）
-       加一页：复制一行，href 写页面文件名；ext: true = 外链（新标签打开） */
+       加一页：复制一行，href 写页面文件名；ext: true = 外链（新标签打开）
+       show: '某个开关' = 那个开关在 config.js 里是 false 时，这条链接不显示 */
     nav: [
       { text: '主页',   href: 'index.html' },
-      { text: '实验室', href: 'test.html' },
+      { text: '项目',   href: 'projects.html' },
+      { text: '实验室', href: 'test.html', show: 'ui.debug' },
       { text: 'GitHub', href: 'https://github.com/BlueStar5468', ext: true }
     ]
   },
@@ -207,6 +209,80 @@ window.SITE_CONTENT = {
     ],
 
     note: '再往下滚，就真正到底了'
+  },
+
+  /* ══════════════════════════════════════════════════════════
+     项目 / 产品展示页（projects.html）
+     ------------------------------------------------------------------
+     这一整页是由下面的数据「生成」出来的：加一个对象 = 多一张卡片。
+     字段说明：
+       name      项目名（必填）
+       cat       分类，对应 categories 里的 key（缺省 all）
+       status    进行中 / 已完成 / 归档 / 概念（留空 = 不显示角标）
+       year      年份，右下角小字
+       featured  true = 精选，卡片占两格、封面更高
+       icon      没有 cover 时中间显示的表情
+       cover     封面图路径，比如 'assets/xxx.jpg'（留空就用渐变色块 + icon）
+       summary   一句话说明（纯文本，会自动转义）
+       desc      想多写几句就写这里（可写 HTML，<br /> 换行）
+       stack     技术栈/标签数组
+       links     按钮数组 { text, href, primary }
+     ══════════════════════════════════════════════════════════ */
+  projects: {
+    eyebrow: 'PROJECTS · 作品',
+    title:   '项目 & 产品',
+    desc:    '自己从零做出来的东西，或者正在折腾的。软件、嵌入式、硬件都在这里。',
+
+    // 筛选按钮：加一个分类就多一个按钮（key 要和 items 里的 cat 对上）
+    categories: [
+      { key: 'all',       label: '全部' },
+      { key: 'software',  label: '软件' },
+      { key: 'embedded',  label: '嵌入式' },
+      { key: 'hardware',  label: '硬件' }
+    ],
+
+    items: [
+      {
+        name: 'StarExplorer',
+        cat: 'software',
+        status: '进行中',
+        year: '2025',
+        featured: true,
+        icon: '⚙️',
+        summary: '受 Windows 资源管理器气，用 C# 重写的一个文件管理器。',
+        desc: '目标是快、干净、不乱跳。<br />多标签、双栏、可自定义的右键菜单。',
+        stack: ['C#', '.NET', 'WinUI'],
+        links: [
+          { text: '仓库', href: 'https://github.com/BlueStar5468/StarExplorer', primary: true }
+        ]
+      },
+      {
+        name: 'Stm32ExtendedLib',
+        cat: 'embedded',
+        status: '进行中',
+        year: '2025',
+        icon: '📊',
+        summary: '不想用 32 标准库，于是自己包了一层。',
+        desc: '把常用外设封装成更顺手的接口，减少样板代码。',
+        stack: ['C', 'STM32', 'HAL'],
+        links: [
+          { text: '仓库', href: 'https://github.com/BlueStar5468/Stm32ExtendedLib' }
+        ]
+      },
+      {
+        // ⚠️ 这是个示例，照着改或者直接删掉
+        name: '示例项目（删掉我）',
+        cat: 'hardware',
+        status: '已完成',
+        year: '2024',
+        icon: '🛠️',
+        summary: '一句话说明它解决了什么问题。',
+        stack: ['KiCad', 'STM32', 'PCB'],
+        links: [
+          { text: '详情', href: '#' }
+        ]
+      }
+    ]
   },
 
   /* ══════════════════════════════════════════════════════════

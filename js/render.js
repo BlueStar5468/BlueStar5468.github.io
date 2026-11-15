@@ -78,7 +78,47 @@
     chip: function (d) { return chipOne(d); },
     chipAmber: function (d) { return chipOne(d, true); },   // 整组强制橙色（硬件页用）
 
-    /* 顶部导航栏的一条链接：当前页自动高亮 */
+    /* 项目卡（projects.html 用）：一张卡 = 一个项目 */
+    projcard: function (d) {
+      var ST = { '进行中': 'wip', '已完成': 'done', '归档': 'archived', '概念': 'idea' };
+      var st = d.status ? (ST[d.status] || 'wip') : '';
+      var cover = d.cover
+        ? '<img class="pcard__img" src="' + esc(d.cover) + '" alt="" loading="lazy" />'
+        : '<span class="pcard__ph" aria-hidden="true">' + esc(d.icon || '📦') + '</span>';
+      var stack = (d.stack || []).map(function (s) {
+        return '<span class="chip chip--sm">' + esc(s) + '</span>';
+      }).join('');
+      var links = (d.links || []).map(function (l) {
+        var ext = isExt(l.href);
+        return '<a class="pcard__link' + (l.primary ? ' pcard__link--primary' : '') +
+               '" href="' + esc(l.href || '#') + '"' +
+               (ext ? ' target="_blank" rel="noopener"' : '') + '>' +
+               esc(l.text) + (ext ? ' ↗' : '') + '</a>';
+      }).join('');
+      return '<article class="pcard" data-cat="' + esc(d.cat || 'all') + '"' +
+             (d.featured ? ' data-featured="1"' : '') + '>' +
+        '<div class="pcard__cover">' + cover +
+          (st ? '<span class="pcard__status pcard__status--' + st + '">' + esc(d.status) + '</span>' : '') +
+        '</div>' +
+        '<div class="pcard__body">' +
+          '<h3 class="pcard__title">' + esc(d.name || '') + '</h3>' +
+          (d.summary ? '<p class="pcard__sum">' + esc(d.summary) + '</p>' : '') +
+          (d.desc ? '<p class="pcard__desc">' + d.desc + '</p>' : '') +
+          (stack ? '<div class="chips chips--sm">' + stack + '</div>' : '') +
+        '</div>' +
+        '<div class="pcard__foot">' +
+          '<span class="pcard__year">' + esc(d.year || '') + '</span>' +
+          '<span class="pcard__links">' + links + '</span>' +
+        '</div>' +
+      '</article>';
+    },
+
+    /* 分类筛选按钮 */
+    filterbtn: function (d) {
+      return '<button class="filter" type="button" data-filter="' + esc(d.key) + '">' +
+             esc(d.label) + '<b class="filter__n">0</b></button>';
+    },
+
     navlink: function (d) {
       var here = '';
       try { here = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase(); } catch (e) { here = ''; }
@@ -199,7 +239,12 @@
     if (!T[tplName]) { warned.push('没有叫 ' + tplName + ' 的模板（' + key + '）'); continue; }
     if (!val || !val.length) { el.innerHTML = ''; continue; }   // 空数组 = 清空
     var html = [];
-    for (var j = 0; j < val.length; j++) html.push(T[tplName](val[j], j));
+    for (var j = 0; j < val.length; j++) {
+      var item = val[j];
+      // 条目上写 show: '某个开关'，那个开关是 false 时就不渲染（用于隐藏调试页之类的入口）
+      if (item && item.show && window.SITE_CONFIG && window.SITE_CONFIG[item.show] === false) continue;
+      html.push(T[tplName](item, j));
+    }
     el.innerHTML = html.join('');
   }
 

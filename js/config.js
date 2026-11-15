@@ -76,7 +76,14 @@
     'jn.learning':    true,   // 最近在折腾
     'jn.note':        true,   // 「再往下滚就到底了」提示
     'deco.path':      true,   // 装饰：向上的里程碑折线
-    'deco.jTokens':   true    // 装饰：TODO / next → / keep going
+    'deco.jTokens':   true,   // 装饰：TODO / next → / keep going
+
+    /* ══════════ 项目 / 产品页（projects.html）══════════ */
+    'pj.filter':      true,   // 顶部分类筛选按钮
+    'pj.count':       true,   // 「共 N 个项目」那行小字
+
+    /* ══════════ 其它 ══════════ */
+    'ui.debug':       false   // 调试页 test.html：false = 导航栏里隐藏（直接输网址仍能打开）
   };
 
   /* ───────── 下面是执行逻辑，一般不用改 ───────── */
