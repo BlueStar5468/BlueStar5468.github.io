@@ -155,6 +155,8 @@
     if (!host) return;
     var err = document.getElementById('berr');
 
+    if (window.LOADBAR) window.LOADBAR.start();
+
     Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
       .then(function (r) {
         var cfg   = r[0] || {};
@@ -166,6 +168,7 @@
 
         if (err) err.hidden = true;
         if (cfg.title) document.title = cfg.title + ' · BlueStar5468';
+        if (window.LOADBAR) window.LOADBAR.done();
       })
       .catch(function (e) {
         if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 主页加载失败：', e);

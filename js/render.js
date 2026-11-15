@@ -18,7 +18,51 @@
      快捷键：按住 Ctrl+Alt，右上角临时冒出「实验室」入口
      （故意放在最开始，这样即使 content.js 没加载也照样能用）
      ========================================================= */
-  (function labShortcut() {
+  /* ---------- 顶部加载进度条（列表页 fetch json 时显示） ---------- */
+var loadbarEl = null, loadbarTimer = null, loadbarVal = 0, loadbarSafety = null;
+
+function loadbarNode() {
+  if (loadbarEl) return loadbarEl;
+  loadbarEl = document.createElement('div');
+  loadbarEl.className = 'ldbar';
+  loadbarEl.setAttribute('aria-hidden', 'true');
+  loadbarEl.innerHTML = '<span class="ldbar__fill"></span>';
+  if (document.body) document.body.appendChild(loadbarEl);
+  return loadbarEl;
+}
+
+window.LOADBAR = {
+  start: function () {
+    var el = loadbarNode();
+    var fill = el.firstChild;
+    if (!fill) return;
+    loadbarVal = 0.08;
+    el.classList.add('is-on');
+    fill.style.transform = 'scaleX(' + loadbarVal + ')';
+    clearInterval(loadbarTimer);
+    // 慢慢爬到 90%，真正完成了再补满
+    loadbarTimer = setInterval(function () {
+      loadbarVal += (0.9 - loadbarVal) * 0.14;
+      if (loadbarVal > 0.9) loadbarVal = 0.9;
+      fill.style.transform = 'scaleX(' + loadbarVal.toFixed(3) + ')';
+    }, 150);
+    // 保险：最多 12 秒自动收掉
+    clearTimeout(loadbarSafety);
+    loadbarSafety = setTimeout(function () { window.LOADBAR.done(); }, 12000);
+  },
+  done: function () {
+    var el = loadbarNode();
+    var fill = el.firstChild;
+    if (!fill) return;
+    clearInterval(loadbarTimer);
+    clearTimeout(loadbarSafety);
+    fill.style.transform = 'scaleX(1)';
+    setTimeout(function () { el.classList.remove('is-on'); }, 240);
+    setTimeout(function () { fill.style.transform = 'scaleX(0)'; }, 520);
+  }
+};
+
+(function labShortcut() {
     var isLab = false;
     try {
       isLab = (document.body && document.body.getAttribute('data-section') === 'lab');

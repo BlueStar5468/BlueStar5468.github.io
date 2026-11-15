@@ -217,6 +217,8 @@
     var count = document.getElementById('pcount');
     var tpl   = window.SITE_TEMPLATES && window.SITE_TEMPLATES.projcard;
 
+    if (window.LOADBAR) window.LOADBAR.start();
+
     loadIndexes().then(loadProjects).then(function (list) {
       buildSidebar(document.getElementById('pnav'), list, null, null);
       if (err) err.hidden = true;
@@ -230,6 +232,7 @@
       }).join('');
 
       initFilter();
+      if (window.LOADBAR) window.LOADBAR.done();
 
       // 一个项目都没有：给一句人话，而不是报错
       if (!list.length) {

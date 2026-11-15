@@ -1571,3 +1571,22 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 @media (prefers-reduced-motion: reduce) {
   * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* =============================================================
+   顶部加载进度条（列表页 fetch json 时显示）
+   ============================================================= */
+.ldbar {
+  position: fixed; left: 0; right: 0; top: 0; height: 2px;
+  z-index: 90; pointer-events: none;
+  opacity: 0; transition: opacity .18s linear;
+}
+.ldbar.is-on { opacity: 1; }
+.ldbar__fill {
+  display: block; height: 100%; width: 100%;
+  transform: scaleX(0); transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--blue-500), #22d3ee);
+  transition: transform .22s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ldbar, .ldbar__fill { transition: none; }
+}
