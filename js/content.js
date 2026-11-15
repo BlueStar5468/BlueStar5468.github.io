@@ -57,7 +57,7 @@ window.SITE_CONTENT = {
     ],
 
     // 可写 HTML
-    bio: '一只手写代码，一只手焊板子。喜欢把想法从 <em>一行代码</em> 做到 <em>一块电路板</em>，再让它跑起来。坚持开放,自由理念',
+    bio: '一只手写代码，一只手焊板子。喜欢把想法从 <br /> ->封装复杂,开放可能',
 
     // color 可选 'blue'（默认）或 'amber'
     skills: [
@@ -84,10 +84,10 @@ window.SITE_CONTENT = {
      第 1 页 · 概览
      ══════════════════════════════════════════════════════════ */
   overview: {
-    eyebrow: 'root@BSuniStudio$~ HELLO, WORLD_ 👋',
+    eyebrow: 'root@BSuniStudio$~ HELLO, WORLD_',
     // 可写 HTML：<span class="hl hl--blue">软件</span> 就是蓝色高亮块
     title:   '我做 <span class="hl hl--blue">软件</span>，也做 <span class="hl hl--amber">硬件</span>。',
-    lead:    '来自一个人的工作室，从一行代码到一块电路板，全链路把想法做成能跑的东西。往下滚，逐页看我分别在折腾什么。',
+    lead:    '来自一个人的工作室，往下滚动以了解我分别在折腾什么。',
 
     stats: [
       { num: '6+',  label: '年写代码' },
@@ -211,7 +211,7 @@ window.SITE_CONTENT = {
       { text: 'Risc-V', color: 'amber' }, { text: '2D加速引擎', color: 'amber' }
     ],
 
-    note: '再往下滚，就真正到底了'
+    note: '已经到底了喵~'
   },
 
   /* ══════════════════════════════════════════════════════════
@@ -232,9 +232,9 @@ window.SITE_CONTENT = {
        links     按钮数组 { text, href, primary }
      ══════════════════════════════════════════════════════════ */
   projects: {
-    eyebrow: 'PROJECTS · 作品',
+    eyebrow: 'PROJECTS',
     title:   '项目 & 产品',
-    desc:    '自己从零做出来的东西，或者正在折腾的。软件、嵌入式、硬件都在这里。',
+    desc:    '做的一些小玩意，软件、硬件都有。包括嵌入式到桌面程序 ',
 
     // 筛选按钮：加一个分类就多一个按钮（key 要和 items 里的 cat 对上）
     categories: [
