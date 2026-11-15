@@ -324,9 +324,15 @@
     apply();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
+  function boot() {
+      init();
+      // 滚动舞台摆好了，才让遮罩淡出（否则会先看到塌陷的布局再跳一下）
+      if (window.SITE_BOOTED) window.SITE_BOOTED();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', boot);
+    } else {
+      boot();
+    }
 })();

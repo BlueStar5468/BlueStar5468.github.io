@@ -1619,6 +1619,10 @@ body[data-booting] .pd-load { display: none; }
 
 body[data-booting] .bootmask {
   display: flex;
+  /* 和 body 一样的背景：遮罩要真的盖住下面的空骨架，而不是只浮一个文字 */
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #ffffff 0%, transparent 60%),
+    linear-gradient(180deg, #f9fbff 0%, #eef4ff 45%, #f8fbff 100%);
   position: fixed; left: 0; right: 0; top: var(--topbar-h); bottom: 0;
   align-items: center; justify-content: center; gap: 12px;
   z-index: 40; pointer-events: none;
