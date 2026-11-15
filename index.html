@@ -19,7 +19,7 @@
   #deck .glow, #deck .stage__progress { display: none; }
   #deck .page { position: static; padding: 26px 0; opacity: 1; transform: none; filter: none; visibility: visible; }
   #deck .rail {
-    position: sticky; top: 8px; order: -1; display: flex; justify-content: center; gap: 6px;
+    position: sticky; top: 64px; order: -1; display: flex; justify-content: center; gap: 6px;
     width: max-content; max-width: 100%; margin: 0 auto 6px; padding: 6px 8px; border-radius: 10px;
     background: #fff; border: 1px solid #e2e8f0;
   }
@@ -28,6 +28,20 @@
 </style></noscript>
 </head>
 <body>
+
+<!-- ════════════ 顶部导航栏（两个页面共用，链接在 js/content.js 的 site.nav 里）════════════ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="index.html">
+      <span class="topbar__logo" aria-hidden="true">B</span>
+      <span data-fill="side.name">BlueStar</span>
+      <small>BSuniStudio</small>
+    </a>
+    <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
+      <a class="topbar__link is-active" href="index.html">主页</a>
+    </nav>
+  </div>
+</header>
 
 <!-- 背景装饰（纯 CSS，无图片） -->
 <div class="bg" aria-hidden="true">

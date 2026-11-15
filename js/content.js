@@ -17,7 +17,15 @@ window.SITE_CONTENT = {
      ══════════════════════════════════════════════════════════ */
   site: {
     title:       'BlueStar5468',
-    description: '泛星际星蓝工作室'
+    description: '泛星际星蓝工作室',
+
+    /* 顶部导航栏的链接（所有页面共用，当前页会自动高亮）
+       加一页：复制一行，href 写页面文件名；ext: true = 外链（新标签打开） */
+    nav: [
+      { text: '主页',   href: 'index.html' },
+      { text: '实验室', href: 'test.html' },
+      { text: 'GitHub', href: 'https://github.com/BlueStar5468', ext: true }
+    ]
   },
 
   /* ══════════════════════════════════════════════════════════

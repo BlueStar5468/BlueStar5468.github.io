@@ -14,6 +14,7 @@
 
   var root  = document.documentElement;
   var deck  = document.getElementById('deck');
+  var stage = document.getElementById('stage');
   var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
   var rails = Array.prototype.slice.call(document.querySelectorAll('.rail__item'));
   var bar   = document.getElementById('progress');
@@ -32,16 +33,33 @@
   var started = false;
   var active  = -1;      // 当前页索引
   var hashReady = false; // 初始化跳页前先不要写 hash
-  var geo = { top: 0, vh: 0, runway: 1 };
+  var geo = { top: 0, vh: 0, runway: 1, pinTop: 0 };
   var raf = null;
   var flowIO = null;
 
   var clamp  = function (v, a, b) { return v < a ? a : (v > b ? b : v); };
   var smooth = function (t) { return t * t * (3 - 2 * t); };
 
+  // 顶部导航栏高度（唯一来源是 CSS 变量 --topbar-h）
+  function topbarH() {
+    var v = 0;
+    try {
+      var cs = window.getComputedStyle(document.documentElement);
+      v = parseFloat(cs.getPropertyValue('--topbar-h')) || 0;
+    } catch (e) { v = 0; }
+    return v;
+  }
+  // 钉住模式下"一屏"的高度。注意：跟当前模式无关，普通流里也要用这个判断放不放得下
+  function pinnedH() { return Math.max(200, window.innerHeight - topbarH()); }
+  // 舞台实际高度（量不到就退回上面算的）
+  function stageH() {
+    var h = stage ? stage.clientHeight : 0;
+    return h > 120 ? h : pinnedH();
+  }
+
   /* =============== 一屏放得下吗（与当前模式无关的测量） =============== */
   function fits() {
-    var vh = window.innerHeight;
+    var vh = pinnedH();
     // 钉住模式下页面上下内边距的近似值 + 安全余量
     var pad = clamp(vh * 0.165, 106, 176) + 14;
     var avail = vh - pad;
@@ -53,8 +71,10 @@
 
   /* =============== 几何测量 =============== */
   function measure() {
-    geo.vh = window.innerHeight;
-    geo.top = deck.getBoundingClientRect().top + window.pageYOffset;
+    geo.vh = stageH();
+    geo.pinTop = topbarH();   // 舞台吸在导航栏下面
+    // geo.top 记成"舞台开始吸顶时的滚动位置"，这样 y 从一开始就跟着滚
+    geo.top = deck.getBoundingClientRect().top + window.pageYOffset - geo.pinTop;
     geo.runway = Math.max(1, deck.offsetHeight - geo.vh);
   }
 
@@ -108,7 +128,11 @@
 
   /* =============== 普通流模式：谁在视口中间谁就是当前页 =============== */
   function pickActiveByCenter() {
-    var mid = window.innerHeight * 0.45;
+    // 有导航栏时，用"导航栏以下的视口"来算中心，别把栏也平均进去
+    var r0 = stage ? stage.getBoundingClientRect() : null;
+    var mid = r0 && r0.height > 120
+      ? r0.top + r0.height * 0.45
+      : window.innerHeight * 0.45;
     var best = 0, bestD = Infinity;
     for (var i = 0; i < N; i++) {
       var r = pages[i].getBoundingClientRect();
@@ -145,8 +169,10 @@
   function setMode() {
     var want = !narrowMQ.matches && !reduceMQ.matches && fits();
 
-    if (started && want === pinned) {        // 模式没变，只重新量一次
-      if (pinned) { measure(); render(); } else { pickActiveByCenter(); }
+    measure();                               // 两种模式都要量（普通流也要 pinTop）
+
+    if (started && want === pinned) {        // 模式没变，只重新渲染
+      if (pinned) { render(); } else { pickActiveByCenter(); }
       return;
     }
 
@@ -191,7 +217,8 @@
       top = geo.top + (geo.runway * i) / Math.max(1, N - 1);
     } else {
       r = pages[i].getBoundingClientRect();
-      top = r.top + window.pageYOffset - 10;
+      // 普通流模式下要避开固定导航栏，否则目标页顶部会被挡住
+      top = r.top + window.pageYOffset - geo.pinTop - 12;
     }
     top = Math.round(top);
 

@@ -51,6 +51,16 @@
   --ease: cubic-bezier(.65, .05, .36, 1);
 
   --side-w: 318px;
+
+  /* 顶部导航栏高度：翻页舞台要扣掉它，否则会被压在下面 */
+  --topbar-h: 56px;
+  /* 一屏可用的高度（舞台高度）：先给 100vh 兜底，支持 dvh 的浏览器下面再覆盖 */
+  --stage-h: calc(100vh - var(--topbar-h));
+}
+
+/* 手机地址栏会伸缩，dvh 才是真正的可视高度 */
+@supports (height: 100dvh) {
+  :root { --stage-h: calc(100dvh - var(--topbar-h)); }
 }
 
 /* 硬件板块：强调色整体转橙 */
@@ -95,13 +105,79 @@ body {
   -webkit-mask-image: radial-gradient(circle at 55% 25%, #000 0%, transparent 72%);
 }
 
-/* ---------- 布局 ---------- */
+/* ---------- 顶部导航栏 ---------- */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--topbar-h);
+  display: flex; align-items: center;
+  background: rgba(255, 255, 255, .74);
+  border-bottom: 1px solid rgba(15, 23, 42, .07);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+}
+.topbar__inner {
+  width: 100%; max-width: 1560px; margin: 0 auto;
+  padding: 0 clamp(12px, 2vw, 34px) 0 clamp(10px, 1.2vw, 22px);
+  display: flex; align-items: center; gap: 10px;
+}
+.topbar__brand {
+  display: inline-flex; align-items: center; gap: 9px;
+  text-decoration: none; color: var(--ink);
+  font-size: 14.5px; font-weight: 700; letter-spacing: -.2px;
+  white-space: nowrap;
+}
+.topbar__logo {
+  width: 27px; height: 27px; border-radius: 8px;
+  display: grid; place-items: center;
+  font-size: 13px; font-weight: 800; color: #fff;
+  background: linear-gradient(135deg, var(--blue-600), var(--cyan-500));
+}
+.topbar__brand small {
+  font-size: 11.5px; font-weight: 600; color: #94a3b8;
+  letter-spacing: .2px;
+}
+.topbar__nav { margin-left: auto; display: flex; align-items: center; gap: 3px; }
+.topbar__link {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px; border-radius: var(--radius-sm);
+  font-size: 13.5px; font-weight: 600; color: var(--muted);
+  text-decoration: none; white-space: nowrap;
+  transition: background .18s, color .18s;
+}
+.topbar__link:hover { background: rgba(15, 23, 42, .05); color: var(--ink); }
+.topbar__link.is-active { background: var(--blue-50); color: var(--blue-700); }
+.topbar__link:focus-visible { outline: 2px solid var(--blue-300); outline-offset: 2px; }
+
+/* ---------- 普通内容页（比如 test.html，不走滚动翻页） ---------- */
+.page-main {
+  position: relative; z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding:
+    calc(var(--topbar-h) + clamp(26px, 6vh, 62px))
+    clamp(16px, 3vw, 32px)
+    clamp(40px, 8vh, 80px);
+  display: grid;
+  gap: clamp(14px, 2.2vh, 22px);
+}
+.page-main__head { display: grid; gap: 5px; }
+.page-main__title { margin: 0; font-size: clamp(24px, 3.6vh, 36px); letter-spacing: -.8px; line-height: 1.25; }
+.page-main__desc { margin: 0; color: var(--muted); max-width: 62ch; }
+.page-main__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* 一格两列/三列的小网格（测试页演示用） */
+.demo-grid { display: grid; gap: clamp(10px, 1.4vw, 14px); grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); }
+.swatch { display: flex; align-items: center; gap: 10px; }
+.swatch__dot { width: 26px; height: 26px; border-radius: 8px; flex: 0 0 26px; border: 1px solid rgba(15, 23, 42, .06); }
+
+/* ---------- 布局（首页：左栏 + 右侧滚动舞台） ---------- */
 .app {
   position: relative;
   z-index: 1;
   max-width: 1560px;
   margin: 0 auto;
-  padding: 16px clamp(18px, 2vw, 34px) 0 clamp(6px, .8vw, 12px);
+  /* 顶部留出导航栏的位置：这样 deck 的起点正好是舞台吸顶的位置 */
+  padding: var(--topbar-h) clamp(18px, 2vw, 34px) 0 clamp(6px, .8vw, 12px);
   display: grid;
   grid-template-columns: var(--side-w) minmax(0, 1fr);
   gap: clamp(16px, 1.6vw, 26px);
@@ -121,9 +197,9 @@ body {
    ========================================================= */
 .sidebar {
   position: sticky;
-  top: 16px;
-  height: calc(100vh - 32px);
-  height: calc(100dvh - 32px);
+  /* 同样要避开导航栏 */
+  top: calc(var(--topbar-h) + 14px);
+  height: calc(var(--stage-h) - 28px);
   min-width: 0;
 }
 .sidebar::before {
@@ -255,16 +331,16 @@ body {
 .main { min-width: 0; }
 
 .deck {
-  height: calc(var(--pages, 4) * 100vh);
-  height: calc(var(--pages, 4) * 100dvh);
+  /* 跑道 = 页数 × 舞台高度；舞台高度已经扣掉了顶部导航栏 */
+  height: calc(var(--pages, 4) * var(--stage-h));
   position: relative;
 }
 
 .stage {
   position: sticky;
-  top: 0;
-  height: 100vh;
-  height: 100dvh;
+  /* 吸在导航栏下面，不是吸在 0，否则会被栏压住 56px */
+  top: var(--topbar-h);
+  height: var(--stage-h);
   overflow: hidden;
   isolation: isolate;
 }
@@ -711,7 +787,7 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 
 /* 导航条移到顶部横向排列 */
 #deck.is-flow .rail {
-  position: sticky; top: 8px; left: auto; right: auto; transform: none;
+  position: sticky; top: calc(var(--topbar-h) + 8px); left: auto; right: auto; transform: none;
   order: -1;
   display: flex; justify-content: center; align-items: center; gap: 2px;
   width: max-content; max-width: 100%; margin: 0 auto 6px;
@@ -731,7 +807,7 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 }
 
 @media (max-width: 1000px) {
-  .app { grid-template-columns: minmax(0, 1fr); padding: 14px clamp(12px, 3vw, 22px) 0; }
+  .app { grid-template-columns: minmax(0, 1fr); padding: var(--topbar-h) clamp(12px, 3vw, 22px) 0; }
   .sidebar { position: static; height: auto; }
   .profile { height: auto; overflow: visible; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
   .profile__foot { margin-top: 18px; }
@@ -748,7 +824,7 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
   .deck .page { position: static; padding: 24px 0; opacity: 1; transform: none; filter: none; visibility: visible; }
   .deck .page[aria-hidden="true"] { display: block; }
   .rail {
-    position: sticky; top: 8px; right: auto; transform: none;
+    position: sticky; top: calc(var(--topbar-h) + 8px); right: auto; transform: none;
     display: flex; justify-content: center; align-items: center; gap: 2px;
     width: max-content; max-width: 100%; margin: 0 auto 6px; padding: 5px 6px;
     border-radius: var(--radius); background: rgba(255, 255, 255, .82); z-index: 30;

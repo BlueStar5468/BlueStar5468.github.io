@@ -78,6 +78,19 @@
     chip: function (d) { return chipOne(d); },
     chipAmber: function (d) { return chipOne(d, true); },   // 整组强制橙色（硬件页用）
 
+    /* 顶部导航栏的一条链接：当前页自动高亮 */
+    navlink: function (d) {
+      var here = '';
+      try { here = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase(); } catch (e) { here = ''; }
+      var href = String(d.href || '#');
+      var ext = d.ext === true || isExt(href);
+      var active = !ext && (href.toLowerCase() === here);
+      return '<a class="topbar__link' + (active ? ' is-active' : '') + '" href="' + esc(href) + '"' +
+             (ext ? ' target="_blank" rel="noopener"' : '') +
+             (active ? ' aria-current="page"' : '') + '>' +
+             esc(d.text) + (ext ? ' ↗' : '') + '</a>';
+    },
+
     stat: function (d) {
       return '<div class="stat card"><b>' + esc(d.num) + '</b><span>' + esc(d.label) + '</span></div>';
     },
