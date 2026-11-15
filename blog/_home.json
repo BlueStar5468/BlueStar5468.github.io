@@ -6,11 +6,11 @@
     {
       "type": "hero",
       "title": "博客",
-      "subtitle": "技术笔记、踩坑记录，以及一些没头没尾的想法。",
+      "subtitle": "技术笔记、踩坑记录，和我的一些碎碎念。",
       "icon": "📝",
       "meta": [
         { "label": "更新", "value": "不定期" },
-        { "label": "内容", "value": "嵌入式 / C# / 前端" }
+        { "label": "内容", "value": "嵌入式 / C全系 / 底层硬件 " }
       ]
     },
     {
@@ -27,7 +27,7 @@
     {
       "type": "posts",
       "title": "最近文章",
-      "limit": 3,
+      "limit": 5,
       "count": false
     }
   ]
