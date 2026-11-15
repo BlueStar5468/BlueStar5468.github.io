@@ -321,7 +321,15 @@ html.pnav-collapsed .page-shell { grid-template-columns: var(--pnav-w-min) minma
 .page-shell > .page-main { padding: 0; margin: 0; max-width: none; }
 
 /* ---------- 项目侧边栏 ---------- */
-.pnav { position: sticky; top: calc(var(--topbar-h) + 20px); min-width: 0; }
+/* 左侧项目导航：给一层很淡的底，收起时缩成窄条 */
+.pnav {
+  position: sticky; top: calc(var(--topbar-h) + 20px);
+  min-width: 0;
+  padding: 10px 8px;
+  background: rgba(255, 255, 255, .5);
+  border: 1px solid rgba(15, 23, 42, .05);
+  border-radius: var(--radius);
+}
 .pnav__toggle {
   display: inline-flex; align-items: center; justify-content: center;
   width: 28px; height: 28px; margin-bottom: 8px;
@@ -372,7 +380,8 @@ html.pnav-collapsed .pnav__toc { display: none; }
 html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 
 /* ---------- 详情页（project.html）---------- */
-.pd-main { display: grid; gap: clamp(16px, 3vh, 28px); min-width: 0; max-width: 900px; }
+/* 详情正文：跟着列宽一起长（左栏收起后不会只往左平移、右边空一大块） */
+.pd-main { display: grid; gap: clamp(16px, 3vh, 28px); min-width: 0; max-width: 1120px; }
 
 .blk { display: grid; gap: 10px; min-width: 0; }
 .blk__title { margin: 0; font-size: 18px; letter-spacing: -.3px; }
@@ -540,6 +549,7 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
     position: static; display: flex; align-items: center; gap: 8px;
     margin: 0 calc(-1 * clamp(16px, 3vw, 32px));
     padding: 0 clamp(16px, 3vw, 32px) 6px;
+    background: transparent; border: 0; border-radius: 0;
     overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
   .pnav__toggle { display: none; }
