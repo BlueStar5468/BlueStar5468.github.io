@@ -1631,3 +1631,11 @@ body[data-booting] .bootmask {
   background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
   font-size: 12.5px; font-weight: 600;
 }
+/* 加载提示下面那两行说明（首页用） */
+.bootmask__note {
+  flex-basis: 100%;
+  margin-top: 6px;
+  text-align: center;
+  font-size: 12px; font-weight: 500;
+  color: var(--muted); line-height: 1.8;
+}

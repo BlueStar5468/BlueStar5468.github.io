@@ -438,6 +438,11 @@ window.LOADBAR = {
   window.SITE_BOOTED = function () {
     if (!document.body || !document.body.hasAttribute('data-booting')) return;
     document.body.removeAttribute('data-booting');
+    // 占位提示用完就删掉（留着它也没用了）
+    var masks = document.querySelectorAll('.bootmask');
+    for (var k = 0; k < masks.length; k++) {
+      if (masks[k].parentNode) masks[k].parentNode.removeChild(masks[k]);
+    }
   };
 
   // 页面上没有「要等数据」的模块时，填完就撤；有的话由模块自己调
