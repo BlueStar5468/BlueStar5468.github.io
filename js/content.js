@@ -27,6 +27,7 @@ window.SITE_CONTENT = {
     nav: [
       { text: '主页',   href: 'index.html',    section: 'home' },
       { text: '项目',   href: 'projects.html', section: 'projects' },
+      { text: '博客',   href: 'blog.html',     section: 'blog' },
       { text: '实验室', href: 'test.html',     section: 'lab', show: 'ui.debug' },
       { text: 'GitHub', href: 'https://github.com/BlueStar5468', ext: true }
     ]

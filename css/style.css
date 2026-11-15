@@ -531,6 +531,105 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
   html.pnav-collapsed .pnav__item { padding: 7px 9px; }
 }
 
+/* ---------- 博客（blog.html / blog-post.html） ---------- */
+.blog-shell {
+  position: relative; z-index: 1;
+  max-width: 1180px; margin: 0 auto;
+  padding:
+    calc(var(--topbar-h) + clamp(20px, 5vh, 44px))
+    clamp(16px, 3vw, 32px)
+    clamp(40px, 8vh, 80px);
+  display: grid;
+  grid-template-columns: 282px minmax(0, 1fr);
+  gap: clamp(16px, 2.2vw, 30px);
+  align-items: start;
+}
+
+/* 左边：个人介绍（不占满高度，下面留白给以后的东西） */
+.bside { position: sticky; top: calc(var(--topbar-h) + 18px); display: grid; gap: 14px; min-width: 0; }
+.bside__card { display: grid; gap: 12px; padding: 15px 14px; }
+.bside__head { display: flex; align-items: center; gap: 11px; }
+.bside__id { min-width: 0; }
+.bside__name { margin: 0; font-size: 16px; letter-spacing: -.3px; line-height: 1.25; }
+.bside__title {
+  margin: 2px 0 0; font-size: 11.5px; font-weight: 600; color: var(--muted);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.bside__bio { margin: 0; font-size: 12.5px; line-height: 1.68; color: var(--muted); }
+.bside__meta {
+  margin: 0; padding: 0; list-style: none;
+  display: grid; gap: 5px; font-size: 12.5px; color: var(--muted);
+}
+.bside__meta .ico { margin-right: 6px; }
+.bside__links { display: grid; gap: 3px; }
+
+/* 头像的纯 CSS 版本（没有图片时显示字母） */
+.avatar--flat {
+  width: 52px; height: 52px; flex: 0 0 52px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, var(--blue-600), var(--cyan-500));
+  color: #fff; font-size: 19px; font-weight: 800; letter-spacing: -.4px;
+}
+.avatar--flat .avatar__letter { line-height: 1; }
+
+/* 右边：内容 */
+.bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 760px; }
+.bmain--post { max-width: 720px; }
+.ppost { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; }
+
+/* 文章列表（posts 组件） */
+.posts { display: grid; gap: 8px; }
+.post {
+  display: flex; gap: 13px; padding: 12px 13px;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: var(--shadow-1);
+  text-decoration: none; color: inherit;
+  transition: border-color .16s, background .16s, transform .16s, box-shadow .16s;
+}
+.post:hover {
+  border-color: var(--blue-100); background: #fbfdff;
+  transform: translateY(-1px); box-shadow: var(--shadow-2);
+}
+.post__thumb {
+  width: 92px; height: 68px; flex: 0 0 92px;
+  object-fit: cover; border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+}
+.post__body { display: grid; gap: 3px; min-width: 0; }
+.post__head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.post__date { font-size: 11.5px; font-weight: 600; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.post__tags { display: flex; gap: 4px; }
+.post__title { font-size: 14.5px; font-weight: 700; letter-spacing: -.2px; line-height: 1.4; }
+.post:hover .post__title { color: var(--blue-700); }
+.post__sum { font-size: 12.5px; line-height: 1.62; color: var(--muted); }
+.posts__count { margin: 4px 0 0; font-size: 11.5px; color: #94a3b8; }
+.posts__empty {
+  margin: 0; padding: 24px 16px; text-align: center;
+  font-size: 13px; color: #94a3b8;
+  border: 1px dashed var(--line); border-radius: var(--radius);
+}
+
+/* 文章页头部 */
+.postback {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12.5px; font-weight: 600; color: var(--muted); text-decoration: none;
+}
+.postback:hover { color: var(--blue-700); }
+.posthead { display: grid; gap: 6px; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
+.posthead__top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.posthead__date { font-size: 11.5px; font-weight: 600; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.posthead__tags { display: flex; gap: 4px; }
+.posthead__title { margin: 0; font-size: clamp(21px, 3.4vh, 29px); letter-spacing: -.7px; line-height: 1.3; }
+.posthead__sum { margin: 0; font-size: 13.5px; line-height: 1.68; color: var(--muted); }
+
+/* 窄屏：单列，介绍卡在最上面（不吸顶） */
+@media (max-width: 900px) {
+  .blog-shell { grid-template-columns: minmax(0, 1fr); }
+  .bside { position: static; }
+  .bside__card { display: grid; grid-template-columns: 1fr; }
+  .bmain, .bmain--post { max-width: none; }
+}
+
 /* ---------- 布局（首页：左栏 + 右侧滚动舞台） ---------- */
 .app {
   position: relative;

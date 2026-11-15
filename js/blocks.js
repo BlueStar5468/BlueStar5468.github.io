@@ -175,16 +175,53 @@
     return wrap(b, i, '<div class="page-main__actions">' + inner + '</div>');
   };
 
+  /* posts —— 专属组件：列出所有博文（数据由 blog.js 预先读好，通过 ctx.posts 传进来）
+     limit  只显示前 N 篇（0 / 不写 = 全部）
+     count  是否显示「共 N 篇」（默认显示，写 false 关掉）
+     emptyText  没有文章时的提示 */
+  B.posts = function (b, i, ctx) {
+    var list = (ctx && ctx.posts) || [];
+    var limit = parseInt(b.limit, 10) || 0;
+    var shown = limit > 0 ? list.slice(0, limit) : list;
+
+    if (!shown.length) {
+      return wrap(b, i, '<p class="posts__empty">' + esc(b.emptyText || '还没有文章。') + '</p>');
+    }
+
+    var html = shown.map(function (p) {
+      var m = p.meta || {};
+      var tags = (m.tags || []).map(function (t) {
+        return '<span class="chip chip--sm">' + esc(t) + '</span>';
+      }).join('');
+      return '<a class="post" href="blog-post.html?p=' + esc(p.id) + '">' +
+        (m.cover ? '<img class="post__thumb" src="' + esc(m.cover) + '" alt="" loading="lazy" />' : '') +
+        '<span class="post__body">' +
+          '<span class="post__head">' +
+            (m.date ? '<time class="post__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>' : '') +
+            (tags ? '<span class="post__tags">' + tags + '</span>' : '') +
+          '</span>' +
+          '<span class="post__title">' + esc(m.title || p.id) + '</span>' +
+          (m.summary ? '<span class="post__sum">' + esc(m.summary) + '</span>' : '') +
+        '</span>' +
+      '</a>';
+    }).join('');
+
+    var foot = (b.count === false) ? ''
+      : '<p class="posts__count">共 ' + shown.length + ' 篇</p>';
+
+    return wrap(b, i, '<div class="posts">' + html + '</div>' + foot);
+  };
+
   /* ---------- 对外 ---------- */
-  window.RENDER_BLOCKS = function (blocks) {
+  window.RENDER_BLOCKS = function (blocks, ctx) {
     if (!blocks || !blocks.length) return '';
     return blocks.map(function (b, i) {
       var fn = B[b && b.type];
       if (!fn) {
         return '<section class="blk" id="s-' + i + '"><p class="blk__warn">未知组件：' +
-               esc(b && b.type) + '（写在 projects/ 的 json 里）</p></section>';
+               esc(b && b.type) + '（写在 projects/ 或 blog/ 的 json 里）</p></section>';
       }
-      return fn(b, i);
+      return fn(b, i, ctx || {});
     }).join('');
   };
 

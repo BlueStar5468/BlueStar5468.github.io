@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-accent="blue">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>博客 · BlueStar5468</title>
+<meta name="description" content="技术笔记、踩坑记录、以及一些没头没尾的想法。" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='16' fill='%232563eb'/%3E%3Ctext y='72' x='50' text-anchor='middle' font-size='58' fill='white' font-family='sans-serif'%3EB%3C/text%3E%3C/svg%3E" />
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-section="blog">
+
+<!-- ════════════ 顶部导航栏 ════════════ -->
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="topbar__brand" href="index.html">
+      <span class="topbar__logo" aria-hidden="true">B</span>
+      <span data-fill="side.name">BlueStar</span>
+      <small>BSuniStudio</small>
+    </a>
+    <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
+      <a class="topbar__link" href="index.html">主页</a>
+      <a class="topbar__link" href="projects.html">项目</a>
+      <a class="topbar__link is-active" href="blog.html">博客</a>
+    </nav>
+  </div>
+</header>
+
+<!-- 背景装饰 -->
+<div class="bg" aria-hidden="true">
+  <span class="bg__blob bg__blob--blue"></span>
+  <span class="bg__blob bg__blob--cyan"></span>
+  <span class="bg__blob bg__blob--amber"></span>
+  <span class="bg__grid"></span>
+</div>
+
+<!-- ════════════ 博客外壳：左边个人介绍（不占满高度）+ 右边主页内容 ════════════ -->
+<div class="blog-shell">
+
+  <aside class="bside" aria-label="个人介绍">
+    <div class="card bside__card">
+
+      <div class="bside__head">
+        <div class="avatar avatar--flat" data-cfg="side.avatar" data-avatar>
+          <span class="avatar__letter" data-fill="side.avatar">YN</span>
+        </div>
+        <div class="bside__id">
+          <h1 class="bside__name" data-cfg="side.name" data-fill="side.name">BlueStar</h1>
+          <p class="bside__title" data-cfg="side.name" data-fill="side.title">软件 &amp; 硬件</p>
+        </div>
+      </div>
+
+      <p class="bside__bio" data-cfg="side.bio" data-fill-html="side.bio">
+        一只手写代码，一只手焊板子。
+      </p>
+
+      <ul class="bside__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta">
+        <li>泛星际蓝星工作室</li>
+      </ul>
+
+      <nav class="bside__links" data-cfg="side.links" data-list="side.links" data-item="link">
+        <a class="link" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">
+          <span class="link__ico">GH</span>
+          <span class="link__text">GitHub</span>
+          <span class="link__arrow">↗</span>
+        </a>
+      </nav>
+
+    </div>
+    <!-- 卡片下面这块空着：以后要放标签云 / 归档 / 统计就加在这儿 -->
+  </aside>
+
+  <!-- 主页内容：由 blog/_home.json 的 blocks 生成 -->
+  <main class="bmain">
+    <p class="lderr" id="berr" hidden></p>
+    <div id="bhome">
+      <p class="pd-load">正在加载…</p>
+    </div>
+  </main>
+
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/content.js"></script>
+<script src="js/render.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/blog.js"></script>
+</body>
+</html>

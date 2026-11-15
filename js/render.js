@@ -208,6 +208,18 @@
   }
   window.PROJ_ICON = iconHtml;
 
+  /* ---------- 共享小工具（blog.js 等复用） ---------- */
+  window.SITE_DATA = {
+    esc: esc,
+    icon: iconHtml,
+    getJSON: function (url) {
+      return fetch(url, { cache: 'no-cache' }).then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' · ' + url);
+        return r.json();
+      });
+    }
+  };
+
   /* ---------- 头像：配了图片就把字母方块换掉（要在填充之前做） ---------- */
   var avatarBox = document.querySelector('[data-avatar]');
   if (avatarBox && C.side && C.side.avatarImg) {
