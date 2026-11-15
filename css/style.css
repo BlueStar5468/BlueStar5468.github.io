@@ -567,14 +567,16 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .avatar--flat {
   width: 52px; height: 52px; flex: 0 0 52px;
   display: grid; place-items: center;
+  border-radius: 6px;                       /* 方形一点 */
   background: linear-gradient(135deg, var(--blue-600), var(--cyan-500));
   color: #fff; font-size: 19px; font-weight: 800; letter-spacing: -.4px;
 }
 .avatar--flat .avatar__letter { line-height: 1; }
 
 /* 右边：内容 */
-.bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 840px; }
-.bmain--post { max-width: 780px; }
+.bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 1000px; }
+/* 文章页：读的东西窄一点，且在剩余宽度里居中，左右对称（不会只剩右边一大块空） */
+.bmain--post { max-width: 820px; margin: 0 auto; }
 .ppost { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; }
 
 /* 介绍卡下面的附加块（由 _home.json 的 sidebar 生成），窄栏里压缩一下 */
@@ -720,7 +722,7 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 
 .avatar {
   width: 82px; height: 82px;
-  border-radius: var(--radius-lg);
+  border-radius: 8px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, .9);
   box-shadow: var(--shadow-1);
@@ -1295,6 +1297,8 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
   .profile { height: auto; overflow: visible; border-radius: 0 var(--radius-lg) var(--radius-lg) 0; }
   .profile__foot { margin-top: 18px; }
   .avatar { width: 72px; height: 72px; }
+  /* 博客里那个小头像有 flex-basis，别被上面的 width/height 拉成竖条 */
+  .avatar--flat { width: 52px; height: 52px; flex: 0 0 52px; }
   .two-col { grid-template-columns: minmax(0, 1fr); }
   .two-col .work--slim { grid-template-columns: auto minmax(0, 1fr); }
   .two-col .work__ico { display: grid; }
