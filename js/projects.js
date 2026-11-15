@@ -216,49 +216,36 @@
   }
 
   /* ---------- 列表页 ---------- */
-  function initList() {
-    var grid  = document.querySelector('.pgrid');
-    var err   = document.getElementById('perr');
-    var empty = document.getElementById('pempty');
-    var count = document.getElementById('pcount');
-    var tpl   = window.SITE_TEMPLATES && window.SITE_TEMPLATES.projcard;
+  /* 项目主页：结构由 projects/_home.json 的 blocks 决定（和博客主页一个套路） */
+  function initHome() {
+    var host = document.getElementById('phome');
+    var err  = document.getElementById('perr');
+    if (!host) return;
 
     if (window.LOADBAR) window.LOADBAR.start();
 
-    loadIndexes().then(loadProjects).then(function (list) {
+    Promise.all([
+      getJSON(BASE + '_home.json').catch(function () { return { blocks: [] }; }),
+      loadIndexes().then(loadProjects)
+    ]).then(function (r) {
+      var cfg  = r[0] || {};
+      var list = r[1] || [];
+
+      host.innerHTML = window.RENDER_BLOCKS(cfg.blocks || [], { projects: list });
+      document.title = (cfg.title || '项目') + ' · BlueStar5468';
+
       buildSidebar(document.getElementById('pnav'), list, null, null);
-      if (err) err.hidden = true;
-
-      grid.innerHTML = list.map(function (p) {
-        if (!tpl) return '';
-        var c = p.data.card || {};
-        c.id = p.id;                     // 模板靠 id 生成"点进详情页"的链接
-        if (p.dir !== BASE) c.href = p.dir + p.id + '.html';   // dev-projects 指到 dev-projects/
-        return tpl(c);
-      }).join('');
-
       initFilter();
+      spyToc();
+
+      if (err) err.hidden = true;
       if (window.LOADBAR) window.LOADBAR.done();
       if (window.SITE_BOOTED) window.SITE_BOOTED();
-
-      // 一个项目都没有：给一句人话，而不是报错
-      if (!list.length) {
-        if (empty) {
-          empty.hidden = false;
-          empty.setAttribute('data-empty-hint', '1');
-          empty.textContent = '还没有项目 —— 在 projects/ 里新建一个 json，' +
-                              '再到 projects/_index.json 的 projects 数组里写上它的 id，就会出现。';
-        }
-        if (count) count.textContent = '共 0 个项目';
-      }
     }).catch(function (e) {
-      if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 列表加载失败：', e);
-      if (err) {
-        err.hidden = false;
-        err.textContent = '项目加载失败：' + e.message +
-          '　—— 这些配置文件是用 fetch 读的，必须用 http 打开（本地：python -m http.server）。';
-      }
-      if (grid) grid.innerHTML = '';
+      if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 主页加载失败：', e);
+      host.innerHTML = '<p class="lderr">项目列表加载失败：' + esc(e.message) +
+        '\u3000—— 要用 http 打开（本地：python -m http.server）。</p>';
+      if (window.SITE_BOOTED) window.SITE_BOOTED();
     });
   }
 
@@ -327,6 +314,6 @@
 
 
   /* ---------- 入口 ---------- */
-  if (document.querySelector('.pgrid')) initList();
+  if (document.getElementById('phome')) initHome();
   if (document.getElementById('pdetail')) initDetail();
 })();

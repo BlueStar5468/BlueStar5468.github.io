@@ -50,6 +50,10 @@
            attr(l.href) + '>' + esc(l.text) + (isExt(l.href) ? ' ↗' : '') + '</a>';
   }
 
+  /* =======================================================================
+     通用组件（项目页 / 博客页 / 列表页都能用）
+     ======================================================================= */
+
   /* ---------- 各组件 ---------- */
   var B = {};
 
@@ -205,6 +209,10 @@
      limit  只显示前 N 篇（0 / 不写 = 全部）
      count  是否显示「共 N 篇」（默认显示，写 false 关掉）
      emptyText  没有文章时的提示 */
+  /* =======================================================================
+     博客专属组件（需要 ctx.posts）
+     ======================================================================= */
+
   B.posts = function (b, i, ctx) {
     var list = (ctx && ctx.posts) || [];
     var limit = parseInt(b.limit, 10) || 0;
@@ -299,4 +307,46 @@
     });
     return out;
   };
+
+  /* =======================================================================
+     项目专属组件
+     ======================================================================= */
+
+  /* projlist —— 项目卡片列表（可选分类筛选 + 计数）
+     依赖 ctx.projects（形如 [{ id, dir, data }]），数据来自 projects/_index.json */
+  B.projlist = function (b, i, ctx) {
+    var all = (ctx && ctx.projects) || [];
+    var cats = b.categories || [];
+    var tpl = window.SITE_TEMPLATES && window.SITE_TEMPLATES.projcard;
+    var showFilter = b.filter !== false && cats.length > 0;
+
+    var cards = all.map(function (p) {
+      if (!tpl) return '';
+      var c = p.data.card || {};
+      c.id = p.id;
+      if (p.dir !== 'projects/') c.href = p.dir + p.id + '.html';
+      return tpl(c);
+    }).join('');
+
+    var bar = '';
+    if (showFilter || b.count !== false) {
+      var btns = showFilter ? cats.map(function (c) {
+        var on = c.key === 'all';
+        return '<button class="filter' + (on ? ' is-active' : '') + '" data-filter="' + esc(c.key) + '"' +
+               ' type="button" aria-pressed="' + (on ? 'true' : 'false') + '">' +
+               esc(c.label) + '<b class="filter__n">0</b></button>';
+      }).join('') : '';
+      bar = '<div class="pbar">' +
+        (btns ? '<div class="filters">' + btns + '</div>' : '') +
+        (b.count !== false ? '<span class="pbar__count" id="pcount">共 0 个项目</span>' : '') +
+      '</div>';
+    }
+
+    var inner = bar +
+      '<div class="pgrid">' + cards + '</div>' +
+      '<p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>';
+
+    return wrap(b, i, inner);
+  };
+
 })();

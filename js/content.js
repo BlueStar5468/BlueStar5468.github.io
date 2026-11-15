@@ -57,7 +57,7 @@ window.SITE_CONTENT = {
     ],
 
     // 可写 HTML
-    bio: '一只手写代码，一只手焊板子。喜欢把想法从 <br /> ->封装复杂,开放可能',
+    bio: '一只手写代码，一只手焊板子。<br /> ->封装复杂,开放可能',
 
     // color 可选 'blue'（默认）或 'amber'
     skills: [
@@ -215,38 +215,13 @@ window.SITE_CONTENT = {
   },
 
   /* ══════════════════════════════════════════════════════════
-     项目 / 产品展示页（projects.html）
+     项目页的配置已经搬走了
      ------------------------------------------------------------------
-     这一整页是由下面的数据「生成」出来的：加一个对象 = 多一张卡片。
-     字段说明：
-       name      项目名（必填）
-       cat       分类，对应 categories 里的 key（缺省 all）
-       status    进行中 / 已完成 / 归档 / 概念（留空 = 不显示角标）
-       year      年份，右下角小字
-       featured  true = 精选，卡片占两格、封面更高
-       icon      没有 cover 时中间显示的表情
-       cover     封面图路径，比如 'assets/xxx.jpg'（留空就用渐变色块 + icon）
-       summary   一句话说明（纯文本，会自动转义）
-       desc      想多写几句就写这里（可写 HTML，<br /> 换行）
-       stack     技术栈/标签数组
-       links     按钮数组 { text, href, primary }
+     项目主页（projects.html）现在是组件化的：页头和筛选分类都写在
+     `projects/_home.json` 的 blocks 里（和博客主页 `blog/_home.json` 一个套路），
+     项目本身仍然是「一个项目一个文件」：`projects/<id>.json`。
+     这里不再放项目页的配置。
      ══════════════════════════════════════════════════════════ */
-  projects: {
-    eyebrow: 'PROJECTS',
-    title:   '项目 & 产品',
-    desc:    '做的一些小玩意，软件、硬件都有。包括嵌入式到桌面程序 ',
-
-    // 筛选按钮：加一个分类就多一个按钮（key 要和 items 里的 cat 对上）
-    categories: [
-      { key: 'all',       label: '全部' },
-      { key: 'software',  label: '软件' },
-      { key: 'embedded',  label: '嵌入式' },
-      { key: 'hardware',  label: '硬件' }
-    ],
-
-    // 具体的项目不在这里，一个项目一个文件：projects/<id>.json
-    // 在 projects/_index.json 里登记顺序，卡片和详情页都从那些文件读
-  },
 
   /* ══════════════════════════════════════════════════════════
      落地页（滚到底之后那一屏）
