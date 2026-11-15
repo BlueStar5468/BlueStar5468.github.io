@@ -185,6 +185,26 @@ body {
   background: rgba(146, 64, 14, .08);
 }
 
+/* 开关（实验室里的调试按钮） */
+.switch { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+.switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.switch__track {
+  position: relative; flex: 0 0 40px; width: 40px; height: 22px;
+  border-radius: 999px; background: #e2e8f0; border: 1px solid var(--line);
+  transition: background .2s, border-color .2s;
+}
+.switch__dot {
+  position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
+  border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .25);
+  transition: transform .2s var(--ease);
+}
+.switch input:checked + .switch__track { background: var(--blue-600); border-color: var(--blue-600); }
+.switch input:checked + .switch__track .switch__dot { transform: translateX(18px); }
+.switch input:focus-visible + .switch__track { outline: 2px solid var(--blue-300); outline-offset: 2px; }
+.switch__label { font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+.switch__label code { font-size: .92em; padding: 1px 4px; border-radius: 3px; background: var(--blue-50); color: var(--blue-700); }
+
 /* ---------- 项目 / 产品页（projects.html） ---------- */
 .pbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; }

@@ -220,6 +220,20 @@
     }
   };
 
+  /* ---------- 本地测试内容开关（实验室页面里可以切） ----------
+     开：项目页 / 博客页也会读 dev-projects/ 和 dev-blog/
+     关：只读 projects/ 和 blog/，跟线上一致
+     默认开；状态存在 localStorage，所有页面共用 */
+  window.SITE_DEV = {
+    KEY: 'dev-content',
+    on: function () {
+      try { return window.localStorage.getItem('dev-content') !== '0'; } catch (e) { return true; }
+    },
+    set: function (v) {
+      try { window.localStorage.setItem('dev-content', v ? '1' : '0'); } catch (e) { /* 忽略 */ }
+    }
+  };
+
   /* ---------- 头像：配了图片就把字母方块换掉（要在填充之前做） ---------- */
   var avatarBox = document.querySelector('[data-avatar]');
   if (avatarBox && C.side && C.side.avatarImg) {

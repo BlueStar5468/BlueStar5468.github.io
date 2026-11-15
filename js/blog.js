@@ -72,11 +72,16 @@
     });
   }
 
+  /* dev-blog/ 只在「本地测试内容开关」开着时读（实验室页面里切） */
   function loadEntryList() {
     function idx(dir) {
       return getJSON(dir + '_index.json').catch(function () { return { posts: [] }; });
     }
-    return Promise.all([idx(BASE), idx(DEV)]).then(function (res) {
+    var useDev = !window.SITE_DEV || window.SITE_DEV.on();
+    return Promise.all([
+      idx(BASE),
+      useDev ? idx(DEV) : Promise.resolve({ posts: [] })
+    ]).then(function (res) {
       var out = [], seen = {};
       function add(j, dir) {
         ((j && j.posts) || []).forEach(function (id) {

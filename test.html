@@ -59,6 +59,21 @@
     <a class="btn" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">GitHub ↗</a>
   </div>
 
+  <!-- ───────── 调试开关：控制项目页 / 博客页要不要读本地的测试内容 ───────── -->
+  <h2 class="section-title"><span class="dot"></span>调试开关</h2>
+  <div class="card pad">
+    <label class="switch">
+      <input type="checkbox" id="devToggle" />
+      <span class="switch__track" aria-hidden="true"><span class="switch__dot"></span></span>
+      <span class="switch__label">加载本地测试内容（<code>dev-projects/</code> + <code>dev-blog/</code>）</span>
+    </label>
+    <p class="debug-note" id="devState" style="margin-top:10px" hidden></p>
+    <p class="page-main__actions" style="margin-top:10px">
+      <a class="btn" href="projects.html">项目页 →</a>
+      <a class="btn" href="blog.html">博客页 →</a>
+    </p>
+  </div>
+
   <!-- ───────── 以后可以放什么 ───────── -->
   <h2 class="section-title"><span class="dot"></span>这里以后可以放</h2>
   <div class="demo-grid">
@@ -147,6 +162,31 @@
     if (!window.SITE_CONFIG || window.SITE_CONFIG['ui.debug'] !== false) return;
     var n = document.getElementById('debugNote');
     if (n) n.hidden = false;
+  })();
+</script>
+
+<!-- 本地测试内容开关 -->
+<script>
+  (function () {
+    var box   = document.getElementById('devToggle');
+    var state = document.getElementById('devState');
+    if (!box || !window.SITE_DEV) return;
+
+    function paint() {
+      if (!state) return;
+      state.hidden = false;
+      state.textContent = box.checked
+        ? '现在是「开」：项目页/博客页会显示 dev-projects / dev-blog 里的测试内容。'
+        : '现在是「关」：只读 projects / blog，跟线上发布后的效果一致。';
+    }
+
+    box.checked = window.SITE_DEV.on();
+    paint();
+
+    box.addEventListener('change', function () {
+      window.SITE_DEV.set(box.checked);
+      paint();
+    });
   })();
 </script>
 </body>
