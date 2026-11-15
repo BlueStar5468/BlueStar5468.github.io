@@ -40,7 +40,7 @@
 <main class="page-shell">
 
   <!-- 项目导航：内容由 js/projects.js 按 projects/_index.json 生成 -->
-  <aside class="pnav" id="pnav" aria-label="项目导航"></aside>
+  <aside class="pnav" id="pnav" aria-label="项目导航"><!-- build:pnav --><button class="pnav__toggle" id="pnavToggle" type="button" aria-label="收起 / 展开项目导航" aria-controls="pnavItems"><span class="pnav__bars" aria-hidden="true"></span></button><nav class="pnav__items" id="pnavItems" aria-label="项目导航"></nav><!-- /build:pnav --></aside>
 
   <div class="page-main">
 
@@ -62,22 +62,9 @@
     <p class="lderr" id="perr" hidden></p>
 
     <!-- 卡片：由 js/projects.js 读 projects/*.json 生成（下面这张是没 JS 时的兜底）-->
-    <div class="pgrid">
-      <article class="pcard" data-cat="software" data-featured="1">
-        <div class="pcard__cover">
-          <span class="pcard__ph" aria-hidden="true">⚙️</span>
-          <span class="pcard__status pcard__status--wip">进行中</span>
-        </div>
-        <div class="pcard__body">
-          <h3 class="pcard__title"><a class="pcard__go" href="project.html?p=starexplorer">StarExplorer</a></h3>
-          <p class="pcard__sum">受 Windows 资源管理器气，用 C# 重写的一个文件管理器。</p>
-          <div class="chips chips--sm"><span class="chip chip--sm">C#</span><span class="chip chip--sm">.NET</span></div>
-        </div>
-        <div class="pcard__foot">
-          <span class="pcard__year">2025</span>
-          <span class="pcard__links"><a class="pcard__link pcard__link--primary" href="https://github.com/BlueStar5468/StarExplorer" target="_blank" rel="noopener">仓库 ↗</a></span>
-        </div>
-      </article>
+    <div class="pgrid"><!-- build:pgrid -->
+
+      <!-- /build:pgrid -->
     </div>
 
     <p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>

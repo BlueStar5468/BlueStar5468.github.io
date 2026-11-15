@@ -69,10 +69,10 @@
     })).then(function (list) { return list.filter(Boolean); });
   }
 
-  /* ---------- 侧边栏（两个页面共用）---------- */
-  function buildSidebar(box, list, currentId, toc) {
-    if (!box) return;
-
+  /* ---------- 侧边栏（两个页面共用）----------
+     sidebarHtml() 是纯函数（只吐字符串），这样 tools/build.js 能在 Node 里直接复用它，
+     保证静态页的侧栏和运行时一模一样 */
+  function sidebarHtml(list, currentId, toc) {
     var html = '<button class="pnav__toggle" id="pnavToggle" type="button" ' +
                  'aria-label="收起 / 展开项目导航" aria-controls="pnavItems">' +
                  '<span class="pnav__bars" aria-hidden="true"></span>' +
@@ -86,7 +86,7 @@
         ? window.PROJ_ICON(c.icon || '📦', 'pnav__img')
         : esc(c.icon || '📦');
       html += '<div class="pnav__group">' +
-        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="project.html?p=' + esc(p.id) + '"' +
+        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="projects/' + esc(p.id) + '.html"' +
           (on ? ' aria-current="page"' : '') + ' title="' + esc(c.title || p.id) + '">' +
           '<span class="pnav__ico" aria-hidden="true">' + icon + '</span>' +
           '<span class="pnav__label">' + esc(c.title || p.id) + '</span>' +
@@ -100,7 +100,14 @@
     });
 
     html += '</nav>';
-    box.innerHTML = html;
+    return html;
+  }
+  window.PROJ_SIDEBAR_HTML = sidebarHtml;   // 给 tools/build.js 用
+
+  function buildSidebar(box, list, currentId, toc) {
+    if (!box) return;
+
+    box.innerHTML = sidebarHtml(list, currentId, toc);
 
     /* 收起 / 展开（状态存 localStorage，刷新后记得） */
     var root = document.documentElement;

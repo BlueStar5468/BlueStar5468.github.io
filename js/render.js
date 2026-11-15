@@ -137,7 +137,7 @@
       }).join('');
       // 整张卡可点：标题包一层链接，再用 CSS 把它撑满整张卡（卡片里的按钮 z-index 更高）
       var name = d.title || d.name || '';
-      var go = d.href || (d.id ? 'project.html?p=' + encodeURIComponent(d.id) : '');
+      var go = d.href || (d.id ? 'projects/' + encodeURIComponent(d.id) + '.html' : '');
       var head = go
         ? '<a class="pcard__go" href="' + esc(go) + '">' + esc(name) + '</a>'
         : esc(name);
