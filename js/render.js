@@ -84,7 +84,7 @@
       var st = d.status ? (ST[d.status] || 'wip') : '';
       var cover = d.cover
         ? '<img class="pcard__img" src="' + esc(d.cover) + '" alt="" loading="lazy" />'
-        : '<span class="pcard__ph" aria-hidden="true">' + esc(d.icon || '📦') + '</span>';
+        : '<span class="pcard__ph" aria-hidden="true">' + iconHtml(d.icon || '📦', 'pcard__phimg') + '</span>';
       var stack = (d.stack || []).map(function (s) {
         return '<span class="chip chip--sm">' + esc(s) + '</span>';
       }).join('');
@@ -194,6 +194,19 @@
              attr(false, d.href) + '>' + esc(d.text) + '</a>';
     }
   };
+
+  /* ---------- 项目图标：emoji 或图片都可以 ----------
+     icon 字段写 "⚙️" 就用 emoji，写 "assets/xxx.png"（或 http 链接）就渲染成图片 */
+  function iconHtml(v, imgClass) {
+    var s = String(v === undefined || v === null ? '' : v).trim();
+    if (!s) return '';
+    var isImg = /^https?:\/\//i.test(s) ||
+                /\.(png|jpe?g|webp|svg|gif|avif)$/i.test(s) ||
+                /^(?:\.{0,2}\/)/.test(s);
+    if (!isImg) return esc(s);
+    return '<img class="' + imgClass + '" src="' + esc(s) + '" alt="" loading="lazy" />';
+  }
+  window.PROJ_ICON = iconHtml;
 
   /* ---------- 头像：配了图片就把字母方块换掉（要在填充之前做） ---------- */
   var avatarBox = document.querySelector('[data-avatar]');

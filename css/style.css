@@ -225,6 +225,7 @@ body {
 .pcard[data-featured="1"] .pcard__cover { aspect-ratio: 21 / 9; }
 .pcard__img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .pcard__ph { font-size: 38px; line-height: 1; }
+.pcard__phimg { max-width: 46%; max-height: 62%; object-fit: contain; border-radius: 7px; }
 .pcard__status {
   position: absolute; top: 9px; left: 9px;
   padding: 3px 8px; border-radius: 999px;
@@ -323,6 +324,11 @@ html.pnav-collapsed .page-shell { grid-template-columns: var(--pnav-w-min) minma
 .pnav__item:hover { background: rgba(15, 23, 42, .045); color: var(--ink); }
 .pnav__item.is-active { background: var(--blue-50); color: var(--blue-700); }
 .pnav__ico { flex: 0 0 auto; width: 20px; text-align: center; font-size: 14px; }
+/* 图标也可以是一张图片（card.icon 写成 assets/xxx.png） */
+.pnav__img {
+  display: block; width: 17px; height: 17px; margin: 0 auto;
+  object-fit: contain; border-radius: 4px;
+}
 .pnav__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .pnav__toc {
@@ -377,6 +383,7 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 }
 .phero__img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .phero__ph { font-size: 46px; }
+.phero__phimg { max-width: 58%; max-height: 64%; object-fit: contain; border-radius: 9px; }
 @media (max-width: 720px) {
   .phero { grid-template-columns: minmax(0, 1fr); gap: 14px; }
   .phero__side { order: -1; aspect-ratio: 16 / 9; }

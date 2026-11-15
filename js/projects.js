@@ -77,10 +77,13 @@
     list.forEach(function (p) {
       var c  = p.data.card || {};
       var on = p.id === currentId;
+      var icon = window.PROJ_ICON
+        ? window.PROJ_ICON(c.icon || '📦', 'pnav__img')
+        : esc(c.icon || '📦');
       html += '<div class="pnav__group">' +
         '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="project.html?p=' + esc(p.id) + '"' +
           (on ? ' aria-current="page"' : '') + ' title="' + esc(c.title || p.id) + '">' +
-          '<span class="pnav__ico" aria-hidden="true">' + esc(c.icon || '📦') + '</span>' +
+          '<span class="pnav__ico" aria-hidden="true">' + icon + '</span>' +
           '<span class="pnav__label">' + esc(c.title || p.id) + '</span>' +
         '</a>';
       if (on && toc && toc.length) {

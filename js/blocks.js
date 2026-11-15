@@ -50,6 +50,12 @@
   /* ---------- 各组件 ---------- */
   var B = {};
 
+  /* 图标：emoji 或图片（复用 render.js 里的实现；没有就退回纯文本） */
+  function icon(v, imgClass) {
+    if (typeof window.PROJ_ICON === 'function') return window.PROJ_ICON(v, imgClass || 'phero__phimg');
+    return esc(v);
+  }
+
   B.hero = function (b, i) {
     var meta = (b.meta || []).map(function (m) {
       return '<li><span>' + esc(m.label) + '</span><b>' + esc(m.value) + '</b></li>';
@@ -57,7 +63,7 @@
     var acts = (b.links || []).map(btn).join('');
     var cover = b.cover
       ? '<img class="phero__img" src="' + esc(b.cover) + '" alt="" />'
-      : '<span class="phero__ph" aria-hidden="true">' + esc(b.icon || '📦') + '</span>';
+      : '<span class="phero__ph" aria-hidden="true">' + icon(b.icon || '📦') + '</span>';
     return '<header class="phero" id="s-' + i + '">' +
       '<div class="phero__main">' +
         (b.eyebrow ? '<p class="eyebrow">' + esc(b.eyebrow) + '</p>' : '') +

@@ -1,5 +1,5 @@
 {
-  "_说明": "复制这个文件 → 改个名字（比如 my-project.json）→ 把 id 改成同名 → 在 _index.json 的 projects 里加上它。字段说明见 NOTES.md。",
+  "_说明": "复制这个文件 → 改个名字（比如 my-project.json）→ 把 id 改成同名 → 在 _index.json 的 projects 里加上它。下面每一段都带示例，照着改就行。",
   "id": "my-project",
 
   "card": {
@@ -8,6 +8,7 @@
     "status": "进行中",
     "year": "2026",
     "featured": false,
+    "_说明_icon": "icon 可以写 emoji（比如 🚀），也可以写图片路径（比如 assets/logo.png），侧边栏和卡片占位都会用它",
     "icon": "🚀",
     "cover": "",
     "summary": "一句话说清它是什么、解决什么问题。",
