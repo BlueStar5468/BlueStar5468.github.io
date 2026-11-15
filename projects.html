@@ -12,13 +12,14 @@
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-section="projects" data-booting>
+  <noscript><p class="noscript">这个页面的内容由 JavaScript 渲染，开启后会显示。</p></noscript>
 
 <!-- ════════════ 顶部导航栏（所有页面共用，链接在 js/content.js 的 site.nav）════════════ -->
 <header class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="index.html">
       <span class="topbar__logo" aria-hidden="true">B</span>
-      <span data-fill="side.name">BlueStar</span>
+      <span data-fill="side.name"></span>
       <small>BSuniStudio</small>
     </a>
     <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
@@ -45,16 +46,14 @@
   <div class="page-main">
 
     <header class="page-main__head">
-      <p class="eyebrow" data-fill="projects.eyebrow">PROJECTS · 作品</p>
-      <h1 class="page-main__title" data-fill="projects.title">项目 &amp; 产品</h1>
-      <p class="page-main__desc" data-fill="projects.desc">自己从零做出来的东西，或者正在折腾的。</p>
+      <p class="eyebrow" data-fill="projects.eyebrow"></p>
+      <h1 class="page-main__title" data-fill="projects.title"></h1>
+      <p class="page-main__desc" data-fill="projects.desc"></p>
     </header>
 
     <!-- 分类筛选（按钮由 content.js 的 categories 生成）+ 计数 -->
     <div class="pbar">
-      <div class="filters" data-cfg="pj.filter" data-list="projects.categories" data-item="filterbtn">
-        <button class="filter is-active" type="button" data-filter="all">全部<b class="filter__n">0</b></button>
-      </div>
+      <div class="filters" data-cfg="pj.filter" data-list="projects.categories" data-item="filterbtn"></div>
       <span class="pbar__count" id="pcount" data-cfg="pj.count">共 0 个项目</span>
     </div>
 
@@ -67,7 +66,7 @@
 
     <p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>
 
-    <p class="landing__foot" data-fill-html="side.credit">© <span id="year">2026</span> BlueStar</p>
+    <p class="landing__foot" data-fill-html="side.credit"></p>
 
   </div>
 </main>

@@ -11,13 +11,14 @@
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body data-section="blog" data-booting>
+  <noscript><p class="noscript">这个页面的内容由 JavaScript 渲染，开启后会显示。</p></noscript>
 
 <!-- ════════════ 顶部导航栏 ════════════ -->
 <header class="topbar">
   <div class="topbar__inner">
     <a class="topbar__brand" href="index.html">
       <span class="topbar__logo" aria-hidden="true">B</span>
-      <span data-fill="side.name">BlueStar</span>
+      <span data-fill="side.name"></span>
       <small>BSuniStudio</small>
     </a>
     <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
@@ -44,29 +45,19 @@
 
       <div class="bside__head">
         <div class="avatar avatar--flat" data-cfg="side.avatar" data-avatar>
-          <span class="avatar__letter" data-fill="side.avatar">YN</span>
+          <span class="avatar__letter" data-fill="side.avatar"></span>
         </div>
         <div class="bside__id">
-          <h1 class="bside__name" data-cfg="side.name" data-fill="side.name">BlueStar</h1>
-          <p class="bside__title" data-cfg="side.name" data-fill="side.title">软件 &amp; 硬件</p>
+          <h1 class="bside__name" data-cfg="side.name" data-fill="side.name"></h1>
+          <p class="bside__title" data-cfg="side.name" data-fill="side.title"></p>
         </div>
       </div>
 
-      <p class="bside__bio" data-cfg="side.bio" data-fill-html="side.bio">
-        一只手写代码，一只手焊板子。
-      </p>
+      <p class="bside__bio" data-cfg="side.bio" data-fill-html="side.bio"></p>
 
-      <ul class="bside__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta">
-        <li>泛星际蓝星工作室</li>
-      </ul>
+      <ul class="bside__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta"></ul>
 
-      <nav class="bside__links" data-cfg="side.links" data-list="side.links" data-item="link">
-        <a class="link" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">
-          <span class="link__ico">GH</span>
-          <span class="link__text">GitHub</span>
-          <span class="link__arrow">↗</span>
-        </a>
-      </nav>
+      <nav class="bside__links" data-cfg="side.links" data-list="side.links" data-item="link"></nav>
 
     </div>
     <!-- 介绍卡下面：由 blog/_home.json 的 sidebar 生成（默认放「最近文章」） -->

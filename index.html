@@ -34,11 +34,13 @@
   <div class="topbar__inner">
     <a class="topbar__brand" href="index.html">
       <span class="topbar__logo" aria-hidden="true">B</span>
-      <span data-fill="side.name">BlueStar</span>
+      <span data-fill="side.name"></span>
       <small>BSuniStudio</small>
     </a>
     <nav class="topbar__nav" aria-label="站点导航" data-list="site.nav" data-item="navlink">
       <a class="topbar__link is-active" href="index.html">主页</a>
+      <a class="topbar__link" href="projects.html">项目</a>
+      <a class="topbar__link" href="blog.html">博客</a>
     </nav>
   </div>
 </header>
@@ -70,49 +72,37 @@
             </defs>
             <rect width="120" height="120" rx="26" fill="url(#avatarGrad)" />
             <text x="60" y="75" text-anchor="middle" font-size="44" font-weight="700"
-                  fill="#ffffff" font-family="system-ui, sans-serif" data-fill="side.avatar">YN</text>
+                  fill="#ffffff" font-family="system-ui, sans-serif" data-fill="side.avatar"></text>
           </svg>
         </div>
         <span class="status" title="可联系" data-cfg="side.status">
-          <i class="status__dot"></i><span data-fill="side.status">开放合作</span>
+          <i class="status__dot"></i><span data-fill="side.status"></span>
         </span>
       </div>
 
-      <h1 class="profile__name" data-cfg="side.name" data-fill="side.name">BlueStar</h1>
-      <p class="profile__title" data-cfg="side.name" data-fill-html="side.title">软件工程师 <span class="slash">/</span> 嵌入式爱好者</p>
+      <h1 class="profile__name" data-cfg="side.name" data-fill="side.name"></h1>
+      <p class="profile__title" data-cfg="side.name" data-fill-html="side.title"></p>
 
       <!-- 内容在 js/content.js → side.meta（下面留一条示例，JS 没跑起来时显示） -->
-      <ul class="profile__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta">
-        <li><span class="ico">📍</span>武汉 · 中国</li>
-      </ul>
+      <ul class="profile__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta"></ul>
 
-      <p class="profile__bio" data-cfg="side.bio" data-fill-html="side.bio">
-        一只手写代码，一只手焊板子。
-      </p>
+      <p class="profile__bio" data-cfg="side.bio" data-fill-html="side.bio"></p>
 
       <div data-cfg="side.skills">
         <div class="divider"></div>
 
         <h2 class="side-heading">技能速览</h2>
-        <div class="chips" data-list="side.skills" data-item="chip">
-          <span class="chip chip--blue">TypeScript</span>
-        </div>
+        <div class="chips" data-list="side.skills" data-item="chip"></div>
       </div>
 
       <div data-cfg="side.links">
         <div class="divider"></div>
 
         <h2 class="side-heading">找到我</h2>
-        <nav class="links" data-list="side.links" data-item="link">
-          <a class="link" href="https://github.com/BlueStar5468" target="_blank" rel="noopener">
-            <span class="link__ico">GH</span>
-            <span class="link__text">GitHub</span>
-            <span class="link__arrow">↗</span>
-          </a>
-        </nav>
+        <nav class="links" data-list="side.links" data-item="link"></nav>
       </div>
 
-      <p class="profile__foot" data-cfg="side.credit" data-fill-html="side.credit">© <span id="year">2025</span> BlueStar<br />由 DSH 与我共同制作</p>
+      <p class="profile__foot" data-cfg="side.credit" data-fill-html="side.credit"></p>
     </div>
   </aside>
 
@@ -161,32 +151,18 @@
           </div>
 
           <div class="page__inner">
-            <p class="eyebrow" data-fill="overview.eyebrow">HELLO, WORLD 👋</p>
-            <h2 class="page__title" data-fill-html="overview.title">
-              我做<span class="hl hl--blue">软件</span>，也做<span class="hl hl--amber">硬件</span>。
-            </h2>
-            <p class="page__lead" data-fill-html="overview.lead">
-              从一行代码到一块电路板，全链路把想法做成能跑的东西。
-            </p>
+            <p class="eyebrow" data-fill="overview.eyebrow"></p>
+            <h2 class="page__title" data-fill-html="overview.title"></h2>
+            <p class="page__lead" data-fill-html="overview.lead"></p>
 
             <!-- 内容在 js/content.js → overview.stats（下面留一条示例） -->
-            <div class="stats" data-cfg="ov.stats" data-list="overview.stats" data-item="stat">
-              <div class="stat card"><b>6+</b><span>年写代码</span></div>
-            </div>
+            <div class="stats" data-cfg="ov.stats" data-list="overview.stats" data-item="stat"></div>
 
-            <div class="quick" data-cfg="ov.quick" data-list="overview.quick" data-item="quick">
-              <button class="card quick__card" data-goto="software">
-                <span class="quick__ico">💻</span>
-                <span class="quick__text"><b>软件开发</b><i>前端 / 后端 / 工具链</i></span>
-                <span class="quick__arrow">→</span>
-              </button>
-            </div>
+            <div class="quick" data-cfg="ov.quick" data-list="overview.quick" data-item="quick"></div>
 
             <div class="card pad" data-cfg="ov.skills">
-              <h3 class="mini-title" data-fill="overview.skillsTitle">技能速览</h3>
-              <div class="chips" data-list="overview.skills" data-item="chip">
-                <span class="chip">TypeScript</span>
-              </div>
+              <h3 class="mini-title" data-fill="overview.skillsTitle"></h3>
+              <div class="chips" data-list="overview.skills" data-item="chip"></div>
             </div>
           </div>
         </section>
@@ -222,46 +198,26 @@ Sections: .text .rodata .data .bss</pre>
 
           <div class="page__inner">
             <header class="phead">
-              <p class="eyebrow" data-fill="software.eyebrow">01 · SOFTWARE</p>
-              <h2 class="phead__title" data-fill="software.title">软件开发</h2>
-              <p class="phead__desc" data-fill-html="software.desc">从界面到服务端，喜欢把东西做得又快又稳。</p>
+              <p class="eyebrow" data-fill="software.eyebrow"></p>
+              <h2 class="phead__title" data-fill="software.title"></h2>
+              <p class="phead__desc" data-fill-html="software.desc"></p>
             </header>
 
             <!-- 内容在 js/content.js → software.stack -->
-            <div class="grid grid--4" data-cfg="sw.stack" data-list="software.stack" data-item="mini">
-              <article class="card mini">
-                <h4>前端</h4>
-                <div class="chips">
-                  <span class="chip">TypeScript</span><span class="chip">React</span>
-                </div>
-              </article>
-            </div>
+            <div class="grid grid--4" data-cfg="sw.stack" data-list="software.stack" data-item="mini"></div>
 
-            <h3 class="section-title" data-cfg="sw.projects"><span class="dot"></span><span data-fill="software.projectsTitle">精选项目</span></h3>
+            <h3 class="section-title" data-cfg="sw.projects"><span class="dot"></span><span data-fill="software.projectsTitle"></span></h3>
             <!-- 内容在 js/content.js → software.projects -->
-            <div class="grid grid--3" data-cfg="sw.projects" data-list="software.projects" data-item="work">
-              <article class="card work work--slim">
-                <div class="work__ico">⚙️</div>
-                <div>
-                  <h4>项目名称 A</h4>
-                  <p>一句话说明它解决什么问题、你负责哪部分。</p>
-                </div>
-                <a class="work__link" href="#" target="_blank" rel="noopener">仓库 ↗</a>
-              </article>
-            </div>
+            <div class="grid grid--3" data-cfg="sw.projects" data-list="software.projects" data-item="work"></div>
 
             <div class="two-col">
               <div class="card pad" data-cfg="sw.opensource">
-                <h3 class="mini-title" data-fill="software.opensourceTitle">开源 &amp; 社区</h3>
-                <ul class="list" data-list="software.opensource" data-item="listitem">
-                  <li><span class="list__tag">维护</span><span>某 CLI 工具 · 300+ star</span></li>
-                </ul>
+                <h3 class="mini-title" data-fill="software.opensourceTitle"></h3>
+                <ul class="list" data-list="software.opensource" data-item="listitem"></ul>
               </div>
               <div class="card pad" data-cfg="sw.certs">
-                <h3 class="mini-title" data-fill="software.certsTitle">证书 / 课程</h3>
-                <div class="chips" data-list="software.certs" data-item="chip">
-                  <span class="chip">CET-6</span>
-                </div>
+                <h3 class="mini-title" data-fill="software.certsTitle"></h3>
+                <div class="chips" data-list="software.certs" data-item="chip"></div>
               </div>
             </div>
           </div>
@@ -323,52 +279,28 @@ Sections: .text .rodata .data .bss</pre>
           <div class="page__inner">
             <header class="phead">
               <p class="eyebrow eyebrow--amber">02 · HARDWARE</p>
-              <h2 class="phead__title" data-fill="hardware.title">硬件开发</h2>
-              <p class="phead__desc" data-fill-html="hardware.desc">画原理图、打板、焊上去，然后把它调通。</p>
+              <h2 class="phead__title" data-fill="hardware.title"></h2>
+              <p class="phead__desc" data-fill-html="hardware.desc"></p>
             </header>
 
             <!-- 内容在 js/content.js → hardware.skills（这一页自动用橙色） -->
-            <div class="grid grid--4" data-cfg="hw.skills" data-list="hardware.skills" data-item="miniAmber">
-              <article class="card mini mini--amber">
-                <h4>单片机</h4>
-                <div class="chips">
-                  <span class="chip chip--amber">STM32</span>
-                </div>
-              </article>
-            </div>
+            <div class="grid grid--4" data-cfg="hw.skills" data-list="hardware.skills" data-item="miniAmber"></div>
 
             <div class="two-col">
-              <div class="card bars" data-cfg="hw.bars" data-list="hardware.bars" data-item="bar">
-                <div class="bar">
-                  <div class="bar__head"><span>嵌入式 C 固件</span><span>85%</span></div>
-                  <div class="bar__track"><i class="bar__fill" style="--v:85%"></i></div>
-                </div>
-              </div>
+              <div class="card bars" data-cfg="hw.bars" data-list="hardware.bars" data-item="bar"></div>
 
               <!-- 内容在 js/content.js → hardware.projects -->
-              <div class="grid grid--2" data-cfg="hw.projects" data-list="hardware.projects" data-item="work">
-                <article class="card work work--slim">
-                  <div class="work__ico">🔧</div>
-                  <div>
-                    <h4>项目名称 D</h4>
-                    <p>STM32 环境监测节点：传感器 + OLED + 无线上传。</p>
-                  </div>
-                </article>
-              </div>
+              <div class="grid grid--2" data-cfg="hw.projects" data-list="hardware.projects" data-item="work"></div>
             </div>
 
             <div class="two-col">
               <div class="card pad" data-cfg="hw.records">
-                <h3 class="mini-title" data-fill="hardware.recordsTitle">打样 / 作品记录</h3>
-                <ul class="list" data-list="hardware.records" data-item="listitem">
-                  <li><span class="list__tag">2025</span><span>四层板 · 电机驱动 · 打样 2 版</span></li>
-                </ul>
+                <h3 class="mini-title" data-fill="hardware.recordsTitle"></h3>
+                <ul class="list" data-list="hardware.records" data-item="listitem"></ul>
               </div>
               <div class="card pad" data-cfg="hw.gear">
-                <h3 class="mini-title" data-fill="hardware.gearTitle">我的装备台</h3>
-                <div class="chips" data-list="hardware.gear" data-item="chipAmber">
-                  <span class="chip chip--amber">恒温焊台</span>
-                </div>
+                <h3 class="mini-title" data-fill="hardware.gearTitle"></h3>
+                <div class="chips" data-list="hardware.gear" data-item="chipAmber"></div>
               </div>
             </div>
           </div>
@@ -408,38 +340,26 @@ Sections: .text .rodata .data .bss</pre>
 
           <div class="page__inner">
             <header class="phead">
-              <p class="eyebrow" data-fill="journey.eyebrow">03 · JOURNEY</p>
-              <h2 class="phead__title" data-fill="journey.title">经历 &amp; 正在学</h2>
-              <p class="phead__desc" data-fill-html="journey.desc">做过的事，和接下来想做的事。</p>
+              <p class="eyebrow" data-fill="journey.eyebrow"></p>
+              <h2 class="phead__title" data-fill="journey.title"></h2>
+              <p class="phead__desc" data-fill-html="journey.desc"></p>
             </header>
 
             <!-- 内容在 js/content.js → journey.timeline -->
-            <ol class="timeline" data-cfg="jn.timeline" data-list="journey.timeline" data-item="timeline">
-              <li>
-                <span class="timeline__time">2024 — 至今</span>
-                <div class="timeline__body card">
-                  <h4>某某公司 · 软件开发实习</h4>
-                  <p>做了什么事情、用到什么技术、带来什么结果。</p>
-                </div>
-              </li>
-            </ol>
+            <ol class="timeline" data-cfg="jn.timeline" data-list="journey.timeline" data-item="timeline"></ol>
 
             <div class="two-col">
               <div class="card pad" data-cfg="jn.honors">
-                <h3 class="mini-title" data-fill="journey.honorsTitle">荣誉 / 奖项</h3>
-                <ul class="list" data-list="journey.honors" data-item="listitem">
-                  <li><span class="list__tag">国家级</span><span>全国大学生电子设计竞赛 · 二等奖</span></li>
-                </ul>
+                <h3 class="mini-title" data-fill="journey.honorsTitle"></h3>
+                <ul class="list" data-list="journey.honors" data-item="listitem"></ul>
               </div>
               <div class="card pad" data-cfg="jn.learning">
-                <h3 class="mini-title" data-fill="journey.learningTitle">最近在折腾</h3>
-                <div class="chips" data-list="journey.learning" data-item="chip">
-                  <span class="chip">Rust</span>
-                </div>
+                <h3 class="mini-title" data-fill="journey.learningTitle"></h3>
+                <div class="chips" data-list="journey.learning" data-item="chip"></div>
               </div>
             </div>
 
-            <p class="scroll-note" data-cfg="jn.note"><span data-fill="journey.note">再往下滚，就真正到底了</span> <span class="scroll-note__chev">⌄</span></p>
+            <p class="scroll-note" data-cfg="jn.note"><span data-fill="journey.note"></span> <span class="scroll-note__chev">⌄</span></p>
           </div>
         </section>
 
@@ -468,17 +388,11 @@ Sections: .text .rodata .data .bss</pre>
 
     <!-- 落地页：滚过最后一屏才出现；内容在 js/content.js → landing -->
     <footer class="landing card" id="landing" data-cfg="ui.landing">
-      <p class="eyebrow" data-fill="landing.eyebrow">CONTACT</p>
-      <h2 class="landing__title" data-fill-html="landing.title">要不要聊聊？</h2>
-      <p class="landing__desc" data-fill-html="landing.desc">
-        实习 / 全职机会、开源合作、或者只是想讨论一块板子怎么画，都欢迎直接找我。
-      </p>
-      <div class="landing__actions" data-list="landing.buttons" data-item="btn">
-        <a class="btn btn--primary" href="mailto:contact@bluestar5468.com">发邮件给我</a>
-      </div>
-      <p class="landing__foot" data-fill-html="landing.foot">
-        © <span id="yearB">2025</span> BlueStar · 托管于 GitHub Pages
-      </p>
+      <p class="eyebrow" data-fill="landing.eyebrow"></p>
+      <h2 class="landing__title" data-fill-html="landing.title"></h2>
+      <p class="landing__desc" data-fill-html="landing.desc"></p>
+      <div class="landing__actions" data-list="landing.buttons" data-item="btn"></div>
+      <p class="landing__foot" data-fill-html="landing.foot"></p>
     </footer>
 
   </main>

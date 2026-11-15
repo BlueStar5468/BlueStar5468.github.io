@@ -1621,3 +1621,12 @@ body[data-booting] .bootmask {
   body[data-booting] .boot-hide, body:not([data-booting]) .boot-hide { transition: none; }
   .bootmask__spin { animation: none; }
 }
+
+/* 关掉 JS 时的提示 */
+.noscript {
+  position: fixed; left: 50%; top: calc(var(--topbar-h) + 18px);
+  transform: translateX(-50%); z-index: 60;
+  margin: 0; padding: 10px 16px; border-radius: var(--radius-sm);
+  background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
+  font-size: 12.5px; font-weight: 600;
+}
