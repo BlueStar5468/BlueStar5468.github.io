@@ -44,7 +44,8 @@
     ]},
     code: { label: '代码块', fields: [
       { k: 'title', t: 'text',     label: '标题（可选）' },
-      { k: 'lang',  t: 'text',     label: '语言标签（比如 c / csharp / bash）' },
+      { k: 'file',  t: 'text',     label: '文件名（可选，比如 main.c）' },
+      { k: 'lang',  t: 'text',     label: '语言标签（比如 c / csharp）' },
       { k: 'code',  t: 'textarea', label: '代码' }
     ]},
     image: { label: '单张图片', fields: [
@@ -213,6 +214,35 @@
       window.addEventListener('resize', paint);
     }
     paint();
+  }
+
+  /* ---------- Tab 键：插入 4 个空格（textarea 里） ----------
+     只拦 Tab，Shift+Tab 保留浏览器默认（方便跳出输入框，不会把人困住） */
+  function initTabKey() {
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Tab' || e.shiftKey) return;
+
+      var el = e.target;
+      if (!el || !el.tagName || String(el.tagName).toLowerCase() !== 'textarea') return;
+
+      e.preventDefault();
+
+      var start = el.selectionStart;
+      var end   = el.selectionEnd;
+      var before = el.value;
+      var done = false;
+
+      // 优先用 execCommand：能保留撤销栈，而且会自动触发 input 事件
+      try { done = document.execCommand('insertText', false, '    ') === true; } catch (err) { done = false; }
+
+      if (!done || el.value === before) {
+        el.value = before.slice(0, start) + '    ' + before.slice(end);
+        el.selectionStart = el.selectionEnd = start + 4;
+        if (el.dispatchEvent && typeof Event === 'function') {
+          el.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+    });
   }
 
   /* ---------- 折叠：分区折叠 + 左栏整体收起 ---------- */
@@ -688,6 +718,7 @@
     bindMeta();
     if (state._fill) state._fill();
     bindButtons();
+    initTabKey();
     initCollapse();
     initPreviewSize();
     renderList();

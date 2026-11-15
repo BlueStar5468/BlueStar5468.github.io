@@ -130,8 +130,15 @@
   };
 
   B.code = function (b, i) {
-    var inner = '<div class="codeblk">' +
-      (b.lang ? '<span class="codeblk__lang">' + esc(b.lang) + '</span>' : '') +
+    // 顶部横条：左边文件名（可选），右边语言标签（可选）；两个都没有就不出横条
+    var bar = '';
+    if (b.file || b.lang) {
+      bar = '<div class="codeblk__bar">' +
+        '<span class="codeblk__file">' + esc(b.file || '') + '</span>' +
+        '<span class="codeblk__lang">' + esc(b.lang || '') + '</span>' +
+      '</div>';
+    }
+    var inner = '<div class="codeblk">' + bar +
       '<pre><code>' + esc(b.code || '') + '</code></pre></div>';
     return wrap(b, i, inner);
   };

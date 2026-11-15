@@ -474,15 +474,29 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 
 /* 代码块 */
 .codeblk { position: relative; border-radius: var(--radius); background: #0f172a; overflow: hidden; }
-.codeblk pre { margin: 0; padding: 15px 16px; overflow-x: auto; }
+/* 顶部横条：文件名在左，语言标签在右（两个都可选） */
+.codeblk__bar {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 16px;
+  background: rgba(148, 163, 184, .07);
+  border-bottom: 1px solid rgba(148, 163, 184, .16);
+  font-size: 11px; font-weight: 700;
+}
+.codeblk__file {
+  flex: 1; min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  letter-spacing: .2px; color: #cbd5e1;
+}
+.codeblk__lang {
+  flex: 0 0 auto;
+  font-size: 10px; letter-spacing: .6px; text-transform: uppercase;
+  color: #64748b;
+}
+.codeblk pre { margin: 0; padding: 14px 16px; overflow-x: auto; }
 .codeblk code {
   font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
   font-size: 12.5px; line-height: 1.72; color: #e2e8f0; white-space: pre;
-}
-.codeblk__lang {
-  position: absolute; top: 8px; right: 11px;
-  font-size: 10px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase;
-  color: #64748b;
 }
 
 /* 图片 / 图集 */
