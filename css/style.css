@@ -258,8 +258,9 @@ body {
 .pcard__link--primary { color: #fff; background: var(--blue-600); border-color: transparent; }
 .pcard__link--primary:hover { color: #fff; background: var(--blue-700); }
 
-.chips--sm { gap: 4px; }
-.chip--sm { padding: 2px 7px; font-size: 11px; }
+/* 双类名压过后面的 .chips / .chip */
+.chips.chips--sm { gap: 4px; }
+.chip.chip--sm { padding: 2px 7px; font-size: 11px; }
 
 .pgrid__empty {
   margin: 0; padding: 28px 16px; text-align: center;
@@ -564,7 +565,9 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .bside__links { display: grid; gap: 3px; }
 
 /* 头像的纯 CSS 版本（没有图片时显示字母） */
-.avatar--flat {
+/* 双类名是有意的：修饰符要压过后面定义的基础类（.avatar 在 700 行附近），
+   否则 width 来自这里、height 来自基础类，头像会变成竖长方形 */
+.avatar.avatar--flat {
   width: 52px; height: 52px; flex: 0 0 52px;
   display: grid; place-items: center;
   border-radius: 6px;                       /* 方形一点 */
@@ -1298,7 +1301,7 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
   .profile__foot { margin-top: 18px; }
   .avatar { width: 72px; height: 72px; }
   /* 博客里那个小头像有 flex-basis，别被上面的 width/height 拉成竖条 */
-  .avatar--flat { width: 52px; height: 52px; flex: 0 0 52px; }
+  .avatar.avatar--flat { width: 52px; height: 52px; flex: 0 0 52px; }
   .two-col { grid-template-columns: minmax(0, 1fr); }
   .two-col .work--slim { grid-template-columns: auto minmax(0, 1fr); }
   .two-col .work__ico { display: grid; }
