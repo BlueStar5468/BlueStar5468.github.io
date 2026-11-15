@@ -1,6 +1,7 @@
 {
   "title": "博客",
-  "_说明": "博客主页的配置。blocks 和项目详情页共用一套组件（见 js/blocks.js）；posts 是「列出所有文章」的专属组件。",
+  "_说明": "博客主页的配置。blocks = 右边主内容；sidebar = 左边介绍卡下面的内容（两个页面共用，组件一样）。",
+
   "blocks": [
     {
       "type": "hero",
@@ -19,6 +20,15 @@
     {
       "type": "posts",
       "title": "全部文章"
+    }
+  ],
+
+  "sidebar": [
+    {
+      "type": "posts",
+      "title": "最近文章",
+      "limit": 3,
+      "count": false
     }
   ]
 }

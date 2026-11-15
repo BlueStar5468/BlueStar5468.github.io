@@ -7,7 +7,7 @@
 
    文件：
      blog/_index.json   文章清单（id 列表）
-     blog/_home.json    主页配置（blocks 数组，组件同项目页）
+     blog/_home.json    主页配置：blocks（右边）+ sidebar（左边介绍卡下面） + title
      blog/<id>.json     一篇文章：meta（标题/日期/标签/摘要） + page.blocks（正文）
    ========================================================================= */
 
@@ -26,7 +26,52 @@
     });
   };
 
-  /* ---------- 读清单（正式 + 本地，正式优先） ---------- */
+  /* ================= 阅读时长 ================= */
+  function plain(html) {
+    return String(html || '').replace(/<[^>]*>/g, ' ').replace(/&[a-z#0-9]+;/gi, ' ').trim();
+  }
+
+  // 把所有块里的文字抠出来（代码块不算：读代码不算阅读）
+  function blocksText(blocks) {
+    var parts = [];
+    (blocks || []).forEach(function (b) {
+      if (!b) return;
+      ['html', 'text', 'title', 'subtitle', 'desc', 'caption', 'summary'].forEach(function (k) {
+        if (typeof b[k] === 'string' && b[k]) parts.push(plain(b[k]));
+      });
+      (b.items || []).forEach(function (it) {
+        if (typeof it === 'string') parts.push(it);
+        else if (it) ['title', 'desc', 'text'].forEach(function (k) {
+          if (typeof it[k] === 'string') parts.push(plain(it[k]));
+        });
+      });
+      (b.rows || []).forEach(function (r) {
+        if (r && r.length) r.forEach(function (c) { parts.push(String(c)); });
+      });
+      (b.images || []).forEach(function (g) {
+        if (g && g.caption) parts.push(plain(g.caption));
+      });
+    });
+    return parts.join(' ');
+  }
+
+  // 中文 300 字/分钟 + 英文 200 词/分钟，最少 1 分钟
+  function readingMinutes(blocks) {
+    var t = blocksText(blocks);
+    var cjk = (t.match(/[\u4e00-\u9fa5]/g) || []).length;
+    var words = (t.replace(/[\u4e00-\u9fa5]/g, ' ').match(/[A-Za-z0-9_]+/g) || []).length;
+    return Math.max(1, Math.round(cjk / 300 + words / 200));
+  }
+
+  /* ================= 读数据 ================= */
+  function loadHomeConfig() {
+    return getJSON(BASE + '_home.json').catch(function () {
+      return getJSON(DEV + '_home.json');
+    }).catch(function () {
+      return {};
+    });
+  }
+
   function loadEntryList() {
     function idx(dir) {
       return getJSON(dir + '_index.json').catch(function () { return { posts: [] }; });
@@ -46,11 +91,15 @@
     });
   }
 
-  /* ---------- 读所有文章，按日期倒序（新的在前） ---------- */
+  // 读所有文章 -> 按日期倒序，并算好阅读时长（meta.minutes）
   function loadPosts(entries) {
     return Promise.all(entries.map(function (e) {
       return getJSON(e.dir + e.id + '.json')
-        .then(function (d) { return { id: e.id, dir: e.dir, meta: d.meta || {}, data: d }; })
+        .then(function (d) {
+          var meta = d.meta || {};
+          meta.minutes = readingMinutes((d.page && d.page.blocks) || []);
+          return { id: e.id, dir: e.dir, meta: meta, data: d };
+        })
         .catch(function (err) {
           if (typeof console !== 'undefined' && console.warn) {
             console.warn('[blog] 读不到 ' + e.dir + e.id + '.json：' + err.message);
@@ -59,22 +108,34 @@
         });
     })).then(function (list) {
       return list.filter(Boolean).sort(function (a, b) {
-        var da = String((a.meta && a.meta.date) || '');
-        var db = String((b.meta && b.meta.date) || '');
+        var da = String(a.meta.date || '');
+        var db = String(b.meta.date || '');
         if (da === db) return 0;
-        return da < db ? 1 : -1;
+        return da < db ? 1 : -1;      // 新的在前
       });
     });
   }
 
-  /* ---------- 文章页的头部（用 meta 生成，不用写在 blocks 里） ---------- */
+  /* ================= 左边介绍卡下面的东西（用组件库生成） ================= */
+  function renderSidebar(cfg, posts) {
+    var box = document.getElementById('bsideExtra');
+    if (!box) return;
+    var blocks = (cfg && cfg.sidebar) || [];
+    if (!blocks.length) { box.innerHTML = ''; return; }
+    box.innerHTML = window.RENDER_BLOCKS(blocks, { posts: posts });
+  }
+
+  /* ================= 文章页头部 ================= */
   function postHead(m) {
     var tags = (m.tags || []).map(function (t) {
       return '<span class="chip chip--sm">' + esc(t) + '</span>';
     }).join('');
+    var bits = [];
+    if (m.date) bits.push('<time class="posthead__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>');
+    if (m.minutes) bits.push('<span class="posthead__min">约 ' + esc(m.minutes) + ' 分钟</span>');
+
     return '<header class="posthead">' +
-      '<div class="posthead__top">' +
-        (m.date ? '<time class="posthead__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>' : '') +
+      '<div class="posthead__top">' + bits.join('<span class="posthead__dot">·</span>') +
         (tags ? '<span class="posthead__tags">' + tags + '</span>' : '') +
       '</div>' +
       '<h1 class="posthead__title">' + esc(m.title || '') + '</h1>' +
@@ -82,61 +143,61 @@
     '</header>';
   }
 
-  /* ---------- 主页 ---------- */
+  /* ================= 主页 ================= */
   function initHome() {
     var host = document.getElementById('bhome');
     if (!host) return;
     var err = document.getElementById('berr');
 
-    var home = getJSON(BASE + '_home.json').catch(function () {
-      return getJSON(DEV + '_home.json');
-    });
-
-    Promise.all([home, loadEntryList().then(loadPosts)])
+    Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
       .then(function (r) {
-        var cfg = r[0] || {};
+        var cfg   = r[0] || {};
         var posts = r[1] || [];
+        var ctx   = { posts: posts };
 
-        host.innerHTML = window.RENDER_BLOCKS(cfg.blocks || [], { posts: posts });
+        host.innerHTML = window.RENDER_BLOCKS(cfg.blocks || [], ctx);
+        renderSidebar(cfg, posts);
+
         if (err) err.hidden = true;
         if (cfg.title) document.title = cfg.title + ' · BlueStar5468';
       })
       .catch(function (e) {
         if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 主页加载失败：', e);
         host.innerHTML = '<p class="lderr">博客加载失败：' + esc(e.message) +
-          '　—— 要用 http 打开（本地：python -m http.server），' +
-          '并且 blog/_home.json 要存在。</p>';
+          '　—— 要用 http 打开（本地：python -m http.server），并且 blog/_home.json 要存在。</p>';
       });
   }
 
-  /* ---------- 文章页 ---------- */
+  /* ================= 文章页 ================= */
   function initPost() {
     var host = document.getElementById('ppost');
     if (!host) return;
 
     var want = (/[?&]p=([\w.-]+)/.exec(location.search) || [])[1] || '';
 
-    loadEntryList().then(function (entries) {
-      var hit = null;
-      entries.forEach(function (e) { if (e.id === want) hit = e; });
-      if (!hit) throw new Error(want ? ('找不到文章「' + want + '」') : '还没有文章');
+    Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
+      .then(function (r) {
+        var cfg   = r[0] || {};
+        var posts = r[1] || [];
 
-      return getJSON(hit.dir + hit.id + '.json').then(function (d) {
-        var meta   = d.meta || {};
-        var blocks = (d.page && d.page.blocks) || [];
+        var hit = null;
+        posts.forEach(function (p) { if (p.id === want) hit = p; });
+        if (!hit) throw new Error(want ? ('找不到文章「' + want + '」') : '还没有文章');
 
-        host.innerHTML = postHead(meta) + window.RENDER_BLOCKS(blocks, {});
-        document.title = (meta.title || hit.id) + ' · BlueStar5468';
+        var blocks = (hit.data.page && hit.data.page.blocks) || [];
+
+        host.innerHTML = postHead(hit.meta) + window.RENDER_BLOCKS(blocks, { posts: posts });
+        renderSidebar(cfg, posts);
+        document.title = (hit.meta.title || hit.id) + ' · BlueStar5468';
+      })
+      .catch(function (e) {
+        if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 文章加载失败：', e);
+        host.innerHTML = '<p class="lderr">' + esc(e.message) +
+          '　—— 检查 blog/_index.json 里有没有这个 id，或者用 http 打开（本地：python -m http.server）。</p>';
       });
-    }).catch(function (e) {
-      if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 文章加载失败：', e);
-      host.innerHTML = '<p class="lderr">' + esc(e.message) +
-        '　—— 检查 blog/_index.json 里有没有这个 id，' +
-        '或者用 http 打开（本地：python -m http.server）。</p>';
-    });
   }
 
-  /* ---------- 入口 ---------- */
+  /* ================= 入口 ================= */
   if (document.getElementById('bhome')) initHome();
   if (document.getElementById('ppost')) initPost();
 })();

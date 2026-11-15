@@ -198,6 +198,7 @@
         '<span class="post__body">' +
           '<span class="post__head">' +
             (m.date ? '<time class="post__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>' : '') +
+            (m.minutes ? '<span class="post__min">' + esc(m.minutes) + ' 分钟</span>' : '') +
             (tags ? '<span class="post__tags">' + tags + '</span>' : '') +
           '</span>' +
           '<span class="post__title">' + esc(m.title || p.id) + '</span>' +
@@ -210,6 +211,42 @@
       : '<p class="posts__count">共 ' + shown.length + ' 篇</p>';
 
     return wrap(b, i, '<div class="posts">' + html + '</div>' + foot);
+  };
+
+  /* postref —— 引用另一篇博文（文章页里用得最多）
+     id    必填，被引用文章的 id
+     note  可选，前面加一句说明
+     （数据同样来自 ctx.posts，找不到会显示黄色提示） */
+  B.postref = function (b, i, ctx) {
+    var list = (ctx && ctx.posts) || [];
+    var hit = null;
+    list.forEach(function (p) { if (p.id === b.id) hit = p; });
+
+    if (!hit) {
+      return wrap(b, i, '<p class="blk__warn">引用的文章找不到：' + esc(b.id) +
+        '（检查 blog/_index.json 里有没有这个 id）</p>');
+    }
+
+    var m = hit.meta || {};
+    var tags = (m.tags || []).map(function (t) {
+      return '<span class="chip chip--sm">' + esc(t) + '</span>';
+    }).join('');
+
+    return wrap(b, i,
+      (b.note ? '<p class="prose">' + esc(b.note) + '</p>' : '') +
+      '<a class="post post--ref" href="blog-post.html?p=' + esc(hit.id) + '">' +
+        '<span class="post__body">' +
+          '<span class="post__head">' +
+            '<span class="post__label">相关</span>' +
+            (m.date ? '<time class="post__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>' : '') +
+            (m.minutes ? '<span class="post__min">' + esc(m.minutes) + ' 分钟</span>' : '') +
+            (tags ? '<span class="post__tags">' + tags + '</span>' : '') +
+          '</span>' +
+          '<span class="post__title">' + esc(m.title || hit.id) + '</span>' +
+          (m.summary ? '<span class="post__sum">' + esc(m.summary) + '</span>' : '') +
+        '</span>' +
+        '<span class="post__arrow" aria-hidden="true">↗</span>' +
+      '</a>');
   };
 
   /* ---------- 对外 ---------- */

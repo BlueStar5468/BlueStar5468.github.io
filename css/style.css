@@ -534,14 +534,14 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 /* ---------- 博客（blog.html / blog-post.html） ---------- */
 .blog-shell {
   position: relative; z-index: 1;
-  max-width: 1180px; margin: 0 auto;
+  max-width: 1440px; margin: 0 auto;
   padding:
-    calc(var(--topbar-h) + clamp(20px, 5vh, 44px))
-    clamp(16px, 3vw, 32px)
+    calc(var(--topbar-h) + clamp(18px, 4.5vh, 38px))
+    clamp(12px, 1.6vw, 26px)
     clamp(40px, 8vh, 80px);
   display: grid;
-  grid-template-columns: 282px minmax(0, 1fr);
-  gap: clamp(16px, 2.2vw, 30px);
+  grid-template-columns: 268px minmax(0, 1fr);
+  gap: clamp(13px, 1.6vw, 22px);
   align-items: start;
 }
 
@@ -573,9 +573,21 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .avatar--flat .avatar__letter { line-height: 1; }
 
 /* 右边：内容 */
-.bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 760px; }
-.bmain--post { max-width: 720px; }
+.bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 840px; }
+.bmain--post { max-width: 780px; }
 .ppost { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; }
+
+/* 介绍卡下面的附加块（由 _home.json 的 sidebar 生成），窄栏里压缩一下 */
+.bside__extra { display: grid; gap: 10px; }
+.bside__extra:empty { display: none; }
+.bside__extra .blk { gap: 6px; }
+.bside__extra .blk__title { font-size: 12.5px; font-weight: 700; color: var(--muted); letter-spacing: .2px; }
+.bside__extra .posts { gap: 6px; }
+.bside__extra .post { padding: 9px 10px; gap: 0; }
+.bside__extra .post__thumb { display: none; }
+.bside__extra .post__title { font-size: 12.5px; line-height: 1.45; }
+.bside__extra .post__sum { display: none; }
+.bside__extra .posts__count { display: none; }
 
 /* 文章列表（posts 组件） */
 .posts { display: grid; gap: 8px; }
@@ -598,7 +610,16 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .post__body { display: grid; gap: 3px; min-width: 0; }
 .post__head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .post__date { font-size: 11.5px; font-weight: 600; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.post__min { font-size: 11.5px; font-weight: 600; color: #b6c2d1; }
+.post__label {
+  padding: 1px 7px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 700; letter-spacing: .3px;
+  color: var(--blue-700); background: var(--blue-50); border: 1px solid var(--blue-100);
+}
 .post__tags { display: flex; gap: 4px; }
+.post__arrow { margin-left: auto; align-self: center; font-size: 13px; color: #cbd5e1; }
+.post--ref { border-left: 3px solid var(--blue-300); padding-left: 13px; }
+.post--ref:hover .post__arrow { color: var(--blue-600); }
 .post__title { font-size: 14.5px; font-weight: 700; letter-spacing: -.2px; line-height: 1.4; }
 .post:hover .post__title { color: var(--blue-700); }
 .post__sum { font-size: 12.5px; line-height: 1.62; color: var(--muted); }
@@ -618,6 +639,8 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .posthead { display: grid; gap: 6px; padding-bottom: 15px; border-bottom: 1px solid var(--line); }
 .posthead__top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .posthead__date { font-size: 11.5px; font-weight: 600; color: #94a3b8; font-variant-numeric: tabular-nums; }
+.posthead__min { font-size: 11.5px; font-weight: 600; color: #b6c2d1; }
+.posthead__dot { font-size: 11px; color: #cbd5e1; }
 .posthead__tags { display: flex; gap: 4px; }
 .posthead__title { margin: 0; font-size: clamp(21px, 3.4vh, 29px); letter-spacing: -.7px; line-height: 1.3; }
 .posthead__sum { margin: 0; font-size: 13.5px; line-height: 1.68; color: var(--muted); }
