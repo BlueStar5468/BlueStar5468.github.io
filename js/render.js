@@ -14,6 +14,46 @@
 (function () {
   'use strict';
 
+  /* =========================================================
+     快捷键：按住 Ctrl+Alt，右上角临时冒出「实验室」入口
+     （故意放在最开始，这样即使 content.js 没加载也照样能用）
+     ========================================================= */
+  (function labShortcut() {
+    var isLab = false;
+    try {
+      isLab = (document.body && document.body.getAttribute('data-section') === 'lab');
+    } catch (e) { isLab = false; }
+    if (isLab) return;                   // 已经在实验室里就不用再给了
+
+    var el = null;
+    var timer = null;
+
+    function show() {
+      if (!el) {
+        if (!document.body) return;
+        el = document.createElement('a');
+        el.className = 'labkey';
+        el.href = 'test.html';
+        el.setAttribute('aria-label', '打开实验室（调试页）');
+        el.innerHTML = '🧪 实验室 <b>→</b>';
+        document.body.appendChild(el);
+      }
+      el.classList.add('is-on');
+
+      clearTimeout(timer);
+      timer = setTimeout(function () { el.classList.remove('is-on'); }, 3500);
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.altKey) show();
+    });
+
+    /* 点过之后立刻收起 */
+    document.addEventListener('click', function (e) {
+      if (el && e.target === el) el.classList.remove('is-on');
+    });
+  })();
+
   var C = window.SITE_CONTENT;
   if (!C) return;                       // 没内容文件就保持 HTML 原样，不报错
 

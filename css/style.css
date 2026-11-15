@@ -678,6 +678,27 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
   .bmain, .bmain--post { max-width: none; }
 }
 
+/* 快捷键（Ctrl+Alt）临时冒出来的实验室入口 */
+.labkey {
+  position: fixed;
+  top: calc(var(--topbar-h) + 10px);
+  right: 14px;
+  z-index: 120;
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 7px 13px;
+  font-size: 12.5px; font-weight: 700; color: #fff;
+  text-decoration: none; white-space: nowrap;
+  background: linear-gradient(135deg, var(--blue-600), var(--cyan-500));
+  border-radius: 999px;
+  box-shadow: 0 6px 18px -6px rgba(37, 99, 235, .55);
+  opacity: 0; transform: translateY(-8px) scale(.96);
+  pointer-events: none;
+  transition: opacity .18s, transform .18s var(--ease);
+}
+.labkey.is-on { opacity: 1; transform: none; pointer-events: auto; }
+.labkey:hover { filter: brightness(1.06); }
+.labkey:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
 /* ---------- 写文章的小工具（studio.html） ---------- */
 .studio {
   position: relative; z-index: 1;
