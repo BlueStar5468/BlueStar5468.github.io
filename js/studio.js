@@ -128,12 +128,144 @@
     });
   }
 
-  /* ---------- 预览 / 输出 ---------- */
+  /* ---------- 预览：用 iframe 装，这样媒体查询会跟着容器宽度变 ---------- */
+  var PREVIEW_SHELL =
+    '<!DOCTYPE html><html lang="zh-CN" data-accent="blue"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<base target="_blank">' +
+    '<link rel="stylesheet" href="css/style.css">' +
+    '<style>' +
+      'html,body{background:#fff}' +
+      'body{margin:0;padding:clamp(14px,4vw,30px)}' +
+      '.studio__empty{margin:0;padding:22px;text-align:center;font-size:13px;color:#94a3b8;' +
+        'border:1px dashed #e5eaf1;border-radius:10px}' +
+    '</style></head><body><div id="pv"></div></body></html>';
+
+  var pendingInner = '';
+
+  function flushPreview() {
+    var f = $('pvFrame');
+    if (!f) return;
+    var doc = f.contentDocument;
+    var host = doc && doc.getElementById ? doc.getElementById('pv') : null;
+    if (host) { host.innerHTML = pendingInner; return; }   // iframe 已经就绪，直接换内容（不闪）
+
+    if (!f._hooked) {
+      f._hooked = true;
+      f.addEventListener('load', function () {
+        var d = f.contentDocument;
+        var h = d && d.getElementById ? d.getElementById('pv') : null;
+        if (h) h.innerHTML = pendingInner;
+      });
+      f.srcdoc = PREVIEW_SHELL;
+    }
+  }
+
   function renderPreview() {
-    var host = $('preview');
-    if (!host) return;
-    host.innerHTML = window.RENDER_BLOCKS(state.blocks, {})
-      || '<p class="posts__empty">还没有内容块</p>';
+    pendingInner = window.RENDER_BLOCKS(state.blocks, {})
+      || '<p class="studio__empty">还没有内容块</p>';
+    flushPreview();
+  }
+
+  /* ---------- 预览尺寸：预设 + 拖动右下角 ---------- */
+  function initPreviewSize() {
+    var box   = $('frameBox');
+    var label = $('pvSize');
+    var btns  = document.querySelectorAll('.studio__pvBtn');
+    var list  = Array.prototype.slice.call(btns);
+
+    function paint() {
+      if (!label || !box) return;
+      label.textContent = Math.round(box.clientWidth) + ' × ' + Math.round(box.clientHeight);
+    }
+
+    list.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var w = parseInt(b.getAttribute('data-w'), 10) || 0;
+        list.forEach(function (x) { x.classList.remove('is-on'); });
+        b.classList.add('is-on');
+        if (box) box.style.width = w > 0 ? (w + 'px') : '';
+        paint();
+      });
+    });
+
+    if (box && window.ResizeObserver) {
+      new window.ResizeObserver(paint).observe(box);
+    } else if (window.addEventListener) {
+      window.addEventListener('resize', paint);
+    }
+    paint();
+  }
+
+  /* ---------- 折叠：分区折叠 + 左栏整体收起 ---------- */
+  var LS_SEC  = 'studio-sec-';
+  var LS_LEFT = 'studio-left';
+
+  function lsGet(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { window.localStorage.setItem(k, v); } catch (e) { /* 忽略 */ } }
+
+  function secEl(name) {
+    var all = document.querySelectorAll('.studio__sec');
+    for (var i = 0; i < all.length; i++) {
+      if (all[i].getAttribute('data-sec') === name) return all[i];
+    }
+    return null;
+  }
+
+  function setSec(name, closed, save) {
+    var el = secEl(name);
+    if (!el) return;
+    el.classList.toggle('is-closed', !!closed);
+    var head = el.querySelector('.studio__secHead');
+    if (head) head.setAttribute('aria-expanded', closed ? 'false' : 'true');
+    if (save) lsSet(LS_SEC + name, closed ? '1' : '0');
+  }
+
+  function setLeft(closed, save) {
+    var grid = $('studioGrid');
+    var btn  = $('btnCollapse');
+    if (grid) grid.classList.toggle('is-left-closed', !!closed);
+    if (btn) {
+      btn.classList.toggle('is-closed', !!closed);
+      btn.setAttribute('aria-expanded', closed ? 'false' : 'true');
+      btn.textContent = closed ? '»' : '«';
+    }
+    if (save) lsSet(LS_LEFT, closed ? '1' : '0');
+  }
+
+  function initCollapse() {
+    var heads = document.querySelectorAll('.studio__secHead');
+    Array.prototype.forEach.call(heads, function (head) {
+      head.addEventListener('click', function () {
+        var sec = head.parentNode.getAttribute('data-sec');
+        setSec(sec, !head.parentNode.classList.contains('is-closed'), true);
+      });
+    });
+
+    var btn = $('btnCollapse');
+    if (btn) {
+      btn.addEventListener('click', function () {
+        var grid = $('studioGrid');
+        setLeft(!(grid && grid.classList.contains('is-left-closed')), true);
+      });
+    }
+
+    var railBtns = document.querySelectorAll('.studio__railBtn');
+    Array.prototype.forEach.call(railBtns, function (b) {
+      b.addEventListener('click', function () {
+        var what = b.getAttribute('data-rail');
+        if (what === 'expand') { setLeft(false, true); return; }
+        setLeft(false, true);
+        setSec(what, false, true);
+        var sec = secEl(what);
+        if (sec && sec.scrollIntoView) sec.scrollIntoView({ block: 'nearest' });
+      });
+    });
+
+    /* 恢复上次的状态 */
+    setLeft(lsGet(LS_LEFT) === '1', false);
+    setSec('info', lsGet(LS_SEC + 'info') === '1', false);
+    setSec('blocks', lsGet(LS_SEC + 'blocks') === '1', false);
   }
 
   function toFile() {
@@ -532,6 +664,8 @@
     bindMeta();
     if (state._fill) state._fill();
     bindButtons();
+    initCollapse();
+    initPreviewSize();
     renderList();
     renderForm();
     renderPreview();
