@@ -25,17 +25,19 @@
 │   ├── main.js         滚动翻页（只有 index.html 用）
 │   ├── blocks.js       详情页组件库（hero / text / list / code / gallery …）
 │   └── projects.js     读 json、生成卡片、侧边栏、筛选
-├── projects/           ⭐ 一个项目一个 json
+├── projects/           ⭐ 正式项目：一个项目一个 json（会推上去）
 │   ├── _index.json     项目清单（顺序）
-│   ├── starexplorer.json
-│   └── …
+│   └── _template.json  新项目从这里复制
+├── dev-projects/       本地测试项目（在 .gitignore 里，不会推上去）
 ├── assets/             图片
 ├── CNAME               自定义域名 —— 不要删
 └── .nojekyll           让 Pages 跳过 Jekyll
 ```
 
 要改内容改 `js/content.js`，要关掉某块改 `js/config.js`；
-**加一个项目 = 在 `projects/` 里新建一个 json + 在 `_index.json` 里登记一行。**
+**加一个项目 = 复制 `projects/_template.json` → 改成 `projects/<id>.json` → 在 `projects/_index.json` 里登记一行。**
+
+`dev-projects/` 里的项目只在本机预览时出现（方便调样式），不会跟着仓库走。
 
 > ⚠️ 项目配置是页面运行时用 `fetch` 读的，所以要**用 http 打开**（本地：`python -m http.server`），
 > 直接双击 html 文件会读不到项目。
