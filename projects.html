@@ -11,7 +11,7 @@
 
 <link rel="stylesheet" href="css/style.css" />
 </head>
-<body data-section="projects">
+<body data-section="projects" data-booting>
 
 <!-- ════════════ 顶部导航栏（所有页面共用，链接在 js/content.js 的 site.nav）════════════ -->
 <header class="topbar">
@@ -37,7 +37,7 @@
 </div>
 
 <!-- ════════════ 项目页外壳：左边导航（可收起） + 右边内容 ════════════ -->
-<main class="page-shell">
+<main class="page-shell boot-hide">
 
   <!-- 项目导航：内容由 js/projects.js 按 projects/_index.json 生成 -->
   <aside class="pnav" id="pnav" aria-label="项目导航"></aside>
@@ -77,5 +77,6 @@
 <script src="js/content.js"></script>
 <script src="js/render.js"></script>
 <script src="js/projects.js"></script>
+  <div class="bootmask" aria-hidden="true"><span class="bootmask__spin"></span><span class="bootmask__text">正在加载…</span></div>
 </body>
 </html>

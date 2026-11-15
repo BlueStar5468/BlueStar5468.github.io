@@ -27,7 +27,7 @@
   #deck .hint { display: none; }
 </style></noscript>
 </head>
-<body data-section="home">
+<body data-section="home" data-booting>
 
 <!-- ════════════ 顶部导航栏（两个页面共用，链接在 js/content.js 的 site.nav 里）════════════ -->
 <header class="topbar">
@@ -51,7 +51,7 @@
   <span class="bg__grid"></span>
 </div>
 
-<div class="app">
+<div class="app boot-hide">
 
   <!-- ════════════════ 左侧：贴边停靠的个人介绍栏 ════════════════ -->
   <aside class="sidebar" data-cfg="ui.sidebar">
@@ -493,5 +493,6 @@ Sections: .text .rodata .data .bss</pre>
 <script src="js/content.js"></script>
 <script src="js/render.js"></script>
 <script src="js/main.js"></script>
+  <div class="bootmask" aria-hidden="true"><span class="bootmask__spin"></span><span class="bootmask__text">正在加载…</span></div>
 </body>
 </html>

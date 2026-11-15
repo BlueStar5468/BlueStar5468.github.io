@@ -239,6 +239,7 @@
 
       initFilter();
       if (window.LOADBAR) window.LOADBAR.done();
+      if (window.SITE_BOOTED) window.SITE_BOOTED();
 
       // 一个项目都没有：给一句人话，而不是报错
       if (!list.length) {
@@ -287,6 +288,7 @@
         buildSidebar(document.getElementById('pnav'), list, cur ? cur.id : null,
                      cur ? window.BLOCK_TOC(cur.blocks) : []);
         spyToc();
+        if (window.SITE_BOOTED) window.SITE_BOOTED();
       }).catch(function (e) {
         if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 侧栏加载失败：', e);
       });
@@ -314,6 +316,7 @@
 
         buildSidebar(document.getElementById('pnav'), list, cur.id, window.BLOCK_TOC(blocks));
         spyToc();
+        if (window.SITE_BOOTED) window.SITE_BOOTED();
       });
     }).catch(function (e) {
       if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 详情加载失败：', e);

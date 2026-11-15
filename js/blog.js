@@ -174,6 +174,7 @@
         if (err) err.hidden = true;
         if (cfg.title) document.title = cfg.title + ' · BlueStar5468';
         if (window.LOADBAR) window.LOADBAR.done();
+        if (window.SITE_BOOTED) window.SITE_BOOTED();
       })
       .catch(function (e) {
         if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 主页加载失败：', e);
@@ -197,7 +198,7 @@
         console.info('[blog] 正文已预渲染，只补侧栏');
       }
       Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
-        .then(function (r) { renderSidebar(r[0] || {}, r[1] || []); })
+        .then(function (r) { renderSidebar(r[0] || {}, r[1] || []); if (window.SITE_BOOTED) window.SITE_BOOTED(); })
         .catch(function (e) { if (typeof console !== 'undefined' && console.warn) console.warn('[blog] 侧栏加载失败：', e); });
       return;
     }

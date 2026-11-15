@@ -432,4 +432,19 @@ window.LOADBAR = {
     var nav = document.querySelector('[data-list="site.nav"]');
     if (nav) fillList(nav);
   };
+
+  /* ---------- 首屏遮罩 ---------- */
+  var bootTimer = null;
+  window.SITE_BOOTED = function () {
+    if (!document.body || !document.body.hasAttribute('data-booting')) return;
+    document.body.removeAttribute('data-booting');
+  };
+
+  // 页面上没有「要等数据」的模块时，填完就撤；有的话由模块自己调
+  try {
+    var bootImpl = document.querySelector('.pgrid') || document.getElementById('bhome') ||
+                   document.getElementById('ppost') || document.getElementById('pdetail');
+    if (!bootImpl) window.SITE_BOOTED();
+    bootTimer = setTimeout(window.SITE_BOOTED, 4000);   // 保险：最多等 4 秒
+  } catch (e) { /* 忽略 */ }
 })();

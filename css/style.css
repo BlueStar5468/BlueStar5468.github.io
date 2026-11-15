@@ -1590,3 +1590,34 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 @media (prefers-reduced-motion: reduce) {
   .ldbar, .ldbar__fill { transition: none; }
 }
+
+/* =============================================================
+   首屏加载遮罩
+   内容由 JS 渲染的页面，在 JS 就绪前先把容器藏起来、显示「正在加载…」，
+   避免用户看到兜底内容 → 变成真实内容的跳变。
+   ============================================================= */
+body[data-booting] .boot-hide {
+  opacity: 0;
+  transition: opacity .25s ease-out;
+}
+body:not([data-booting]) .boot-hide { opacity: 1; transition: opacity .25s ease-out; }
+
+.bootmask { display: none; }
+body[data-booting] .bootmask {
+  display: flex;
+  position: fixed; left: 0; right: 0; top: var(--topbar-h); bottom: 0;
+  align-items: center; justify-content: center; gap: 12px;
+  z-index: 40; pointer-events: none;
+  font-size: 13px; font-weight: 600; color: var(--muted);
+}
+.bootmask__spin {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--blue-500);
+  animation: bootspin .7s linear infinite;
+}
+@keyframes bootspin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  body[data-booting] .boot-hide, body:not([data-booting]) .boot-hide { transition: none; }
+  .bootmask__spin { animation: none; }
+}

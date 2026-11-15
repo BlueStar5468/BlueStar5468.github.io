@@ -43,7 +43,7 @@
   "keywords": "杂项"
 }</script>
 </head>
-<body data-section="blog">
+<body data-section="blog" data-booting>
 
 <header class="topbar">
   <div class="topbar__inner">
@@ -68,7 +68,7 @@
 </div>
 
 <div class="blog-shell">
-  <aside class="bside" aria-label="个人介绍">
+  <aside class="bside boot-hide" aria-label="个人介绍">
     <div class="card bside__card"><div class="bside__head"><div class="avatar avatar--flat" data-cfg="side.avatar" data-avatar><span class="avatar__letter" data-fill="side.avatar"></span></div><div class="bside__id"><h1 class="bside__name" data-cfg="side.name" data-fill="side.name"></h1><p class="bside__title" data-cfg="side.name" data-fill="side.title"></p></div></div><p class="bside__bio" data-cfg="side.bio" data-fill-html="side.bio"></p><ul class="bside__meta" data-cfg="side.meta" data-list="side.meta" data-item="meta"></ul><nav class="bside__links" data-cfg="side.links" data-list="side.links" data-item="link"></nav></div>
     <div class="bside__extra" id="bsideExtra"></div>
   </aside>
@@ -90,5 +90,7 @@
 <script src="../js/render.js" defer></script>
 <script src="../js/blocks.js" defer></script>
 <script src="../js/blog.js" defer></script>
+  <!-- 详情页只遮侧栏，不放中间提示 -->
+  <div class="bootmask" aria-hidden="true" hidden><span class="bootmask__spin"></span><span class="bootmask__text">正在加载…</span></div>
 </body>
 </html>

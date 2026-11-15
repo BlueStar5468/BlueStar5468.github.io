@@ -10,7 +10,7 @@
 
 <link rel="stylesheet" href="css/style.css" />
 </head>
-<body data-section="blog">
+<body data-section="blog" data-booting>
 
 <!-- ════════════ 顶部导航栏 ════════════ -->
 <header class="topbar">
@@ -37,7 +37,7 @@
 </div>
 
 <!-- ════════════ 博客外壳：左边个人介绍（不占满高度）+ 右边主页内容 ════════════ -->
-<div class="blog-shell">
+<div class="blog-shell boot-hide">
 
   <aside class="bside" aria-label="个人介绍">
     <div class="card bside__card">
@@ -88,5 +88,6 @@
 <script src="js/render.js"></script>
 <script src="js/blocks.js"></script>
 <script src="js/blog.js"></script>
+  <div class="bootmask" aria-hidden="true"><span class="bootmask__spin"></span><span class="bootmask__text">正在加载…</span></div>
 </body>
 </html>
