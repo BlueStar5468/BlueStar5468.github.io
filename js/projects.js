@@ -92,7 +92,7 @@
         ? window.PROJ_ICON(c.icon || '📦', 'pnav__img')
         : esc(c.icon || '📦');
       html += '<div class="pnav__group">' +
-        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="' + base + '/' + esc(p.id) + '.html"' +
+        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="' + PU(base + '/' + esc(p.id) + '.html') + '"' +
           (on ? ' aria-current="page"' : '') + ' title="' + esc(c.title || p.id) + '">' +
           '<span class="pnav__ico" aria-hidden="true">' + icon + '</span>' +
           '<span class="pnav__label">' + esc(c.title || p.id) + '</span>' +
@@ -108,6 +108,7 @@
     html += '</nav>';
     return html;
   }
+  var PU = window.PAGE_URL || function (u) { return u; };
   window.PROJ_SIDEBAR_HTML = sidebarHtml;   // 给 tools/build.js 用
 
   /* 只绑侧栏的收起 / 展开（侧栏已经预渲染好时用） */

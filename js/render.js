@@ -116,6 +116,17 @@ window.LOADBAR = {
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   }
+
+  /* 运行时生成的资源 URL：子目录页面要补 <html data-base> 的前缀 */
+  function pageUrl(u) {
+    u = String(u === undefined || u === null ? '' : u);
+    if (!u || /^(https?:|\/\/|data:|#|\/|\.\.\/)/.test(u)) return u;
+    var base = '';
+    try { base = document.documentElement.getAttribute('data-base') || ''; } catch (e) { base = ''; }
+    return base + u;
+  }
+  window.PAGE_URL = pageUrl;
+
   function get(path) {
     var parts = path.split('.'), o = C;
     for (var i = 0; i < parts.length; i++) {
@@ -167,7 +178,7 @@ window.LOADBAR = {
       var ST = { '进行中': 'wip', '已完成': 'done', '归档': 'archived', '概念': 'idea' };
       var st = d.status ? (ST[d.status] || 'wip') : '';
       var cover = d.cover
-        ? '<img class="pcard__img" src="' + esc(d.cover) + '" alt="" loading="lazy" />'
+        ? '<img class="pcard__img" src="' + esc(pageUrl(d.cover)) + '" alt="" loading="lazy" />'
         : '<span class="pcard__ph" aria-hidden="true">' + iconHtml(d.icon || '📦', 'pcard__phimg') + '</span>';
       var stack = (d.stack || []).map(function (s) {
         return '<span class="chip chip--sm">' + esc(s) + '</span>';
@@ -292,7 +303,7 @@ window.LOADBAR = {
                 /\.(png|jpe?g|webp|svg|gif|avif)$/i.test(s) ||
                 /^(?:\.{0,2}\/)/.test(s);
     if (!isImg) return esc(s);
-    return '<img class="' + imgClass + '" src="' + esc(s) + '" alt="" loading="lazy" />';
+    return '<img class="' + imgClass + '" src="' + esc(pageUrl(s)) + '" alt="" loading="lazy" />';
   }
   window.PROJ_ICON = iconHtml;
 
@@ -360,7 +371,7 @@ window.LOADBAR = {
   var avatarBox = document.querySelector('[data-avatar]');
   if (avatarBox && C.side && C.side.avatarImg) {
     var avatarBackup = avatarBox.innerHTML;
-    avatarBox.innerHTML = '<img class="avatar__img" src="' + esc(C.side.avatarImg) + '" alt="头像" />';
+    avatarBox.innerHTML = '<img class="avatar__img" src="' + esc(pageUrl(C.side.avatarImg)) + '" alt="头像" />';
     var avatarImg = avatarBox.firstChild;
     if (avatarImg && avatarImg.tagName === 'IMG') {
       avatarImg.onerror = function () {                  // 图挂了就退回字母头像

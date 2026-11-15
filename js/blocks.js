@@ -21,6 +21,9 @@
 (function () {
   'use strict';
 
+    // 子目录页面（blog/、projects/）的资源 URL 要带前缀
+    var PU = window.PAGE_URL || function (u) { return u; };
+
   /* ---------- 小工具 ---------- */
   var ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   function esc(s) {
@@ -71,7 +74,7 @@
     }).join('');
     var acts = (b.links || []).map(btn).join('');
     var cover = b.cover
-      ? '<img class="phero__img" src="' + esc(b.cover) + '" alt="" />'
+      ? '<img class="phero__img" src="' + esc(PU(b.cover)) + '" alt="" />'
       : '<span class="phero__ph" aria-hidden="true">' + icon(b.icon || '📦') + '</span>';
     return '<header class="phero" id="s-' + i + '">' +
       '<div class="phero__main">' +
@@ -145,7 +148,7 @@
 
   B.image = function (b, i) {
     var inner = '<figure class="fig">' +
-      '<img class="fig__img" src="' + esc(b.src) + '" alt="' + esc(b.alt || b.caption || '') + '" loading="lazy" />' +
+      '<img class="fig__img" src="' + esc(PU(b.src)) + '" alt="' + esc(b.alt || b.caption || '') + '" loading="lazy" />' +
       (b.caption ? '<figcaption class="fig__cap">' + esc(b.caption) + '</figcaption>' : '') +
     '</figure>';
     return wrap(b, i, inner);
@@ -154,7 +157,7 @@
   B.gallery = function (b, i) {
     var inner = (b.images || []).map(function (g) {
       return '<figure class="fig fig--sm">' +
-        '<img class="fig__img" src="' + esc(g.src) + '" alt="' + esc(g.caption || '') + '" loading="lazy" />' +
+        '<img class="fig__img" src="' + esc(PU(g.src)) + '" alt="' + esc(g.caption || '') + '" loading="lazy" />' +
         (g.caption ? '<figcaption class="fig__cap">' + esc(g.caption) + '</figcaption>' : '') +
       '</figure>';
     }).join('');
@@ -219,7 +222,7 @@
       // 链到静态文章页（tools/build.js 生成的 blog/<id>.html），爬虫和 JS 看到的是同一个链接
       var href = (p.meta && p.meta.href) || ('blog/' + p.id + '.html');
       return '<a class="post" href="' + esc(href) + '">' +
-        (m.cover ? '<img class="post__thumb" src="' + esc(m.cover) + '" alt="" loading="lazy" />' : '') +
+        (m.cover ? '<img class="post__thumb" src="' + esc(PU(m.cover)) + '" alt="" loading="lazy" />' : '') +
         '<span class="post__body">' +
           '<span class="post__head">' +
             (m.date ? '<time class="post__date" datetime="' + esc(m.date) + '">' + esc(m.date) + '</time>' : '') +
