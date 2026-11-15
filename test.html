@@ -68,9 +68,20 @@
       <span class="switch__label">加载本地测试内容（<code>dev-projects/</code> + <code>dev-blog/</code>）</span>
     </label>
     <p class="debug-note" id="devState" style="margin-top:10px" hidden></p>
-    <p class="page-main__actions" style="margin-top:10px">
+
+    <hr class="bdiv" style="margin:16px 0" />
+
+    <label class="switch">
+      <input type="checkbox" id="labToggle" />
+      <span class="switch__track" aria-hidden="true"><span class="switch__dot"></span></span>
+      <span class="switch__label">在顶部导航栏里显示「实验室」</span>
+    </label>
+    <p class="debug-note" id="labState" style="margin-top:10px" hidden></p>
+
+    <p class="page-main__actions" style="margin-top:12px">
       <a class="btn" href="projects.html">项目页 →</a>
       <a class="btn" href="blog.html">博客页 →</a>
+      <a class="btn" href="index.html">主页 →</a>
     </p>
   </div>
 
@@ -186,6 +197,45 @@
     box.addEventListener('change', function () {
       window.SITE_DEV.set(box.checked);
       paint();
+    });
+  })();
+</script>
+
+<!-- 「实验室」是否出现在导航栏 -->
+<script>
+  (function () {
+    var box   = document.getElementById('labToggle');
+    var state = document.getElementById('labState');
+    if (!box) return;
+
+    var KEY = 'lab-in-nav';   // '1' = 显示，'0' = 隐藏，没设过就看 config.js 的 ui.debug
+
+    function read() {
+      try {
+        var v = window.localStorage.getItem(KEY);
+        if (v === '1') return true;
+        if (v === '0') return false;
+      } catch (e) { /* 忽略 */ }
+      return !!(window.SITE_CONFIG && window.SITE_CONFIG['ui.debug'] === true);
+    }
+    function write(v) {
+      try { window.localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) { /* 忽略 */ }
+    }
+    function paint() {
+      if (!state) return;
+      state.hidden = false;
+      state.textContent = box.checked
+        ? '现在是「显示」：导航栏里会出现「实验室」，所有页面生效，刷新也还在。'
+        : '现在是「隐藏」：导航栏里看不到它了（直接输 test.html 仍能打开，就是当前这页）。';
+    }
+
+    box.checked = read();
+    paint();
+
+    box.addEventListener('change', function () {
+      write(box.checked);
+      paint();
+      if (window.SITE_RENDER_NAV) window.SITE_RENDER_NAV();   // 立刻重画导航
     });
   })();
 </script>

@@ -234,6 +234,40 @@
     }
   };
 
+  /* ---------- 条目开关：show: '某个 key' 的判定 ----------
+     默认看 config.js 里的布尔值；个别 key 允许被 localStorage 覆盖
+     （实验室页面上的「在导航栏显示实验室」就是这么做的） */
+  var FLAG_STORE = { 'ui.debug': 'lab-in-nav' };
+
+  function flag(key) {
+    var ls = FLAG_STORE[key];
+    if (ls) {
+      try {
+        var v = window.localStorage.getItem(ls);
+        if (v === '1') return true;
+        if (v === '0') return false;
+      } catch (e) { /* localStorage 不可用就走下面 */ }
+    }
+    if (!window.SITE_CONFIG) return false;   // config 都没加载，当没开
+    return window.SITE_CONFIG[key] !== false;
+  }
+
+  /* ---------- 列表渲染（抽出来，方便只重画导航） ---------- */
+  function fillList(el) {
+    var key = el.getAttribute('data-list');
+    var tplName = el.getAttribute('data-item');
+    var val = get(key);
+    if (!T[tplName]) { warned.push('没有叫 ' + tplName + ' 的模板（' + key + '）'); return; }
+    if (!val || !val.length) { el.innerHTML = ''; return; }
+    var html = [];
+    for (var j = 0; j < val.length; j++) {
+      var item = val[j];
+      if (item && item.show && !flag(item.show)) continue;
+      html.push(T[tplName](item, j));
+    }
+    el.innerHTML = html.join('');
+  }
+
   /* ---------- 头像：配了图片就把字母方块换掉（要在填充之前做） ---------- */
   var avatarBox = document.querySelector('[data-avatar]');
   if (avatarBox && C.side && C.side.avatarImg) {
@@ -283,20 +317,7 @@
 
   nodes = document.querySelectorAll('[data-list]');
   for (i = 0; i < nodes.length; i++) {
-    el = nodes[i];
-    key = el.getAttribute('data-list');
-    var tplName = el.getAttribute('data-item');
-    val = get(key);
-    if (!T[tplName]) { warned.push('没有叫 ' + tplName + ' 的模板（' + key + '）'); continue; }
-    if (!val || !val.length) { el.innerHTML = ''; continue; }   // 空数组 = 清空
-    var html = [];
-    for (var j = 0; j < val.length; j++) {
-      var item = val[j];
-      // 条目上写 show: '某个开关'，那个开关是 false 时就不渲染（用于隐藏调试页之类的入口）
-      if (item && item.show && window.SITE_CONFIG && window.SITE_CONFIG[item.show] === false) continue;
-      html.push(T[tplName](item, j));
-    }
-    el.innerHTML = html.join('');
+    fillList(nodes[i]);
   }
 
   if (typeof console !== 'undefined' && console.info) {
@@ -306,4 +327,10 @@
 
   // 模板也暴露出去：项目页（js/projects.js）要用 projcard 渲染卡片
   window.SITE_TEMPLATES = T;
+
+  // 只重画顶部导航（实验室里切「显示实验室」时要立刻生效）
+  window.SITE_RENDER_NAV = function () {
+    var nav = document.querySelector('[data-list="site.nav"]');
+    if (nav) fillList(nav);
+  };
 })();
