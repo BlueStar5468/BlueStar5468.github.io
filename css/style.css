@@ -1602,14 +1602,21 @@ html[data-accent="amber"] .rail__item.is-active .rail__dot {
 @keyframes bootfade    { from { opacity: 0; } to { opacity: 1; } }
 @keyframes bootfadeout { from { opacity: 1; } to { opacity: 0; } }
 
-/* 阶段 1：渲染中 —— 内容藏起来，遮罩显示 */
-body[data-booting] .boot-hide { opacity: 0; }
+/* 阶段 1：渲染中 —— 显示遮罩。
+   注意：这里刻意不去隐藏内容（不设 opacity:0）——
+   内容本来就被清空成空占位了，没有什么会"闪"的；
+   而依赖 opacity 的时序在慢网络/慢脚本下并不可靠。
+   遮罩是纯 CSS 就能显示出来的，所以第一帧一定看得见。 */
+body[data-booting] .boot-hide { /* 保留类名，便于以后想遮的时候再用 */ }
 
 /* 阶段 2：渲染完成 —— 内容淡入，遮罩淡出（遮罩在 data-booting 移除时才真正消失） */
 body.boot-done .boot-hide { opacity: 1; animation: bootfade .28s ease-out; }
 body.boot-done .bootmask  { animation: bootfadeout .3s ease-out forwards; }
 
 .bootmask { display: none; }
+/* 遮罩期间，内容区自带的「正在加载」占位不用再显示（避免两处文字） */
+body[data-booting] .pd-load { display: none; }
+
 body[data-booting] .bootmask {
   display: flex;
   position: fixed; left: 0; right: 0; top: var(--topbar-h); bottom: 0;

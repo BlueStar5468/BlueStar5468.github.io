@@ -458,8 +458,11 @@ window.LOADBAR = {
 
   // 页面上没有「要等数据」的模块时，填完就撤；有的话由模块自己调
   try {
-    var bootImpl = document.querySelector('.pgrid') || document.getElementById('bhome') ||
-                   document.getElementById('ppost') || document.getElementById('pdetail');
+    // 这些容器里的内容要等数据，遮罩由各自的模块在渲染完后撤
+    var bootImpl = document.getElementById('phome') ||
+                   document.getElementById('bhome') ||
+                   document.getElementById('ppost') ||
+                   document.getElementById('pdetail');
     if (!bootImpl) window.SITE_BOOTED();
     bootTimer = setTimeout(window.SITE_BOOTED, 4000);   // 保险：最多等 4 秒
   } catch (e) { /* 忽略 */ }
