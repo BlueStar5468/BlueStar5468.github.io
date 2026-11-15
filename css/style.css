@@ -608,8 +608,8 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 
 /* 右边：内容 */
 .bmain { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; max-width: 1000px; }
-/* 文章页：读的东西窄一点，且在剩余宽度里居中，左右对称（不会只剩右边一大块空） */
-.bmain--post { max-width: 820px; margin: 0 auto; }
+/* 文章页和列表页同一套宽度规则：不居中固定宽（那样左右都会留一大块空白） */
+.bmain--post { max-width: 1000px; }
 .ppost { display: grid; gap: clamp(14px, 2.6vh, 24px); min-width: 0; }
 
 /* 介绍卡下面的附加块（由 _home.json 的 sidebar 生成），窄栏里压缩一下 */
