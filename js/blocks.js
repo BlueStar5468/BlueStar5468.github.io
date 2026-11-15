@@ -1,0 +1,194 @@
+/* =========================================================================
+   详情页组件库 —— 一个 block = 一段 HTML
+   -------------------------------------------------------------------------
+   支持的类型（每个都可以在 projects/<项目>.json 的 page.blocks 里组合）：
+     hero      大标题 + 副标题 + 封面 + meta + 按钮
+     text      一段富文本（html 字段可写任意 HTML）
+     list      要点列表（style: check / bullet / number）
+     cards     小卡片网格（cols 控制列数）
+     stats     数字统计
+     specs     参数表（rows: [["键","值"], ...]）
+     code      代码块（lang 只是右上角的标签，不做着色）
+     image     单张图（src, caption）
+     gallery   图集（cols, images: [{src, caption}]）
+     timeline  时间线（items: [{time, title, desc}]）
+     quote     引用块
+     video     iframe 嵌入（src 留空显示占位）
+     divider   分隔线
+     links     按钮组（primary: true 是实心蓝）
+   ========================================================================= */
+
+(function () {
+  'use strict';
+
+  /* ---------- 小工具 ---------- */
+  var ESC = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  function esc(s) {
+    return String(s === undefined || s === null ? '' : s).replace(/[&<>"']/g, function (c) { return ESC[c]; });
+  }
+  function isExt(href) { return /^https?:\/\//i.test(String(href || '')); }
+  function attr(href) { return isExt(href) ? ' target="_blank" rel="noopener"' : ''; }
+  function cols(n) { return ' style="--cols:' + (parseInt(n, 10) || 2) + '"'; }
+
+  /* 每块统一的外壳：有 title 就出标题（hero / divider 除外） */
+  function wrap(b, i, inner, opt) {
+    var o = opt || {};
+    var cls = 'blk blk--' + esc(b.type);
+    if (o.cls) cls += ' ' + o.cls;
+    var head = '';
+    if (b.title && !o.noTitle) {
+      head = '<h2 class="blk__title">' + esc(b.title) + '</h2>';
+    }
+    return '<section class="' + cls + '" id="s-' + i + '">' + head + inner + '</section>';
+  }
+
+  function btn(l) {
+    return '<a class="btn' + (l.primary ? ' btn--primary' : '') + '" href="' + esc(l.href || '#') + '"' +
+           attr(l.href) + '>' + esc(l.text) + (isExt(l.href) ? ' ↗' : '') + '</a>';
+  }
+
+  /* ---------- 各组件 ---------- */
+  var B = {};
+
+  B.hero = function (b, i) {
+    var meta = (b.meta || []).map(function (m) {
+      return '<li><span>' + esc(m.label) + '</span><b>' + esc(m.value) + '</b></li>';
+    }).join('');
+    var acts = (b.links || []).map(btn).join('');
+    var cover = b.cover
+      ? '<img class="phero__img" src="' + esc(b.cover) + '" alt="" />'
+      : '<span class="phero__ph" aria-hidden="true">' + esc(b.icon || '📦') + '</span>';
+    return '<header class="phero" id="s-' + i + '">' +
+      '<div class="phero__main">' +
+        (b.eyebrow ? '<p class="eyebrow">' + esc(b.eyebrow) + '</p>' : '') +
+        '<h1 class="phero__title">' + esc(b.title || '') + '</h1>' +
+        (b.subtitle ? '<p class="phero__sub">' + esc(b.subtitle) + '</p>' : '') +
+        (meta ? '<ul class="phero__meta">' + meta + '</ul>' : '') +
+        (acts ? '<div class="page-main__actions">' + acts + '</div>' : '') +
+      '</div>' +
+      (b.cover || b.icon ? '<div class="phero__side">' + cover + '</div>' : '') +
+    '</header>';
+  };
+
+  B.text = function (b, i) {
+    return wrap(b, i, '<div class="prose">' + (b.html || '') + '</div>');
+  };
+
+  B.list = function (b, i) {
+    var style = b.style || 'bullet';
+    var items = (b.items || []).map(function (t) {
+      return '<li>' + esc(t) + '</li>';
+    }).join('');
+    return wrap(b, i, '<ul class="plist plist--' + esc(style) + '">' + items + '</ul>');
+  };
+
+  B.cards = function (b, i) {
+    var inner = (b.items || []).map(function (c) {
+      return '<article class="bcard">' +
+        (c.icon ? '<span class="bcard__ico" aria-hidden="true">' + esc(c.icon) + '</span>' : '') +
+        '<h4 class="bcard__title">' + esc(c.title) + '</h4>' +
+        (c.desc ? '<p class="bcard__desc">' + esc(c.desc) + '</p>' : '') +
+      '</article>';
+    }).join('');
+    return wrap(b, i, '<div class="bcards"' + cols(b.cols || 3) + '>' + inner + '</div>');
+  };
+
+  B.stats = function (b, i) {
+    var inner = (b.items || []).map(function (s) {
+      return '<div class="bstat"><b>' + esc(s.num) + '</b><span>' + esc(s.label) + '</span></div>';
+    }).join('');
+    return wrap(b, i, '<div class="bstats">' + inner + '</div>');
+  };
+
+  B.specs = function (b, i) {
+    var rows = (b.rows || []).map(function (r) {
+      return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>';
+    }).join('');
+    return wrap(b, i, '<table class="specs"><tbody>' + rows + '</tbody></table>');
+  };
+
+  B.code = function (b, i) {
+    var inner = '<div class="codeblk">' +
+      (b.lang ? '<span class="codeblk__lang">' + esc(b.lang) + '</span>' : '') +
+      '<pre><code>' + esc(b.code || '') + '</code></pre></div>';
+    return wrap(b, i, inner);
+  };
+
+  B.image = function (b, i) {
+    var inner = '<figure class="fig">' +
+      '<img class="fig__img" src="' + esc(b.src) + '" alt="' + esc(b.alt || b.caption || '') + '" loading="lazy" />' +
+      (b.caption ? '<figcaption class="fig__cap">' + esc(b.caption) + '</figcaption>' : '') +
+    '</figure>';
+    return wrap(b, i, inner);
+  };
+
+  B.gallery = function (b, i) {
+    var inner = (b.images || []).map(function (g) {
+      return '<figure class="fig fig--sm">' +
+        '<img class="fig__img" src="' + esc(g.src) + '" alt="' + esc(g.caption || '') + '" loading="lazy" />' +
+        (g.caption ? '<figcaption class="fig__cap">' + esc(g.caption) + '</figcaption>' : '') +
+      '</figure>';
+    }).join('');
+    return wrap(b, i, '<div class="gal"' + cols(b.cols || 2) + '>' + inner + '</div>');
+  };
+
+  B.timeline = function (b, i) {
+    var inner = (b.items || []).map(function (t) {
+      return '<li class="ptl__item">' +
+        '<span class="ptl__time">' + esc(t.time) + '</span>' +
+        '<div class="ptl__body">' +
+          '<h4 class="ptl__title">' + esc(t.title) + '</h4>' +
+          (t.desc ? '<p class="ptl__desc">' + esc(t.desc) + '</p>' : '') +
+        '</div>' +
+      '</li>';
+    }).join('');
+    return wrap(b, i, '<ol class="ptl">' + inner + '</ol>');
+  };
+
+  B.quote = function (b, i) {
+    return wrap(b, i, '<blockquote class="bquote">' +
+      '<p>' + esc(b.text) + '</p>' +
+      (b.by ? '<cite>' + esc(b.by) + '</cite>' : '') +
+    '</blockquote>', { noTitle: true });
+  };
+
+  B.video = function (b, i) {
+    var inner = b.src
+      ? '<div class="bvideo"><iframe src="' + esc(b.src) + '" title="' + esc(b.title || '视频') +
+        '" loading="lazy" allowfullscreen frameborder="0"></iframe></div>'
+      : '<div class="bvideo bvideo--empty"><span>🎬 ' + esc(b.caption || '视频位置（src 留空）') + '</span></div>';
+    return wrap(b, i, inner);
+  };
+
+  B.divider = function (b, i) {
+    return '<hr class="bdiv" id="s-' + i + '" />';
+  };
+
+  B.links = function (b, i) {
+    var inner = (b.items || []).map(btn).join('');
+    return wrap(b, i, '<div class="page-main__actions">' + inner + '</div>');
+  };
+
+  /* ---------- 对外 ---------- */
+  window.RENDER_BLOCKS = function (blocks) {
+    if (!blocks || !blocks.length) return '';
+    return blocks.map(function (b, i) {
+      var fn = B[b && b.type];
+      if (!fn) {
+        return '<section class="blk" id="s-' + i + '"><p class="blk__warn">未知组件：' +
+               esc(b && b.type) + '（写在 projects/ 的 json 里）</p></section>';
+      }
+      return fn(b, i);
+    }).join('');
+  };
+
+  // 侧边栏的章节列表：只取有标题的块（hero 是顶部的，不算）
+  window.BLOCK_TOC = function (blocks) {
+    var out = [];
+    (blocks || []).forEach(function (b, i) {
+      if (!b || !b.title || b.type === 'hero') return;
+      out.push({ id: 's-' + i, title: b.title });
+    });
+    return out;
+  };
+})();

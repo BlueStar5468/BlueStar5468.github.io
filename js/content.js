@@ -21,11 +21,13 @@ window.SITE_CONTENT = {
 
     /* 顶部导航栏的链接（所有页面共用，当前页会自动高亮）
        加一页：复制一行，href 写页面文件名；ext: true = 外链（新标签打开）
+       section: 板块名，和页面 <body data-section="..."> 对上就算「选中」——
+                这样 project.html（详情页）也会高亮导航里的「项目」
        show: '某个开关' = 那个开关在 config.js 里是 false 时，这条链接不显示 */
     nav: [
-      { text: '主页',   href: 'index.html' },
-      { text: '项目',   href: 'projects.html' },
-      { text: '实验室', href: 'test.html', show: 'ui.debug' },
+      { text: '主页',   href: 'index.html',    section: 'home' },
+      { text: '项目',   href: 'projects.html', section: 'projects' },
+      { text: '实验室', href: 'test.html',     section: 'lab', show: 'ui.debug' },
       { text: 'GitHub', href: 'https://github.com/BlueStar5468', ext: true }
     ]
   },
@@ -241,48 +243,8 @@ window.SITE_CONTENT = {
       { key: 'hardware',  label: '硬件' }
     ],
 
-    items: [
-      {
-        name: 'StarExplorer',
-        cat: 'software',
-        status: '进行中',
-        year: '2025',
-        featured: true,
-        icon: '⚙️',
-        summary: '受 Windows 资源管理器气，用 C# 重写的一个文件管理器。',
-        desc: '目标是快、干净、不乱跳。<br />多标签、双栏、可自定义的右键菜单。',
-        stack: ['C#', '.NET', 'WinUI'],
-        links: [
-          { text: '仓库', href: 'https://github.com/BlueStar5468/StarExplorer', primary: true }
-        ]
-      },
-      {
-        name: 'Stm32ExtendedLib',
-        cat: 'embedded',
-        status: '进行中',
-        year: '2025',
-        icon: '📊',
-        summary: '不想用 32 标准库，于是自己包了一层。',
-        desc: '把常用外设封装成更顺手的接口，减少样板代码。',
-        stack: ['C', 'STM32', 'HAL'],
-        links: [
-          { text: '仓库', href: 'https://github.com/BlueStar5468/Stm32ExtendedLib' }
-        ]
-      },
-      {
-        // ⚠️ 这是个示例，照着改或者直接删掉
-        name: '示例项目（删掉我）',
-        cat: 'hardware',
-        status: '已完成',
-        year: '2024',
-        icon: '🛠️',
-        summary: '一句话说明它解决了什么问题。',
-        stack: ['KiCad', 'STM32', 'PCB'],
-        links: [
-          { text: '详情', href: '#' }
-        ]
-      }
-    ]
+    // 具体的项目不在这里，一个项目一个文件：projects/<id>.json
+    // 在 projects/_index.json 里登记顺序，卡片和详情页都从那些文件读
   },
 
   /* ══════════════════════════════════════════════════════════

@@ -95,13 +95,20 @@
                (ext ? ' target="_blank" rel="noopener"' : '') + '>' +
                esc(l.text) + (ext ? ' ↗' : '') + '</a>';
       }).join('');
+      // 整张卡可点：标题包一层链接，再用 CSS 把它撑满整张卡（卡片里的按钮 z-index 更高）
+      var name = d.title || d.name || '';
+      var go = d.href || (d.id ? 'project.html?p=' + encodeURIComponent(d.id) : '');
+      var head = go
+        ? '<a class="pcard__go" href="' + esc(go) + '">' + esc(name) + '</a>'
+        : esc(name);
       return '<article class="pcard" data-cat="' + esc(d.cat || 'all') + '"' +
+             (d.id ? ' data-id="' + esc(d.id) + '"' : '') +
              (d.featured ? ' data-featured="1"' : '') + '>' +
         '<div class="pcard__cover">' + cover +
           (st ? '<span class="pcard__status pcard__status--' + st + '">' + esc(d.status) + '</span>' : '') +
         '</div>' +
         '<div class="pcard__body">' +
-          '<h3 class="pcard__title">' + esc(d.name || '') + '</h3>' +
+          '<h3 class="pcard__title">' + head + '</h3>' +
           (d.summary ? '<p class="pcard__sum">' + esc(d.summary) + '</p>' : '') +
           (d.desc ? '<p class="pcard__desc">' + d.desc + '</p>' : '') +
           (stack ? '<div class="chips chips--sm">' + stack + '</div>' : '') +
@@ -120,11 +127,16 @@
     },
 
     navlink: function (d) {
-      var here = '';
+      var here = '', section = '';
       try { here = (window.location.pathname.split('/').pop() || 'index.html').toLowerCase(); } catch (e) { here = ''; }
+      try {
+        section = (document.body && document.body.getAttribute('data-section') || '').toLowerCase();
+      } catch (e) { section = ''; }
       var href = String(d.href || '#');
       var ext = d.ext === true || isExt(href);
-      var active = !ext && (href.toLowerCase() === here);
+      // 两种判定：文件名一致，或者所在板块一致（详情页也算「项目」板块）
+      var active = !ext && (href.toLowerCase() === here ||
+                            (!!d.section && String(d.section).toLowerCase() === section));
       return '<a class="topbar__link' + (active ? ' is-active' : '') + '" href="' + esc(href) + '"' +
              (ext ? ' target="_blank" rel="noopener"' : '') +
              (active ? ' aria-current="page"' : '') + '>' +
@@ -252,4 +264,7 @@
     if (warned.length) console.warn('[content] 有几处没填上：', warned.join('；'));
     else console.info('[content] 内容已从 js/content.js 渲染完成');
   }
+
+  // 模板也暴露出去：项目页（js/projects.js）要用 projcard 渲染卡片
+  window.SITE_TEMPLATES = T;
 })();

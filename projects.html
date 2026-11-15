@@ -11,7 +11,7 @@
 
 <link rel="stylesheet" href="css/style.css" />
 </head>
-<body>
+<body data-section="projects">
 
 <!-- ════════════ 顶部导航栏（所有页面共用，链接在 js/content.js 的 site.nav）════════════ -->
 <header class="topbar">
@@ -36,49 +36,55 @@
   <span class="bg__grid"></span>
 </div>
 
-<main class="page-main">
+<!-- ════════════ 项目页外壳：左边导航（可收起） + 右边内容 ════════════ -->
+<main class="page-shell">
 
-  <!-- ───────── 页头（文字来自 content.js）───────── -->
-  <header class="page-main__head">
-    <p class="eyebrow" data-fill="projects.eyebrow">PROJECTS · 作品</p>
-    <h1 class="page-main__title" data-fill="projects.title">项目 &amp; 产品</h1>
-    <p class="page-main__desc" data-fill="projects.desc">自己从零做出来的东西，或者正在折腾的。</p>
-  </header>
+  <!-- 项目导航：内容由 js/projects.js 按 projects/_index.json 生成 -->
+  <aside class="pnav" id="pnav" aria-label="项目导航"></aside>
 
-  <!-- ───────── 分类筛选 + 计数 ───────── -->
-  <div class="pbar">
-    <div class="filters" data-cfg="pj.filter" data-list="projects.categories" data-item="filterbtn">
-      <button class="filter is-active" type="button" data-filter="all">全部<b class="filter__n">0</b></button>
+  <div class="page-main">
+
+    <header class="page-main__head">
+      <p class="eyebrow" data-fill="projects.eyebrow">PROJECTS · 作品</p>
+      <h1 class="page-main__title" data-fill="projects.title">项目 &amp; 产品</h1>
+      <p class="page-main__desc" data-fill="projects.desc">自己从零做出来的东西，或者正在折腾的。</p>
+    </header>
+
+    <!-- 分类筛选（按钮由 content.js 的 categories 生成）+ 计数 -->
+    <div class="pbar">
+      <div class="filters" data-cfg="pj.filter" data-list="projects.categories" data-item="filterbtn">
+        <button class="filter is-active" type="button" data-filter="all">全部<b class="filter__n">0</b></button>
+      </div>
+      <span class="pbar__count" id="pcount" data-cfg="pj.count">共 0 个项目</span>
     </div>
-    <span class="pbar__count" id="pcount" data-cfg="pj.count">共 0 个项目</span>
+
+    <!-- 加载失败时的提示 -->
+    <p class="lderr" id="perr" hidden></p>
+
+    <!-- 卡片：由 js/projects.js 读 projects/*.json 生成（下面这张是没 JS 时的兜底）-->
+    <div class="pgrid">
+      <article class="pcard" data-cat="software" data-featured="1">
+        <div class="pcard__cover">
+          <span class="pcard__ph" aria-hidden="true">⚙️</span>
+          <span class="pcard__status pcard__status--wip">进行中</span>
+        </div>
+        <div class="pcard__body">
+          <h3 class="pcard__title"><a class="pcard__go" href="project.html?p=starexplorer">StarExplorer</a></h3>
+          <p class="pcard__sum">受 Windows 资源管理器气，用 C# 重写的一个文件管理器。</p>
+          <div class="chips chips--sm"><span class="chip chip--sm">C#</span><span class="chip chip--sm">.NET</span></div>
+        </div>
+        <div class="pcard__foot">
+          <span class="pcard__year">2025</span>
+          <span class="pcard__links"><a class="pcard__link pcard__link--primary" href="https://github.com/BlueStar5468/StarExplorer" target="_blank" rel="noopener">仓库 ↗</a></span>
+        </div>
+      </article>
+    </div>
+
+    <p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>
+
+    <p class="landing__foot" data-fill-html="side.credit">© <span id="year">2026</span> BlueStar</p>
+
   </div>
-
-  <!-- ───────── 项目卡片：由 js/content.js 的 projects.items 生成 ───────── -->
-  <div class="pgrid" data-list="projects.items" data-item="projcard">
-
-    <!-- 没有 JS 时的兜底：一张示例卡，结构和生成出来的一样 -->
-    <article class="pcard" data-cat="software" data-featured="1">
-      <div class="pcard__cover">
-        <span class="pcard__ph" aria-hidden="true">⚙️</span>
-        <span class="pcard__status pcard__status--wip">进行中</span>
-      </div>
-      <div class="pcard__body">
-        <h3 class="pcard__title">StarExplorer</h3>
-        <p class="pcard__sum">受 Windows 资源管理器气，用 C# 重写的一个文件管理器。</p>
-        <div class="chips chips--sm"><span class="chip chip--sm">C#</span><span class="chip chip--sm">.NET</span></div>
-      </div>
-      <div class="pcard__foot">
-        <span class="pcard__year">2025</span>
-        <span class="pcard__links"><a class="pcard__link pcard__link--primary" href="https://github.com/BlueStar5468/StarExplorer" target="_blank" rel="noopener">仓库 ↗</a></span>
-      </div>
-    </article>
-
-  </div>
-
-  <p class="pgrid__empty" id="pempty" hidden>这个分类下还没有项目。</p>
-
-  <p class="landing__foot" data-fill-html="side.credit">© <span id="year">2026</span> BlueStar</p>
-
 </main>
 
 <!-- 这页没有滚动翻页，不需要 main.js -->
