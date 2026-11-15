@@ -14,8 +14,13 @@
 (function () {
   'use strict';
 
-  var BASE = 'blog/';
-  var DEV  = 'dev-blog/';
+  // 页面在子目录里时（blog/、projects/），数据路径要带 ../ 前缀
+  function siteBase() {
+    try { return document.documentElement.getAttribute('data-base') || ''; } catch (e) { return ''; }
+  }
+
+  var BASE = siteBase() + 'blog/';
+  var DEV  = siteBase() + 'dev-blog/';
 
   var SD  = window.SITE_DATA || {};
   var esc = SD.esc || function (s) { return String(s == null ? '' : s); };

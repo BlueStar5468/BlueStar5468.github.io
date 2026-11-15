@@ -14,8 +14,13 @@
 (function () {
   'use strict';
 
-  var BASE     = 'projects/';       // 推上去的
-  var DEV_BASE = 'dev-projects/';   // 只在本地
+  // 页面在子目录里时（blog/、projects/），数据路径要带 ../ 前缀
+  function siteBase() {
+    try { return document.documentElement.getAttribute('data-base') || ''; } catch (e) { return ''; }
+  }
+
+  var BASE     = siteBase() + 'projects/';       // 推上去的
+  var DEV_BASE = siteBase() + 'dev-projects/';   // 只在本地
   var STORE    = 'pnav-collapsed';
 
   /* ---------- 小工具 ---------- */
