@@ -326,8 +326,10 @@
 
   function boot() {
       init();
-      // 滚动舞台摆好了，才让遮罩淡出（否则会先看到塌陷的布局再跳一下）
-      if (window.SITE_BOOTED) window.SITE_BOOTED();
+      // 内容就绪：移除加载提示，显示左侧栏和滚动舞台
+      var loading = document.getElementById('homeLoad');
+      if (loading && loading.parentNode) loading.parentNode.removeChild(loading);
+      document.documentElement.classList.remove('home-booting');
     }
 
     if (document.readyState === 'loading') {

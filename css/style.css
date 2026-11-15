@@ -1648,11 +1648,29 @@ body[data-booting] .bootmask {
   background: #fef3c7; color: #92400e; border: 1px solid #fde68a;
   font-size: 12.5px; font-weight: 600;
 }
-/* 加载提示下面那两行说明（首页用） */
-.bootmask__note {
-  flex-basis: 100%;
-  margin-top: 6px;
-  text-align: center;
-  font-size: 12px; font-weight: 500;
-  color: var(--muted); line-height: 1.8;
+/* =============================================================
+   首页加载提示
+   内容没渲染好时（html.home-booting）右侧只显示这一块，
+   左侧和滚动舞台都藏着 —— main.js 初始化完后移除提示、显示内容。
+   ============================================================= */
+.home-load {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; min-height: calc(100vh - var(--topbar-h));
+  text-align: center; color: var(--muted);
+}
+.home-load__spin {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2px solid var(--line);
+  border-top-color: var(--blue-500);
+  animation: bootspin .7s linear infinite;
+}
+.home-load__text { margin: 0; font-size: 13px; font-weight: 600; }
+.home-load__note { margin: 0; font-size: 12px; line-height: 1.8; }
+
+/* 内容还没好：左侧栏和滚动舞台先不显示（占位保持布局） */
+html.home-booting .sidebar,
+html.home-booting .deck { visibility: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .home-load__spin { animation: none; }
 }

@@ -462,8 +462,7 @@ window.LOADBAR = {
     var bootImpl = document.getElementById('phome') ||
                    document.getElementById('bhome') ||
                    document.getElementById('ppost') ||
-                   document.getElementById('pdetail') ||
-                   document.querySelector('.deck');   // 首页：等 main.js 摆好滚动舞台
+                   document.getElementById('pdetail');
     if (!bootImpl) window.SITE_BOOTED();
     bootTimer = setTimeout(window.SITE_BOOTED, 4000);   // 保险：最多等 4 秒
   } catch (e) { /* 忽略 */ }

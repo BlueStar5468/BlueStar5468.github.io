@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-accent="blue">
+<html lang="zh-CN" data-accent="blue" class="home-booting">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,7 +27,7 @@
   #deck .hint { display: none; }
 </style></noscript>
 </head>
-<body data-section="home" data-booting>
+<body data-section="home">
 
 <!-- ════════════ 顶部导航栏（两个页面共用，链接在 js/content.js 的 site.nav 里）════════════ -->
 <header class="topbar">
@@ -53,7 +53,7 @@
   <span class="bg__grid"></span>
 </div>
 
-<div class="app boot-hide">
+<div class="app">
 
   <!-- ════════════════ 左侧：贴边停靠的个人介绍栏 ════════════════ -->
   <aside class="sidebar" data-cfg="ui.sidebar">
@@ -108,6 +108,13 @@
 
   <!-- ════════════════ 右侧：滚动驱动的分页叙事 ════════════════ -->
   <main class="main">
+
+    <!-- 内容没渲染好之前只显示这一块；main.js 初始化完会把它移除 -->
+    <div class="home-load" id="homeLoad">
+      <span class="home-load__spin" aria-hidden="true"></span>
+      <p class="home-load__text">正在加载…</p>
+      <p class="home-load__note">主页资源较多，加载时间可能较长<br />需要查看项目和博客请右上角导航</p>
+    </div>
 
     <!-- deck = 滚动跑道，stage 在里面被"钉"住 -->
     <div class="deck" id="deck">
@@ -407,10 +414,5 @@ Sections: .text .rodata .data .bss</pre>
 <script src="js/content.js"></script>
 <script src="js/render.js"></script>
 <script src="js/main.js"></script>
-  <div class="bootmask" aria-hidden="true">
-    <span class="bootmask__spin"></span>
-    <span class="bootmask__text">正在加载…</span>
-    <span class="bootmask__note">主页资源较多，加载时间可能较长<br />需要查看项目和博客请右上角导航</span>
-  </div>
 </body>
 </html>
