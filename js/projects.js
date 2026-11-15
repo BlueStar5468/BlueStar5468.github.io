@@ -72,7 +72,8 @@
   /* ---------- 侧边栏（两个页面共用）----------
      sidebarHtml() 是纯函数（只吐字符串），这样 tools/build.js 能在 Node 里直接复用它，
      保证静态页的侧栏和运行时一模一样 */
-  function sidebarHtml(list, currentId, toc) {
+  function sidebarHtml(list, currentId, toc, dir) {
+    var base = dir || 'projects';
     var html = '<button class="pnav__toggle" id="pnavToggle" type="button" ' +
                  'aria-label="收起 / 展开项目导航" aria-controls="pnavItems">' +
                  '<span class="pnav__bars" aria-hidden="true"></span>' +
@@ -86,7 +87,7 @@
         ? window.PROJ_ICON(c.icon || '📦', 'pnav__img')
         : esc(c.icon || '📦');
       html += '<div class="pnav__group">' +
-        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="projects/' + esc(p.id) + '.html"' +
+        '<a class="pnav__item' + (on ? ' is-active' : '') + '" href="' + base + '/' + esc(p.id) + '.html"' +
           (on ? ' aria-current="page"' : '') + ' title="' + esc(c.title || p.id) + '">' +
           '<span class="pnav__ico" aria-hidden="true">' + icon + '</span>' +
           '<span class="pnav__label">' + esc(c.title || p.id) + '</span>' +
@@ -218,6 +219,7 @@
         if (!tpl) return '';
         var c = p.data.card || {};
         c.id = p.id;                     // 模板靠 id 生成"点进详情页"的链接
+        if (p.dir !== BASE) c.href = p.dir + p.id + '.html';   // dev-projects 指到 dev-projects/
         return tpl(c);
       }).join('');
 
@@ -245,11 +247,27 @@
   }
 
   /* ---------- 详情页 ---------- */
+  /* 详情页：页面里已经有预渲染内容就直接用，没有才回落到 json */
   function initDetail() {
     var host = document.getElementById('pdetail');
     if (!host) return;
 
+    var hasBody = host.children.length > 0 && !host.querySelector('.pd-load');
+    var nav = document.getElementById('pnav');
+    var hasNav = !nav || nav.children.length > 0;
+
+    if (hasBody && hasNav) {
+      if (typeof console !== 'undefined' && console.info) {
+        console.info('[projects] 静态页已预渲染，跳过 json 加载');
+      }
+      return;
+    }
+
     var want = (/[?&]p=([\w.-]+)/.exec(location.search) || [])[1] || '';
+    if (!want) {
+      var m = /\/(?:dev-)?projects\/([\w.-]+)\.html?$/.exec(location.pathname);
+      if (m) want = m[1];
+    }
 
     loadIndexes().then(function (entries) {
       if (!entries.length) throw new Error('还没有项目');
@@ -276,10 +294,10 @@
     }).catch(function (e) {
       if (typeof console !== 'undefined' && console.warn) console.warn('[projects] 详情加载失败：', e);
       host.innerHTML = '<p class="lderr">' + esc(e.message) +
-        '　—— 要用 http 打开（本地：python -m http.server），' +
-        '并且 projects/_index.json 里至少登记了一个项目。</p>';
+        '　—— 要用 http 打开（本地：python -m http.server），并且 projects/_index.json 里至少登记了一个项目。</p>';
     });
   }
+
 
   /* ---------- 入口 ---------- */
   if (document.querySelector('.pgrid')) initList();

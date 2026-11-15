@@ -16,9 +16,9 @@
 | --- | --- |
 | `index.html` | **主页**：左侧介绍栏 + 右侧四页滚动叙事（软件 / 硬件 / 经历），滚一屏渐变到下一页 |
 | `projects.html` | **项目列表**：卡片网格 + 分类筛选 + 左侧项目导航 |
-| `project.html?p=<id>` | **项目详情**：由 `projects/<id>.json` 里的 `page.blocks` 拼出来 |
+| `projects/<id>.html` | **项目详情**（静态，构建时生成） |
 | `blog.html` | **博客主页**：左侧个人介绍 + 最近文章，右侧由 `blog/_home.json` 的 blocks 组成 |
-| `blog-post.html?p=<id>` | **文章页**：头部用 `meta` 生成，正文用 `page.blocks` |
+| `blog/<id>.html` | **文章页**（静态，构建时生成） |
 
 ### 组件库
 

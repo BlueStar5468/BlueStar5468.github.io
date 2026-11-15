@@ -103,6 +103,7 @@
         .then(function (d) {
           var meta = d.meta || {};
           meta.minutes = readingMinutes((d.page && d.page.blocks) || []);
+          meta.href = e.dir + e.id + '.html';   // dev-blog 的要指到 dev-blog/
           return { id: e.id, dir: e.dir, meta: meta, data: d };
         })
         .catch(function (err) {
@@ -174,11 +175,33 @@
   }
 
   /* ================= 文章页 ================= */
+  /* 文章页：页面里已经有预渲染内容就直接用，没有才回落到 json */
   function initPost() {
     var host = document.getElementById('ppost');
     if (!host) return;
 
+    var hasBody = host.children.length > 0 && !host.querySelector('.pd-load');
+    var side = document.getElementById('bsideExtra');
+    var hasSide = !side || side.children.length > 0;
+
+    if (hasBody && hasSide) {
+      if (typeof console !== 'undefined' && console.info) {
+        console.info('[blog] 静态页已预渲染，跳过 json 加载');
+      }
+      return;
+    }
+
+    // 回落：id 从 ?p= 取，取不到就从 blog/<id>.html 的地址里取
     var want = (/[?&]p=([\w.-]+)/.exec(location.search) || [])[1] || '';
+    if (!want) {
+      var m = /\/blog\/([\w.-]+)\.html?$/.exec(location.pathname);
+      if (m) want = m[1];
+    }
+    if (!want) {
+      host.innerHTML = '<p class="lderr">没法确定要显示哪篇文章' +
+        '（地址里既没有 ?p= 也没有 &lt;id&gt;.html）。</p>';
+      return;
+    }
 
     Promise.all([loadHomeConfig(), loadEntryList().then(loadPosts)])
       .then(function (r) {
@@ -187,7 +210,7 @@
 
         var hit = null;
         posts.forEach(function (p) { if (p.id === want) hit = p; });
-        if (!hit) throw new Error(want ? ('找不到文章「' + want + '」') : '还没有文章');
+        if (!hit) throw new Error('找不到文章「' + want + '」');
 
         var blocks = (hit.data.page && hit.data.page.blocks) || [];
 
@@ -201,6 +224,7 @@
           '　—— 检查 blog/_index.json 里有没有这个 id，或者用 http 打开（本地：python -m http.server）。</p>';
       });
   }
+
 
   /* ================= 入口 ================= */
   if (document.getElementById('bhome')) initHome();
