@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://blog.bluestar5468.com/sitemap.xml

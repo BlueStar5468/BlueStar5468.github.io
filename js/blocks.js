@@ -216,7 +216,8 @@
       var tags = (m.tags || []).map(function (t) {
         return '<span class="chip chip--sm">' + esc(t) + '</span>';
       }).join('');
-      return '<a class="post" href="blog-post.html?p=' + esc(p.id) + '">' +
+      // 链到静态文章页（tools/build.js 生成的 blog/<id>.html），爬虫和 JS 看到的是同一个链接
+      return '<a class="post" href="blog/' + esc(p.id) + '.html">' +
         (m.cover ? '<img class="post__thumb" src="' + esc(m.cover) + '" alt="" loading="lazy" />' : '') +
         '<span class="post__body">' +
           '<span class="post__head">' +
@@ -257,7 +258,7 @@
 
     return wrap(b, i,
       (b.note ? '<p class="prose">' + esc(b.note) + '</p>' : '') +
-      '<a class="post post--ref" href="blog-post.html?p=' + esc(hit.id) + '">' +
+      '<a class="post post--ref" href="blog/' + esc(hit.id) + '.html">' +
         '<span class="post__body">' +
           '<span class="post__head">' +
             '<span class="post__label">相关</span>' +
