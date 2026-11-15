@@ -105,10 +105,9 @@
   }
   window.PROJ_SIDEBAR_HTML = sidebarHtml;   // 给 tools/build.js 用
 
-  function buildSidebar(box, list, currentId, toc) {
+  /* 只绑侧栏的收起 / 展开（侧栏已经预渲染好时用） */
+  function bindPnav(box) {
     if (!box) return;
-
-    box.innerHTML = sidebarHtml(list, currentId, toc);
 
     /* 收起 / 展开（状态存 localStorage，刷新后记得） */
     var root = document.documentElement;
@@ -129,6 +128,13 @@
         setCollapsed(!root.classList.contains('pnav-collapsed'));
       });
     }
+  }
+  window.PROJ_BIND_PNAV = bindPnav;
+
+  function buildSidebar(box, list, currentId, toc) {
+    if (!box) return;
+    box.innerHTML = sidebarHtml(list, currentId, toc);
+    bindPnav(box);
   }
 
   /* ---------- 滚动时高亮当前章节 ---------- */
@@ -260,6 +266,7 @@
       if (typeof console !== 'undefined' && console.info) {
         console.info('[projects] 静态页已预渲染，跳过 json 加载');
       }
+      bindPnav(document.getElementById('pnav'));   // 内容不用重画，但收起按钮得能点
       return;
     }
 

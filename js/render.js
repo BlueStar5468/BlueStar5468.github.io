@@ -173,11 +173,15 @@
         section = (document.body && document.body.getAttribute('data-section') || '').toLowerCase();
       } catch (e) { section = ''; }
       var href = String(d.href || '#');
+      // 页面在子目录里时（blog/、projects/），站点根链接要补 ../
+      var base = '';
+      try { base = document.documentElement.getAttribute('data-base') || ''; } catch (e) { base = ''; }
       var ext = d.ext === true || isExt(href);
       // 两种判定：文件名一致，或者所在板块一致（详情页也算「项目」板块）
       var active = !ext && (href.toLowerCase() === here ||
                             (!!d.section && String(d.section).toLowerCase() === section));
-      return '<a class="topbar__link' + (active ? ' is-active' : '') + '" href="' + esc(href) + '"' +
+      var out = (ext || /^(#|\.\.\/|\/)/.test(href)) ? href : base + href;
+      return '<a class="topbar__link' + (active ? ' is-active' : '') + '" href="' + esc(out) + '"' +
              (ext ? ' target="_blank" rel="noopener"' : '') +
              (active ? ' aria-current="page"' : '') + '>' +
              esc(d.text) + (ext ? ' ↗' : '') + '</a>';
