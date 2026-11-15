@@ -30,7 +30,7 @@
       { k: 'eyebrow',  t: 'text',  label: '小标签（可选）' },
       { k: 'icon',     t: 'text',  label: '图标（emoji 或 assets/x.png）' },
       { k: 'cover',    t: 'asset', label: '封面图（可选）' },
-      { k: 'meta',     t: 'pairs', label: '信息行', cols: ['标签', '值'] },
+      { k: 'meta',     t: 'metapairs', label: '信息行（一行一组：标签 | 值）', cols: ['标签', '值'] },
       { k: 'links',    t: 'links', label: '按钮' }
     ]},
     text: { label: '段落', fields: [
@@ -107,9 +107,27 @@
   function unlines(s) {
     return String(s || '').split('\n').map(function (x) { return x.trim(); }).filter(Boolean);
   }
-  function pairs(v) { return (v || []).map(function (r) { return r.join(' | '); }).join('\n'); }
+  function pairs(v) {
+    return (v || []).map(function (r) {
+      if (Array.isArray(r)) return r.join(' | ');
+      return [r && r.label, r && r.value].join(' | ');   // 兼容对象写法
+    }).join('\n');
+  }
   function unpairs(s) {
     return unlines(s).map(function (l) { return l.split('|').map(function (x) { return x.trim(); }); });
+  }
+  /* hero 的 meta 要的是 [{label, value}]，和 specs.rows 的 [[k,v]] 不一样 */
+  function metas(v) {
+    return (v || []).map(function (m) {
+      if (Array.isArray(m)) return [m[0], m[1]].join(' | ');
+      return [m && m.label, m && m.value].join(' | ');
+    }).join('\n');
+  }
+  function unMetas(s) {
+    return unlines(s).map(function (l) {
+      var p = l.split('|').map(function (x) { return x.trim(); });
+      return { label: p[0] || '', value: p[1] || '' };
+    });
   }
   function imgs(v) { return (v || []).map(function (g) { return [g.src, g.caption || ''].join(' | '); }).join('\n'); }
   function unImgs(s) {
@@ -449,6 +467,11 @@
         el.rows = 5;
         el.placeholder = (f.cols || ['键', '值']).join(' | ');
         el.value = pairs(val);
+      } else if (f.t === 'metapairs') {
+        el = document.createElement('textarea');
+        el.rows = 4;
+        el.placeholder = (f.cols || ['标签', '值']).join(' | ');
+        el.value = metas(val);
       } else if (f.t === 'imgs') {
         el = document.createElement('textarea');
         el.rows = 4;
@@ -485,6 +508,7 @@
       el.addEventListener('input', function () {
         if (f.t === 'lines')      b[f.k] = unlines(el.value);
         else if (f.t === 'pairs') b[f.k] = unpairs(el.value);
+        else if (f.t === 'metapairs') b[f.k] = unMetas(el.value);
         else if (f.t === 'imgs')  b[f.k] = unImgs(el.value);
         else if (f.t === 'links') b[f.k] = unLinks(el.value);
         else if (f.t === 'number') b[f.k] = el.value === '' ? undefined : Number(el.value);

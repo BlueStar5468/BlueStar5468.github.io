@@ -57,8 +57,17 @@
   }
 
   B.hero = function (b, i) {
-    var meta = (b.meta || []).map(function (m) {
-      return '<li><span>' + esc(m.label) + '</span><b>' + esc(m.value) + '</b></li>';
+    // meta 兼容两种写法：{ label, value } 对象 或 ["标签","值"] 数组；空行直接跳过
+    function pair(m) {
+      if (Array.isArray(m)) return [m[0], m[1]];
+      return [m && m.label, m && m.value];
+    }
+    var meta = (b.meta || []).filter(function (m) {
+      var p = pair(m);
+      return (p[0] && String(p[0]).trim()) || (p[1] && String(p[1]).trim());
+    }).map(function (m) {
+      var p = pair(m);
+      return '<li><span>' + esc(p[0]) + '</span><b>' + esc(p[1]) + '</b></li>';
     }).join('');
     var acts = (b.links || []).map(btn).join('');
     var cover = b.cover
@@ -107,8 +116,15 @@
   };
 
   B.specs = function (b, i) {
-    var rows = (b.rows || []).map(function (r) {
-      return '<tr><th>' + esc(r[0]) + '</th><td>' + esc(r[1]) + '</td></tr>';
+    var rows = (b.rows || []).filter(function (r) {
+      if (!r) return false;
+      if (Array.isArray(r)) return (r[0] && String(r[0]).trim()) || (r[1] && String(r[1]).trim());
+      return (r.k && String(r.k).trim()) || (r.v && String(r.v).trim()) || (r.label && String(r.label).trim()) || (r.value && String(r.value).trim());
+    }).map(function (r) {
+      var k, v;
+      if (Array.isArray(r)) { k = r[0]; v = r[1]; }
+      else { k = (r.k !== undefined ? r.k : r.label); v = (r.v !== undefined ? r.v : r.value); }
+      return '<tr><th>' + esc(k) + '</th><td>' + esc(v) + '</td></tr>';
     }).join('');
     return wrap(b, i, '<table class="specs"><tbody>' + rows + '</tbody></table>');
   };
