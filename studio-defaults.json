@@ -1,0 +1,13 @@
+{
+  "sidebar": [
+    {
+      "type": "profile"
+    },
+    {
+      "type": "posts",
+      "title": "最近文章",
+      "limit": 3,
+      "count": false
+    }
+  ]
+}

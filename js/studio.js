@@ -90,7 +90,7 @@
   /* ---------- 状态 ---------- */
   var state = { id: '', meta: {}, blocks: [], sidebar: [] };
   var container = 'main';                       // 当前编辑哪个容器：main / sidebar
-  function curBlocks() { return container === 'sidebar' ? state.sidebar : state.blocks; }
+  function curBlocks() { return container === 'sidebar' ? (state.sidebar || []) : state.blocks; }
   var sel = 0;
   var saveTimer = null;
 
@@ -108,7 +108,7 @@
         { type: 'hero', title: '', subtitle: '', icon: '📝' },
         { type: 'text', title: '', html: '<p>在这里写正文。</p>' }
       ],
-      sidebar: [{ type: 'profile' }]
+      sidebar: null   // null = 跟随 blog/_home.json 的默认侧栏
     };
   }
 
@@ -174,6 +174,7 @@
     '</div>' +
   '</body></html>';
 
+  var DEFAULT_SIDE = null;     // studio-defaults.json 里的默认侧栏
   var pendingInner = '';
   var pendingSide = '';
 
@@ -201,7 +202,8 @@
   }
 
   function renderPreview() {
-    pendingSide = window.RENDER_BLOCKS(state.sidebar, {});
+    var sb = state.sidebar === null ? (DEFAULT_SIDE || []) : state.sidebar;
+    pendingSide = window.RENDER_BLOCKS(sb, {});
     pendingInner = window.RENDER_BLOCKS(state.blocks, {})
       || '<p class="studio__empty">还没有内容块</p>';
     flushPreview();
@@ -339,7 +341,7 @@
 
   function toFile() {
     var out = { id: state.id || 'my-post', meta: state.meta, page: { blocks: state.blocks } };
-    if (state.sidebar && state.sidebar.length) out.sidebar = state.sidebar;
+    if (state.sidebar !== null) out.sidebar = state.sidebar;   // null = 用默认，不写字段
     return out;
   }
 
@@ -357,6 +359,41 @@
   }
 
   /* ---------- 块列表 ---------- */
+  /* ---------- 侧栏默认开关 ---------- */
+  function initDefaultSide() {
+    var chk = $('useDefault');
+    var sbBtn = document.querySelector('.seg__btn[data-box="sidebar"]');
+    if (!chk) return;
+
+    function paint() {
+      var on = chk.checked;
+      state.sidebar = on ? null : (state.sidebar || []);
+      if (sbBtn) { sbBtn.disabled = on; sbBtn.title = on ? '侧栏用默认，先在下面取消勾选' : ''; }
+      if (on && container === 'sidebar') container = 'main';
+      Array.prototype.slice.call(document.querySelectorAll('#segBox .seg__btn')).forEach(function (x) {
+        x.classList.toggle('is-on', x.getAttribute('data-box') === container);
+      });
+    }
+
+    chk.checked = state.sidebar === null;
+    chk.addEventListener('change', function () {
+      paint();
+      renderList(); renderForm(); renderPreview(); renderOut();
+    });
+    paint();
+  }
+
+  function loadDefaultSide() {
+    if (!window.fetch) return;
+    fetch('studio-defaults.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        DEFAULT_SIDE = (j && Array.isArray(j.sidebar)) ? j.sidebar : null;
+        if (state.sidebar === null) renderPreview();
+      })
+      .catch(function () { /* 本地直开时没有这个文件，忽略 */ });
+  }
+
   /* ---------- 容器切换：主文章 / 侧边栏 ---------- */
   function initBoxSwitch() {
     var box = $('segBox');
@@ -787,7 +824,8 @@
           meta: Object.assign({ title: '', date: today(), summary: '', tags: [], cover: '' }, d.meta || {}),
           blocks: Array.isArray(d.blocks) ? d.blocks : [],
           /* 老草稿（还没这项功能时存的）没有 sidebar，这里补默认介绍卡 */
-          sidebar: (Array.isArray(d.sidebar) && d.sidebar.length) ? d.sidebar : [{ type: 'profile' }]
+          /* 老草稿没这个字段 -> null 表示用默认；[] 表示明确空侧栏 */
+          sidebar: Array.isArray(d.sidebar) ? d.sidebar : null
         };
       } catch (e) { state = blank(); }
     } else {
@@ -813,8 +851,10 @@
     initTabKey();
     initCollapse();
     initPreviewSize();
+    initDefaultSide();
     initBoxSwitch();
     initSplits();
+    loadDefaultSide();
     renderList();
     renderForm();
     renderPreview();

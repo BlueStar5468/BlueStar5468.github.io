@@ -1716,3 +1716,7 @@ html.home-booting .deck { visibility: hidden; }
 
 /* 单栏页面（实验室）：不要左侧项目导航那一列 */
 .page-shell--single { grid-template-columns: minmax(0, 1fr); }
+
+/* 侧栏没内容时整列收起（文章可以配 sidebar: [] 表示不要侧栏） */
+.bside:empty { display: none; }
+.blog-shell:has(> .bside:empty) { grid-template-columns: minmax(0, 1fr); }
