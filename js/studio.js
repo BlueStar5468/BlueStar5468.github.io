@@ -785,7 +785,9 @@
         state = {
           id: d.id || '',
           meta: Object.assign({ title: '', date: today(), summary: '', tags: [], cover: '' }, d.meta || {}),
-          blocks: d.blocks || []
+          blocks: Array.isArray(d.blocks) ? d.blocks : [],
+          /* 老草稿（还没这项功能时存的）没有 sidebar，这里补默认介绍卡 */
+          sidebar: (Array.isArray(d.sidebar) && d.sidebar.length) ? d.sidebar : [{ type: 'profile' }]
         };
       } catch (e) { state = blank(); }
     } else {
@@ -811,8 +813,8 @@
     initTabKey();
     initCollapse();
     initPreviewSize();
-      initBoxSwitch();
-      initSplits();
+    initBoxSwitch();
+    initSplits();
     renderList();
     renderForm();
     renderPreview();
