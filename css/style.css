@@ -591,7 +591,16 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 }
 
 /* 左边：个人介绍（不占满高度，下面留白给以后的东西） */
-.bside { position: sticky; top: calc(var(--topbar-h) + 18px); display: grid; gap: 14px; min-width: 0; }
+/* 侧栏 = 一个卡片容器，里面装 blocks（profile / text / links / posts…） */
+.bside {
+  position: sticky; top: calc(var(--topbar-h) + 18px);
+  display: grid; gap: 14px; min-width: 0;
+  padding: 15px 14px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+}
 .bside__card { display: grid; gap: 12px; padding: 15px 14px; }
 .bside__head { display: flex; align-items: center; gap: 11px; }
 .bside__id { min-width: 0; }
@@ -742,11 +751,33 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 .studio__grid {
   display: grid;
   /* 左栏宽度用变量控制：收起时变窄，中间的编辑器自动吃掉剩下的地方 */
-  grid-template-columns: var(--studio-leftw, 300px) minmax(300px, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: var(--studio-leftw, 300px) 6px minmax(300px, 1.4fr) 6px var(--studio-rightw, 400px);
   gap: 12px;
   align-items: start;
 }
 .studio__grid.is-left-closed { --studio-leftw: 48px; }
+
+/* 拖动分隔条 */
+.studio__split {
+  align-self: stretch;
+  min-height: 240px;
+  cursor: col-resize;
+  border-radius: 3px;
+  background: linear-gradient(180deg, transparent, rgba(148,163,184,.18), transparent);
+  transition: background .15s;
+  touch-action: none;
+}
+.studio__split:hover, .studio__split.is-drag { background: rgba(37,99,235,.22); }
+
+/* 容器切换的小分段按钮 */
+.seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--slate-100, #f1f5f9); border-radius: 8px; }
+.seg__btn {
+  border: 0; background: transparent; color: var(--muted);
+  font: inherit; font-size: 12.5px; font-weight: 600;
+  padding: 5px 12px; border-radius: 6px; cursor: pointer;
+}
+.seg__btn.is-on { background: #fff; color: var(--blue-700, #1d4ed8); box-shadow: 0 1px 3px rgba(15,23,42,.12); }
+
 
 .studio__left { display: grid; gap: 10px; min-width: 0; }
 .studio__mid { display: grid; gap: 12px; min-width: 0; }
@@ -872,6 +903,7 @@ html.pnav-collapsed .pnav__item { justify-content: center; padding: 8px 0; }
 
 @media (max-width: 1280px) {
   .studio__grid { grid-template-columns: var(--studio-leftw, 280px) minmax(0, 1fr); }
+  .studio__split { display: none; }
   .studio__right { grid-column: 1 / -1; position: static; }
 }
 @media (max-width: 860px) {
@@ -1674,3 +1706,13 @@ html.home-booting .deck { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .home-load__spin { animation: none; }
 }
+
+/* =============================================================
+   首页（关于页）：正文居中，Label 字号加大
+   ============================================================= */
+.bmain--home .prose { text-align: center; }
+.bmain--home .blk__title { text-align: center; font-size: 1.55rem; letter-spacing: .5px; }
+.bmain--home .page-main__actions { justify-content: center; }
+
+/* 单栏页面（实验室）：不要左侧项目导航那一列 */
+.page-shell--single { grid-template-columns: minmax(0, 1fr); }

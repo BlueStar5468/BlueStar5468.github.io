@@ -83,7 +83,15 @@
             <span class="studio__chev" aria-hidden="true">▾</span>
           </button>
           <div class="studio__secBody">
-            <div class="studio__blocks" id="blockList"></div>
+            <div class="fld">
+          <span class="fld__cap">当前编辑的容器</span>
+          <div class="seg" id="segBox">
+            <button class="seg__btn is-on" type="button" data-box="main">主文章</button>
+            <button class="seg__btn" type="button" data-box="sidebar">侧边栏</button>
+          </div>
+        </div>
+
+        <div class="studio__blocks" id="blockList"></div>
             <div class="studio__add">
               <select id="addType" aria-label="要添加的组件类型"></select>
               <button class="btn" type="button" id="btnAdd">+ 添加</button>
@@ -102,12 +110,16 @@
 
     </section>
 
+    <div class="studio__split" data-split="left" title="拖动调整左栏宽度"></div>
+
     <!-- ══════════ 中：表单（左栏收起后这里会变宽） ══════════ -->
     <section class="studio__mid">
       <div class="card pad" id="formHost">
         <p class="pd-load">左边选一个块…</p>
       </div>
     </section>
+
+    <div class="studio__split" data-split="right" title="拖动调整预览栏宽度"></div>
 
     <!-- ══════════ 右：预览（容器可拖动改宽高） ══════════ -->
     <section class="studio__right">

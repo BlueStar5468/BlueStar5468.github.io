@@ -24,6 +24,12 @@
   /* ---------- 组件表单定义 ----------
      没在这里的类型（cards / stats / timeline / video / postref）走 JSON 输入框 */
   var SCHEMA = {
+
+    profile: { label: '介绍卡（侧栏用）', fields: [
+      { k: 'name',  t: 'text', label: '名字（留空用站点默认）' },
+      { k: 'title', t: 'text', label: '副标题（留空用站点默认）' }
+    ] },
+
     hero: { label: '顶部 Hero', fields: [
       { k: 'title',    t: 'text',  label: '标题' },
       { k: 'subtitle', t: 'text',  label: '副标题' },
@@ -79,10 +85,12 @@
     cards: '卡片组', stats: '数字', timeline: '时间线', video: '视频', postref: '引用文章'
   };
   var ALL_TYPES = ['hero', 'text', 'list', 'code', 'image', 'gallery', 'specs', 'links', 'quote', 'divider',
-                   'cards', 'stats', 'timeline', 'video', 'postref'];
+                   'cards', 'stats', 'timeline', 'video', 'postref', 'profile'];
 
   /* ---------- 状态 ---------- */
-  var state = { id: '', meta: {}, blocks: [] };
+  var state = { id: '', meta: {}, blocks: [], sidebar: [] };
+  var container = 'main';                       // 当前编辑哪个容器：main / sidebar
+  function curBlocks() { return container === 'sidebar' ? state.sidebar : curBlocks(); }
   var sel = 0;
   var saveTimer = null;
 
@@ -99,7 +107,8 @@
       blocks: [
         { type: 'hero', title: '', subtitle: '', icon: '📝' },
         { type: 'text', title: '', html: '<p>在这里写正文。</p>' }
-      ]
+      ],
+      sidebar: [{ type: 'profile' }]
     };
   }
 
@@ -158,16 +167,27 @@
       'body{margin:0;padding:clamp(14px,4vw,30px)}' +
       '.studio__empty{margin:0;padding:22px;text-align:center;font-size:13px;color:#94a3b8;' +
         'border:1px dashed #e5eaf1;border-radius:10px}' +
-    '</style></head><body><div id="pv"></div></body></html>';
+    '</style></head><body>' +
+    '<div class="blog-shell">' +
+      '<aside class="bside" id="pvSide"></aside>' +
+      '<main class="bmain" id="pv"></main>' +
+    '</div>' +
+  '</body></html>';
 
   var pendingInner = '';
+  var pendingSide = '';
 
   function flushPreview() {
     var f = $('pvFrame');
     if (!f) return;
     var doc = f.contentDocument;
     var host = doc && doc.getElementById ? doc.getElementById('pv') : null;
-    if (host) { host.innerHTML = pendingInner; return; }   // iframe 已经就绪，直接换内容（不闪）
+    var side = doc && doc.getElementById ? doc.getElementById('pvSide') : null;
+    if (host) {
+      host.innerHTML = pendingInner;
+      if (side) side.innerHTML = pendingSide;
+      return;                                            // iframe 已经就绪，直接换内容（不闪）
+    }
 
     if (!f._hooked) {
       f._hooked = true;
@@ -181,6 +201,7 @@
   }
 
   function renderPreview() {
+    pendingSide = window.RENDER_BLOCKS(state.sidebar, {});
     pendingInner = window.RENDER_BLOCKS(state.blocks, {})
       || '<p class="studio__empty">还没有内容块</p>';
     flushPreview();
@@ -317,7 +338,9 @@
   }
 
   function toFile() {
-    return { id: state.id || 'my-post', meta: state.meta, page: { blocks: state.blocks } };
+    var out = { id: state.id || 'my-post', meta: state.meta, page: { blocks: state.blocks } };
+    if (state.sidebar && state.sidebar.length) out.sidebar = state.sidebar;
+    return out;
   }
 
   function renderOut() {
@@ -334,17 +357,83 @@
   }
 
   /* ---------- 块列表 ---------- */
+  /* ---------- 容器切换：主文章 / 侧边栏 ---------- */
+  function initBoxSwitch() {
+    var box = $('segBox');
+    if (!box) return;
+    Array.prototype.slice.call(box.querySelectorAll('.seg__btn')).forEach(function (b) {
+      b.addEventListener('click', function () {
+        var want = b.getAttribute('data-box') || 'main';
+        if (want === container) return;
+        container = want;
+        Array.prototype.slice.call(box.querySelectorAll('.seg__btn')).forEach(function (x) {
+          x.classList.toggle('is-on', x === b);
+        });
+        sel = 0;
+        renderList();
+        renderForm();
+        renderPreview();
+        renderOut();
+      });
+    });
+  }
+
+  /* ---------- 拖动分隔条：自定义三栏宽度 ---------- */
+  function initSplits() {
+    var grid = $('studioGrid');
+    if (!grid) return;
+
+    var MIN = { left: 200, right: 260, mid: 300 };
+    var savedL = parseFloat(lsGet('studio-leftw'));
+    var savedR = parseFloat(lsGet('studio-rightw'));
+    if (savedL > 0) grid.style.setProperty('--studio-leftw', Math.round(savedL) + 'px');
+    if (savedR > 0) grid.style.setProperty('--studio-rightw', Math.round(savedR) + 'px');
+
+    Array.prototype.slice.call(document.querySelectorAll('.studio__split')).forEach(function (sp) {
+      sp.addEventListener('pointerdown', function (e) {
+        if (e.button !== 0) return;
+        e.preventDefault();
+        var side = sp.getAttribute('data-split');
+        var rect = grid.getBoundingClientRect();
+        sp.classList.add('is-drag');
+        try { sp.setPointerCapture(e.pointerId); } catch (err) { /* 忽略 */ }
+
+        function move(ev) {
+          if (side === 'left') {
+            var w = Math.max(MIN.left, Math.min(ev.clientX - rect.left, rect.width - MIN.mid - MIN.right - 12));
+            grid.style.setProperty('--studio-leftw', Math.round(w) + 'px');
+          } else {
+            var r = Math.max(MIN.right, Math.min(rect.right - ev.clientX, rect.width - MIN.left - MIN.mid - 12));
+            grid.style.setProperty('--studio-rightw', Math.round(r) + 'px');
+          }
+          renderPreview();
+        }
+        function up() {
+          sp.classList.remove('is-drag');
+          sp.removeEventListener('pointermove', move);
+          sp.removeEventListener('pointerup', up);
+          var cl = grid.style.getPropertyValue('--studio-leftw');
+          var cr = grid.style.getPropertyValue('--studio-rightw');
+          if (cl) lsSet('studio-leftw', parseFloat(cl) || '');
+          if (cr) lsSet('studio-rightw', parseFloat(cr) || '');
+        }
+        sp.addEventListener('pointermove', move);
+        sp.addEventListener('pointerup', up);
+      });
+    });
+  }
+
   function renderList() {
     var host = $('blockList');
     if (!host) return;
     host.innerHTML = '';
 
-    if (!state.blocks.length) {
+    if (!curBlocks().length) {
       host.innerHTML = '<p class="posts__empty">还没有内容块，下面加一个</p>';
       return;
     }
 
-    state.blocks.forEach(function (b, i) {
+    curBlocks().forEach(function (b, i) {
       var row = document.createElement('div');
       row.className = 'brow' + (i === sel ? ' is-sel' : '');
       row.setAttribute('role', 'button');
@@ -390,21 +479,21 @@
 
   function move(i, d) {
     var j = i + d;
-    if (j < 0 || j >= state.blocks.length) return;
-    var t = state.blocks[i];
-    state.blocks[i] = state.blocks[j];
-    state.blocks[j] = t;
+    if (j < 0 || j >= curBlocks().length) return;
+    var t = curBlocks()[i];
+    curBlocks()[i] = curBlocks()[j];
+    curBlocks()[j] = t;
     sel = j;
     onChange(true);
   }
   function dup(i) {
-    state.blocks.splice(i + 1, 0, JSON.parse(JSON.stringify(state.blocks[i])));
+    curBlocks().splice(i + 1, 0, JSON.parse(JSON.stringify(curBlocks()[i])));
     sel = i + 1;
     onChange(true);
   }
   function del(i) {
-    state.blocks.splice(i, 1);
-    if (sel >= state.blocks.length) sel = state.blocks.length - 1;
+    curBlocks().splice(i, 1);
+    if (sel >= curBlocks().length) sel = curBlocks().length - 1;
     if (sel < 0) sel = 0;
     onChange(true);
   }
@@ -426,7 +515,7 @@
     if (!host) return;
     host.innerHTML = '';
 
-    var b = state.blocks[sel];
+    var b = curBlocks()[sel];
     if (!b) {
       host.innerHTML = '<p class="pd-load">左边选一个块，或者先加一个</p>';
       return;
@@ -455,7 +544,7 @@
         try {
           var obj = JSON.parse(ta.value);
           if (obj && typeof obj === 'object') {
-            state.blocks[sel] = obj;
+            curBlocks()[sel] = obj;
             ta.classList.remove('is-bad');
             renderPreview(); renderOut(); scheduleSave();
           }
@@ -607,8 +696,8 @@
         var block = { type: t };
         if (t === 'list') block.items = [];
         if (t === 'text') block.html = '';
-        state.blocks.push(block);
-        sel = state.blocks.length - 1;
+        curBlocks().push(block);
+        sel = curBlocks().length - 1;
         onChange(true);
       });
     }
@@ -658,7 +747,7 @@
             var obj = JSON.parse(String(reader.result));
             state.id = obj.id || '';
             state.meta = Object.assign({ title: '', date: today(), summary: '', tags: [], cover: '' }, obj.meta || {});
-            state.blocks = (obj.page && obj.page.blocks) || obj.blocks || [];
+            curBlocks() = (obj.page && obj.page.blocks) || obj.blocks || [];
             sel = 0;
             if (state._fill) state._fill();
             onChange(true);
@@ -721,6 +810,8 @@
     initTabKey();
     initCollapse();
     initPreviewSize();
+      initBoxSwitch();
+      initSplits();
     renderList();
     renderForm();
     renderPreview();

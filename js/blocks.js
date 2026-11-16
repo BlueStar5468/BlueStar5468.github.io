@@ -196,6 +196,20 @@
     return wrap(b, i, inner);
   };
 
+  /* 侧边栏介绍卡：头像 + 名字 + 副标题（不带块标题） */
+  B.profile = function (b, i) {
+    var inner = '<div class="blk-profile">' +
+      '<div class="bside__head">' +
+        '<div class="avatar avatar--flat"><span class="avatar__letter">B</span></div>' +
+        '<div class="bside__id">' +
+          '<h1 class="bside__name">' + esc(b.name || 'BlueStar5468') + '</h1>' +
+          '<p class="bside__title">' + esc(b.title || 'BSuniStudio/BlueStar5468') + '</p>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+    return wrap(b, i, inner, { noTitle: true });
+  };
+
   B.divider = function (b, i) {
     return '<hr class="bdiv" id="s-' + i + '" />';
   };
