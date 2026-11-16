@@ -90,7 +90,7 @@
   /* ---------- 状态 ---------- */
   var state = { id: '', meta: {}, blocks: [], sidebar: [] };
   var container = 'main';                       // 当前编辑哪个容器：main / sidebar
-  function curBlocks() { return container === 'sidebar' ? state.sidebar : curBlocks(); }
+  function curBlocks() { return container === 'sidebar' ? state.sidebar : state.blocks; }
   var sel = 0;
   var saveTimer = null;
 
@@ -747,7 +747,8 @@
             var obj = JSON.parse(String(reader.result));
             state.id = obj.id || '';
             state.meta = Object.assign({ title: '', date: today(), summary: '', tags: [], cover: '' }, obj.meta || {});
-            curBlocks() = (obj.page && obj.page.blocks) || obj.blocks || [];
+            state.blocks = (obj.page && obj.page.blocks) || obj.blocks || [];
+            state.sidebar = Array.isArray(obj.sidebar) ? obj.sidebar : [];
             sel = 0;
             if (state._fill) state._fill();
             onChange(true);
